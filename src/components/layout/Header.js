@@ -41,8 +41,11 @@ function Header() {
           <nav className="nav-desktop">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/books" className="nav-link">Books</Link>
-            <Link to="/ai-formatter" className="nav-link highlight">
-              AI Formatter ✨
+            <Link to="/formatter" className="nav-link highlight">
+              📚 Formatter
+            </Link>
+            <Link to="/creative" className="nav-link highlight">
+              🎨 Creative Suite
             </Link>
             <Link to="/about" className="nav-link">About</Link>
           </nav>
@@ -61,32 +64,19 @@ function Header() {
         {/* MOBILE NAVIGATION (only shows when mobileMenuOpen is true) */}
         {mobileMenuOpen && (
           <nav className="nav-mobile">
-            <Link
-              to="/"
-              className="nav-link-mobile"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link to="/" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
-            <Link
-              to="/books"
-              className="nav-link-mobile"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link to="/books" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               Books
             </Link>
-            <Link
-              to="/ai-formatter"
-              className="nav-link-mobile highlight"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              AI Formatter ✨
+            <Link to="/formatter" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              📚 Formatter
             </Link>
-            <Link
-              to="/about"
-              className="nav-link-mobile"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link to="/creative" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎨 Creative Suite
+            </Link>
+            <Link to="/about" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               About
             </Link>
           </nav>

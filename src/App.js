@@ -26,32 +26,36 @@ import BooksPage from './pages/BooksPage';
 import AIFormatterPage from './pages/AIFormatterPage';
 import AboutPage from './pages/AboutPage';
 
+// App Components (full-screen apps)
+import AIFormatter from './components/formatter/AIFormatter';
+import CreativeSuite from './components/creative/CreativeSuite';
+
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* Header shows on every page */}
-        <Header />
-
         {/* Routes define which component shows for each URL */}
-        <main className="main-content">
-          <Routes>
-            {/* Homepage - www.yoursite.com/ */}
-            <Route path="/" element={<HomePage />} />
+        <Routes>
+          {/* APPS - Full screen, no header/footer */}
+          <Route path="/formatter" element={<AIFormatter />} />
+          <Route path="/creative" element={<CreativeSuite />} />
 
-            {/* Books page - www.yoursite.com/books */}
-            <Route path="/books" element={<BooksPage />} />
-
-            {/* AI Formatter - www.yoursite.com/ai-formatter */}
-            <Route path="/ai-formatter" element={<AIFormatterPage />} />
-
-            {/* About page - www.yoursite.com/about */}
-            <Route path="/about" element={<AboutPage />} />
-          </Routes>
-        </main>
-
-        {/* Footer shows on every page */}
-        <Footer />
+          {/* MARKETING SITE - With header/footer */}
+          <Route path="/*" element={
+            <>
+              <Header />
+              <main className="main-content">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/books" element={<BooksPage />} />
+                  <Route path="/ai-formatter" element={<AIFormatterPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                </Routes>
+              </main>
+              <Footer />
+            </>
+          } />
+        </Routes>
       </div>
     </Router>
   );
