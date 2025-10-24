@@ -1,0 +1,125 @@
+/**
+ * APP.CSS - Application-specific styles
+ *
+ * Styles specific to the App component and general layout
+ */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Gradient backgrounds (used in various places) */
+.gradient-phoenix {
+  background: linear-gradient(135deg, var(--phoenix-fire) 0%, var(--coral-peach) 100%);
+}
+
+.gradient-peacock {
+  background: linear-gradient(135deg, var(--peacock-teal) 0%, var(--deep-purple) 100%);
+}
+
+.gradient-royal {
+  background: linear-gradient(135deg, var(--deep-purple) 0%, var(--phoenix-fire) 100%);
+}
+
+/* Card component - reusable */
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-lg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button styles */
+.btn {
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--deep-purple);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--phoenix-fire);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background: var(--peacock-teal);
+  color: var(--white);
+}
+
+.btn-secondary:hover {
+  background: var(--deep-purple);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--deep-purple);
+  color: var(--deep-purple);
+}
+
+.btn-outline:hover {
+  background: var(--deep-purple);
+  color: var(--white);
+}
+
+/* Grid layouts */
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Responsive grids */
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section padding */
+.section {
+  padding: var(--spacing-xl) 0;
+}
+
+.section-lg {
+  padding: calc(var(--spacing-xl) * 2) 0;
+}

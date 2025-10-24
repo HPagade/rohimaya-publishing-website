@@ -1,0 +1,149 @@
+/**
+ * GLOBAL STYLES
+ *
+ * These styles apply to the entire application.
+ * CSS Variables (--variable-name) let you reuse values throughout your app.
+ */
+
+/* CSS Variables - Define your color palette once, use everywhere */
+:root {
+  /* Brand Colors */
+  --phoenix-fire: #ff6b6b;
+  --peacock-teal: #4ecdc4;
+  --gold-accent: #ffd700;
+  --deep-purple: #764ba2;
+  --coral-peach: #ffb88c;
+
+  /* Neutral Colors */
+  --cream: #fef5e7;
+  --dark-text: #2c3e50;
+  --light-bg: #f8f9fa;
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Semantic Colors (for messages, buttons, etc.) */
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --error: #e74c3c;
+  --info: #3498db;
+
+  /* Spacing System (consistent spacing throughout) */
+  --spacing-xs: 0.5rem;   /* 8px */
+  --spacing-sm: 1rem;     /* 16px */
+  --spacing-md: 1.5rem;   /* 24px */
+  --spacing-lg: 2rem;     /* 32px */
+  --spacing-xl: 3rem;     /* 48px */
+
+  /* Typography */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Roboto', sans-serif;
+  --font-cursive: 'Dancing Script', cursive;
+}
+
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styles for the entire app */
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--dark-text);
+  background-color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+}
+
+h1 { font-size: 3.5rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 1.8rem; }
+h4 { font-size: 1.5rem; }
+
+/* Responsive typography - smaller on mobile */
+@media (max-width: 768px) {
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+}
+
+/* Links */
+a {
+  color: var(--deep-purple);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--phoenix-fire);
+}
+
+/* Buttons - Base styles */
+button {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Images - Responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Main content area */
+.main-content {
+  min-height: calc(100vh - 200px); /* Full height minus header/footer */
+}
+
+/* Container - Centers content with max width */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-cursive { font-family: var(--font-cursive); }
+
+/* Loading spinner */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xl);
+}
+
+/* Error message */
+.error {
+  color: var(--error);
+  padding: var(--spacing-md);
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 8px;
+  margin: var(--spacing-md) 0;
+}
+
+/* Success message */
+.success {
+  color: var(--success);
+  padding: var(--spacing-md);
+  background-color: rgba(46, 204, 113, 0.1);
+  border-radius: 8px;
+  margin: var(--spacing-md) 0;
+}
