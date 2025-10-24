@@ -1,0 +1,132 @@
+/* CREATIVE SUITE STYLES */
+
+.creative-suite-app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.tool-selector {
+  background: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tool-btn {
+  padding: 1rem 2rem;
+  background: var(--light-bg);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tool-btn:hover {
+  background: var(--peacock-teal);
+  color: white;
+}
+
+.tool-btn.active {
+  background: var(--deep-purple);
+  color: white;
+  border-color: var(--deep-purple);
+}
+
+.tool-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+/* Image Creator & Video Maker Stub Styles */
+.image-creator,
+.video-maker {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.image-creator h2,
+.video-maker h2 {
+  font-size: 2.5rem;
+  color: var(--deep-purple);
+  margin-bottom: 0.5rem;
+}
+
+.image-type-selector,
+.video-type-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.type-btn,
+.video-type-card {
+  padding: 1.5rem;
+  background: var(--light-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.type-btn:hover,
+.video-type-card:hover {
+  border-color: var(--peacock-teal);
+  transform: translateY(-4px);
+}
+
+.type-btn.active,
+.video-type-card.active {
+  background: var(--peacock-teal);
+  color: white;
+  border-color: var(--peacock-teal);
+}
+
+.coming-soon-note {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 12px;
+  border-left: 4px solid var(--gold-accent);
+}
+
+.video-features {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--light-bg);
+  border-radius: 12px;
+}
+
+.video-features h3 {
+  color: var(--deep-purple);
+  margin-bottom: 1rem;
+}
+
+.video-features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.video-features li {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .tool-selector {
+    flex-direction: column;
+  }
+
+  .image-type-selector,
+  .video-type-selector {
+    grid-template-columns: 1fr;
+  }
+}

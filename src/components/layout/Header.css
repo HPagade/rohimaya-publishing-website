@@ -1,0 +1,154 @@
+/**
+ * HEADER STYLES
+ */
+
+.header {
+  background: linear-gradient(135deg, var(--deep-purple) 0%, var(--phoenix-fire) 100%);
+  color: var(--white);
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo styles */
+.logo {
+  text-decoration: none;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.phoenix {
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.peacock {
+  color: var(--gold-accent);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Desktop Navigation */
+.nav-desktop {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Highlight special nav items */
+.nav-link.highlight {
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid var(--gold-accent);
+}
+
+.nav-link.highlight:hover {
+  background: var(--gold-accent);
+  color: var(--deep-purple);
+}
+
+/* Mobile Menu Button - hidden on desktop */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+/* Mobile Navigation - hidden by default */
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-link-mobile {
+  color: var(--white);
+  text-decoration: none;
+  padding: 1rem;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-link-mobile:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link-mobile.highlight {
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid var(--gold-accent);
+}
+
+/* RESPONSIVE DESIGN - Mobile (screens smaller than 768px) */
+@media (max-width: 768px) {
+  /* Hide desktop nav on mobile */
+  .nav-desktop {
+    display: none;
+  }
+
+  /* Show mobile menu button */
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* Show mobile nav when open */
+  .nav-mobile {
+    display: flex;
+  }
+
+  /* Smaller logo on mobile */
+  .logo-text {
+    font-size: 1.5rem;
+  }
+
+  .peacock {
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 769px) {
+  .nav-mobile {
+    display: none !important; /* Never show mobile nav on desktop */
+  }
+}
