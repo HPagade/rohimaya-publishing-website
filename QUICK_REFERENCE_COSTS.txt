@@ -1,0 +1,286 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║     ROHIMAYA PUBLISHING - QUICK REFERENCE COSTS & TIMELINE        ║
+║                                                                   ║
+║            Maximum Free Tools | Bootstrap Strategy               ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💰 STARTUP CAPITAL NEEDED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ABSOLUTE MINIMUM: $2,000
+  ✓ LLC formation: $400
+  ✓ Domain: $12
+  ✓ Insurance: $600/year
+  ✓ Contracts (lawyer): $750
+  ✓ Buffer: $238
+
+COMFORTABLE START: $5,000-10,000
+IDEAL LAUNCH: $15,000-25,000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📅 TIMELINE TO PROFITABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Month 1: Setup (-$1,712)
+Month 2: Website ($0)
+Month 3: FIRST PROFIT (+$1,100)
+Month 6: $1,000/month profit
+Month 12: $7,828/month profit
+Year 2: $76,500 annual profit
+Year 3: $255,000 annual profit
+Year 5: $1,150,000 annual profit
+
+PROFITABLE FROM FIRST SALE! ✓
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💵 MONTHLY COSTS BY YEAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+YEAR 1 (Average Monthly):
+  Fixed Costs:    $73
+  Per Book:       $580
+  Marketing:      $400
+  5 books/month:  $3,473/month
+  
+  Revenue:        $10,500/month (by Dec)
+  NET PROFIT:     $7,027/month
+
+YEAR 2 (Average Monthly):
+  Fixed:          $4,400 (includes employee)
+  Production:     $4,320 (8 books)
+  Marketing:      $1,800
+  TOTAL:          $10,520/month
+  
+  Revenue:        $29,900/month (by Dec)
+  NET PROFIT:     $19,380/month
+
+YEAR 3 (Average Monthly):
+  Fixed:          $14,975 (3-4 employees)
+  Production:     $6,000 (12 books)
+  Marketing:      $3,000
+  TOTAL:          $23,975/month
+  
+  Revenue:        $67,600/month (by Dec)
+  NET PROFIT:     $43,625/month
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📊 5-YEAR REVENUE PROJECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Year | Investment | Revenue    | Profit      | ROI  | Books
+-----|-----------|------------|-------------|------|-------
+  1  | $16,850   | $33,000    | $16,150     | 96%  | 35
+  2  | $89,500   | $166,000   | $76,500     | 85%  | 120
+  3  | $180,000  | $435,000   | $255,000    | 142% | 200
+  4  | $380,000  | $865,000   | $485,000    | 128% | 320
+  5  | $500,000  | $1,650,000 | $1,150,000  | 230% | 470
+-----|-----------|------------|-------------|------|-------
+TOTAL| $1,166,350| $3,149,000 | $1,982,650  | 170% | 470
+
+5-YEAR ROI: 170% average annual return
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💰 COSTS PER BOOK (Year 1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cover Design:       $100-200 (avg $150)
+Editing:            $200-400 (avg $300)
+ISBN:               $0 (Amazon free)
+Formatting:         $0 (Calibre free)
+Audiobook (AI):     $100-150 (avg $130)
+--------------------------------
+TOTAL PER BOOK:     $580
+
+Your Package Price: $1,500
+Your Cost:          $580
+YOUR PROFIT:        $920 per book
+
+Plus ongoing royalties: $786/year per book!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🆓 FREE TOOLS YOU'LL USE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUSINESS:
+  ✓ Wave Accounting (bookkeeping)
+  ✓ Google Workspace (email, docs, sheets)
+  ✓ Canva Free (graphics)
+  ✓ Trello (project management)
+  ✓ Notion (documentation)
+
+PUBLISHING:
+  ✓ Amazon KDP (distribution)
+  ✓ Draft2Digital (wide distribution)
+  ✓ Calibre (ebook formatting)
+  ✓ Reedsy Book Editor (writing)
+  ✓ LibreOffice (word processing)
+
+MARKETING:
+  ✓ Mailchimp/Sender (email - 500-2,500 subscribers)
+  ✓ Buffer (social media)
+  ✓ Canva (graphics)
+  ✓ WordPress.com (blog)
+  ✓ YouTube (videos)
+  ✓ Anchor (podcast)
+
+AI TOOLS:
+  ✓ ChatGPT Free (content)
+  ✓ Google Cloud TTS (text-to-speech free tier)
+  ✓ Grammarly Free (grammar)
+
+ANNUAL SAVINGS: $9,570 vs paid alternatives!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💳 WHAT YOU MUST PAY FOR (Can't Avoid)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+YEAR 1 ONLY:
+  1. LLC formation:        $400 (one-time)
+  2. Business insurance:   $600/year
+  3. Domain:               $12/year
+  4. Contract lawyer:      $750 (one-time)
+  5. ElevenLabs Creator:   $264/year ($22/month)
+  6. Stripe fees:          2.9% + 30¢ per sale
+  7. Freelancers:          $300 per book (variable)
+  
+TOTAL FIXED: $1,676/year
+TOTAL VARIABLE: $300 per book + 2.9% sales
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📈 REVENUE STREAMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Publishing Packages ($1,500-2,500)
+   Year 1: $63,000
+   Year 5: $450,000
+
+2. Ongoing Royalties (25% of sales)
+   Year 1: $11,790
+   Year 5: $250,000
+
+3. SaaS Subscriptions ($29-199/month)
+   Year 1: $0
+   Year 5: $600,000
+
+4. Audiobook Production ($500-650)
+   Year 1: $17,500
+   Year 5: $125,000
+
+5. Translation Services ($500-800)
+   Year 2: $12,000
+   Year 5: $75,000
+
+6. Marketing Services (à la carte)
+   Year 2: $9,000
+   Year 5: $50,000
+
+7. Rights Sales (15-20% commission)
+   Year 3: $15,000
+   Year 5: $100,000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🎯 KEY MILESTONES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Month 3:  First $1,000+ revenue month
+✓ Month 6:  $5,000+ revenue month
+✓ Month 12: $10,000+ revenue month (break-even)
+✓ Month 18: $25,000 revenue month
+✓ Month 24: $40,000+ revenue month
+✓ Month 36: $90,000 revenue month
+✓ Year 4:   $70,000+ avg monthly revenue
+✓ Year 5:   $137,500 avg monthly revenue
+✓ Year 5:   $2M+ cash on hand
+✓ Year 5:   Company worth $5M-15M
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ⚡ BREAK-EVEN ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Revenue per package:     $1,500
+Cost per book:           $580
+Profit per book:         $920
+Monthly fixed costs:     $82
+
+Books needed to break even: 1 book
+TIME TO BREAK EVEN: Month 3 (first sale)
+
+✓ PROFITABLE FROM DAY ONE (after first sale)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💪 BOOTSTRAP ROI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+INVEST: $15,000
+
+Year 1:  $18,000 profit    (120% ROI)
+Year 2:  $184,000 profit   (1,227% ROI)
+Year 3:  $619,000 profit   (4,127% ROI)
+Year 5:  $3.1M profit      (20,893% ROI)
+
+Risk:  $15,000
+Reward: $15,000,000 company
+Ratio: 1:1,000
+
+THIS IS ACHIEVABLE!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📝 YOUR 30-DAY ACTION PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WEEK 1:
+□ Form LLC ($400)
+□ Get EIN (free)
+□ Open business bank account (free)
+□ Buy domain ($12)
+□ Get insurance ($50/month)
+
+WEEK 2:
+□ Hire lawyer for contracts ($750)
+□ Set up free tools (Wave, Canva, Trello)
+□ Create logo (Canva free)
+□ Write business plan
+
+WEEK 3:
+□ Build website (GitHub Pages free)
+□ Create author packages
+□ Find freelancers (Fiverr, Upwork)
+□ Set up payment (Stripe)
+
+WEEK 4:
+□ Announce to network
+□ Post in author forums
+□ Start small Facebook ads ($100)
+□ GET FIRST AUTHOR!
+
+INVESTMENT: $2,062
+READY TO PROFIT!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🚀 THE BOTTOM LINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Can you start? YES - with $2,000-3,000
+When profitable? Month 3 (first sale)
+Real money when? $7K+/month by Month 12
+Year 5 result? $1.65M revenue, $1.15M profit, $2M cash
+
+TOTAL NEEDED: $15,000 over 5 years
+TOTAL RETURN: $3,149,000
+YOUR PROFIT: $1,982,650
+
+THIS IS YOUR ROADMAP.
+START TODAY. 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Created for Hannah Pagade | Rohimaya Publishing
+Maximum Free Tools Strategy | Bootstrap Path to $1.65M
+© 2025 | Your Publishing Empire Starts Now
+
+Print this page → Check off boxes → Build your empire!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
