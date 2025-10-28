@@ -9,19 +9,31 @@
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["ai", "publishing", "api"],
+  "keywords": [
+    "ai",
+    "publishing",
+    "api"
+  ],
   "author": "Rohimaya Publishing",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^7.0.1",
     "axios": "^1.13.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "epub-gen-memory": "^1.1.2",
     "express": "^5.1.0",
     "express-validator": "^7.3.0",
+    "fs-extra": "^11.3.2",
     "helmet": "^8.1.0",
+    "mammoth": "^1.11.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
-    "openai": "^6.7.0"
+    "openai": "^6.7.0",
+    "pdf-parse": "^2.4.5",
+    "pdfkit": "^0.17.2",
+    "stripe": "^19.1.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

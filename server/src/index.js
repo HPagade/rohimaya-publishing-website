@@ -11,9 +11,6 @@ import dotenv from 'dotenv';
 
 // Import routes
 import formatterRoutes from './routes/formatter.routes.js';
-import coverRoutes from './routes/cover.routes.js';
-import imageRoutes from './routes/image.routes.js';
-import videoRoutes from './routes/video.routes.js';
 import healthRoutes from './routes/health.routes.js';
 
 // Import middleware
@@ -54,26 +51,19 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Health check
 app.use('/api/health', healthRoutes);
 
-// AI Services
+// AI Formatter Service
 app.use('/api/formatter', formatterRoutes);
-app.use('/api/covers', coverRoutes);
-app.use('/api/images', imageRoutes);
-app.use('/api/videos', videoRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'PhoenixForge AI API Server',
+    message: 'AI Book Formatter API',
     version: '1.0.0',
     status: 'running',
     endpoints: {
       health: '/api/health',
-      formatter: '/api/formatter',
-      covers: '/api/covers',
-      images: '/api/images',
-      videos: '/api/videos'
-    },
-    docs: 'https://docs.phoenixforge.ai'
+      formatter: '/api/formatter'
+    }
   });
 });
 
