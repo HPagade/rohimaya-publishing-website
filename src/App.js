@@ -28,7 +28,6 @@ import AboutPage from './pages/AboutPage';
 
 // App Components (full-screen apps)
 import AIFormatter from './components/formatter/AIFormatter';
-import CreativeSuite from './components/creative/CreativeSuite';
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
         <Routes>
           {/* APPS - Full screen, no header/footer */}
           <Route path="/formatter" element={<AIFormatter />} />
-          <Route path="/creative" element={<CreativeSuite />} />
 
           {/* MARKETING SITE - With header/footer */}
           <Route path="/*" element={
