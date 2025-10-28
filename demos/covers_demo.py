@@ -9,6 +9,7 @@ Run with: streamlit run demos/covers_demo.py
 import streamlit as st
 import time
 from datetime import datetime
+from image_utils import create_book_cover, pil_to_bytes
 
 # Page config
 st.set_page_config(
@@ -206,23 +207,29 @@ with col_preview:
 
         var_col1, var_col2, var_col3 = st.columns(3)
 
+        # Generate actual cover images
+        cover_title = book_title or "Your Book Title"
+        cover_author = author_name or "Author Name"
+        cover_genre = genre
+        cover_style = style
+
         with var_col1:
-            st.image("https://via.placeholder.com/300x450/667eea/ffffff?text=Variation+1",
-                    caption="Variation 1", use_container_width=True)
-            st.image("https://via.placeholder.com/300x450/ff6b6b/ffffff?text=Variation+4",
-                    caption="Variation 4", use_container_width=True)
+            img1 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 1, 400, 600)
+            st.image(img1, caption="Variation 1", use_container_width=True)
+            img4 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 4, 400, 600)
+            st.image(img4, caption="Variation 4", use_container_width=True)
 
         with var_col2:
-            st.image("https://via.placeholder.com/300x450/4ecdc4/ffffff?text=Variation+2",
-                    caption="Variation 2", use_container_width=True)
-            st.image("https://via.placeholder.com/300x450/ffd700/ffffff?text=Variation+5",
-                    caption="Variation 5", use_container_width=True)
+            img2 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 2, 400, 600)
+            st.image(img2, caption="Variation 2", use_container_width=True)
+            img5 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 5, 400, 600)
+            st.image(img5, caption="Variation 5", use_container_width=True)
 
         with var_col3:
-            st.image("https://via.placeholder.com/300x450/764ba2/ffffff?text=Variation+3",
-                    caption="Variation 3", use_container_width=True)
-            st.image("https://via.placeholder.com/300x450/ff9a9e/ffffff?text=Variation+6",
-                    caption="Variation 6", use_container_width=True)
+            img3 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 3, 400, 600)
+            st.image(img3, caption="Variation 3", use_container_width=True)
+            img6 = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 6, 400, 600)
+            st.image(img6, caption="Variation 6", use_container_width=True)
 
         # Download options
         st.markdown("### 📥 Download Options")
@@ -251,8 +258,9 @@ with col_preview:
             with st.spinner("Creating 3D mockup..."):
                 time.sleep(1)
             st.success("✅ 3D mockup ready!")
-            st.image("https://via.placeholder.com/800x600/ffffff/000000?text=3D+Book+Mockup",
-                    caption="Professional 3D mockup", use_container_width=True)
+            # Use one of the generated covers for the mockup
+            mockup_img = create_book_cover(cover_title, cover_author, cover_genre, cover_style, 1, 800, 1200)
+            st.image(mockup_img, caption="Professional 3D mockup", use_container_width=True)
 
     else:
         # Default preview

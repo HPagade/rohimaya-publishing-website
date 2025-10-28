@@ -7,6 +7,7 @@ Run with: streamlit run demos/app.py
 
 import streamlit as st
 from pathlib import Path
+import webbrowser
 
 # Page config
 st.set_page_config(
@@ -38,21 +39,24 @@ st.markdown("""
         border-color: #ff6b6b;
         box-shadow: 0 5px 15px rgba(255,107,107,0.3);
     }
-    .demo-button {
-        width: 100%;
+    .demo-link {
         background: linear-gradient(135deg, #ff6b6b 0%, #764ba2 100%);
-        color: white;
+        color: white !important;
         padding: 0.75rem 1.5rem;
         border-radius: 5px;
-        border: none;
-        font-size: 1rem;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0.5rem 0;
         font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
+        text-align: center;
     }
-    .demo-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+    .command-box {
+        background: #f8f9fa;
+        border-left: 4px solid #ff6b6b;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: monospace;
+        border-radius: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -70,11 +74,49 @@ st.markdown("""
 st.markdown("## Welcome to the PhoenixForge Demo Suite!")
 
 st.info("""
-👋 **Hi Prasad!** This is a working demonstration of the PhoenixForge AI platform.
-Each demo shows a real, functioning product that we can build and launch.
+👋 **Welcome!** This is a working demonstration of the PhoenixForge AI platform.
+Each demo shows a real, functioning product.
 
-**All demos use FREE tools and APIs** - perfect for bootstrapping!
+**All demos work in MOCK MODE** - No API keys required for testing!
 """)
+
+# Quick Start Instructions
+with st.expander("🚀 Quick Start - How to Run Demos", expanded=True):
+    st.markdown("""
+    ### Option 1: Use the RUN_DEMOS.sh Launcher (Easiest!)
+
+    ```bash
+    cd rohimaya-publishing-website
+    bash demos/RUN_DEMOS.sh
+    ```
+
+    Then select which demo you want from the menu!
+
+    ### Option 2: Run Individual Demos
+
+    Open a new terminal and run:
+    """)
+
+    demo_commands = {
+        "📄 Format Demo": "streamlit run demos/format_demo.py",
+        "🎨 Covers Demo": "streamlit run demos/covers_demo.py",
+        "🖼️ Images Demo": "streamlit run demos/images_demo.py",
+        "🎬 Videos Demo": "streamlit run demos/videos_demo.py"
+    }
+
+    for demo_name, command in demo_commands.items():
+        st.code(command, language="bash")
+
+    st.markdown("""
+    ### Option 3: Deploy to Streamlit Cloud
+
+    1. Go to https://share.streamlit.io
+    2. Connect your GitHub repository
+    3. Select the demo file (e.g., `demos/format_demo.py`)
+    4. Click Deploy!
+
+    Each demo will get its own URL like `https://your-app.streamlit.app`
+    """)
 
 # Product showcase
 st.markdown("## 🎨 Our Products")
@@ -96,8 +138,12 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("📄 Try Format Demo", key="format", use_container_width=True):
-        st.markdown("👉 **Run:** `streamlit run demos/format_demo.py`")
+    st.markdown("""
+    <div class="command-box">
+        💡 <strong>To Try This Demo:</strong><br>
+        <code>streamlit run demos/format_demo.py</code>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="product-card">
@@ -113,8 +159,12 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("🖼️ Try Images Demo", key="images", use_container_width=True):
-        st.markdown("👉 **Run:** `streamlit run demos/images_demo.py`")
+    st.markdown("""
+    <div class="command-box">
+        💡 <strong>To Try This Demo:</strong><br>
+        <code>streamlit run demos/images_demo.py</code>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("""
@@ -131,8 +181,12 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("🎨 Try Covers Demo", key="covers", use_container_width=True):
-        st.markdown("👉 **Run:** `streamlit run demos/covers_demo.py`")
+    st.markdown("""
+    <div class="command-box">
+        💡 <strong>To Try This Demo:</strong><br>
+        <code>streamlit run demos/covers_demo.py</code>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="product-card">
@@ -148,8 +202,12 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("🎬 Try Videos Demo", key="videos", use_container_width=True):
-        st.markdown("👉 **Run:** `streamlit run demos/videos_demo.py`")
+    st.markdown("""
+    <div class="command-box">
+        💡 <strong>To Try This Demo:</strong><br>
+        <code>streamlit run demos/videos_demo.py</code>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Subscription tiers
 st.markdown("---")
@@ -197,124 +255,93 @@ with tier_col3:
     - Team accounts (10 users)
     - API access
     - White-label option
-    - 24/7 support
+    - Dedicated support
 
-    **Profit: $74/user** 💰
+    **Profit: $89/user** 💰
     """)
 
 # Revenue projections
 st.markdown("---")
 st.markdown("## 📊 Revenue Projections")
 
-projection_data = {
-    "Year": ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5"],
-    "Revenue": ["$124K", "$693K", "$1.87M", "$3.39M", "$5.32M"],
-    "Profit": ["$89K", "$393K", "$1.02M", "$1.69M", "$2.72M"],
-    "Users": ["500", "2,000", "5,000", "8,000", "10,000"],
-}
+import pandas as pd
 
-st.table(projection_data)
+projections = pd.DataFrame({
+    "Year": [1, 2, 3, 4, 5],
+    "Users": [50, 250, 750, 1500, 3000],
+    "Revenue": ["$24K", "$124K", "$372K", "$744K", "$1.49M"],
+    "Profit": ["$18K", "$93K", "$279K", "$558K", "$1.12M"]
+})
+
+st.table(projections)
 
 st.success("""
-### 🎯 5-Year Outcome:
-- **Total Revenue:** $11.4M+
-- **Total Profit:** $5.9M+
-- **Company Valuation:** $20M-50M+
-- **Market Position:** Industry Leader
+🎯 **Break-Even:** Month 2 (~20 users)
+💰 **First $100K Year:** Year 2 (250 users)
+🚀 **Million Dollar Revenue:** Year 4 (1,500 users)
 """)
 
-# How to run demos
+# Investment ask
 st.markdown("---")
-st.markdown("## 🚀 How to Run These Demos")
+st.markdown("## 💼 Investment Requirements")
 
 st.markdown("""
-### Step 1: Install Requirements
-```bash
-cd /home/user/rohimaya-publishing-website
-pip install -r demos/requirements.txt
-```
+### 🎯 Seed Round: $50,000
 
-### Step 2: Set Up API Keys (Optional for Basic Demo)
-```bash
-cp demos/.env.example demos/.env
-# Edit demos/.env and add your OpenAI API key
-# Get free $5 credit at: https://platform.openai.com/
-```
+**Use of Funds:**
+- 💻 **Product Development** - $20K (40%)
+  - Backend API integration
+  - Database & user management
+  - Payment processing
+  - Mobile apps
 
-### Step 3: Run Any Demo
-```bash
-# Main launcher (this page)
-streamlit run demos/app.py
+- 🎨 **Design & Branding** - $10K (20%)
+  - Professional logo & branding
+  - UI/UX improvements
+  - Marketing materials
 
-# Individual demos
-streamlit run demos/format_demo.py
-streamlit run demos/covers_demo.py
-streamlit run demos/images_demo.py
-streamlit run demos/videos_demo.py
-```
+- 📣 **Marketing** - $15K (30%)
+  - Content marketing
+  - Social media ads
+  - Influencer partnerships
+  - SEO & SEM
 
-### 💡 Demo Features:
-- ✅ **Mock Mode:** Works without API keys (simulated)
-- ✅ **Real Mode:** Connect OpenAI API for actual AI generation
-- ✅ **Free Tools:** Everything uses free or freemium services
-- ✅ **Production-Ready:** These are real, working prototypes
+- 💰 **Operations** - $5K (10%)
+  - Legal (incorporation, terms)
+  - Accounting
+  - Insurance
+  - Contingency
+
+**Timeline:** 6 months to full launch
+**Expected ROI:** 3-5x within 2 years
 """)
-
-# Investment requirements
-st.markdown("---")
-st.markdown("## 💰 Investment Requirements")
-
-col_a, col_b = st.columns(2)
-
-with col_a:
-    st.markdown("""
-    ### Starting Capital Needed:
-    - **Minimum:** $2,000-3,000
-    - **Comfortable:** $5,000-10,000
-    - **Ideal:** $15,000
-
-    ### Month 1 Costs:
-    - LLC formation: $400
-    - Domain: $12
-    - Insurance: $50/month
-    - OpenAI API: $50-100
-    - **Total:** ~$600
-    """)
-
-with col_b:
-    st.markdown("""
-    ### Timeline to Profitability:
-    - **Month 3:** First revenue ($3K-5K)
-    - **Month 6:** $10K-15K/month
-    - **Month 12:** $30K-40K/month
-    - **Year 2:** $60K+/month
-
-    ### ROI:
-    - **Year 1:** 254% return
-    - **Year 5:** 35,300% return 🚀
-    """)
 
 # Call to action
 st.markdown("---")
-st.markdown("""
-<div style="background: linear-gradient(135deg, #ff6b6b 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; text-align: center; color: white;">
-    <h2>🔥 Ready to Build the Future of Author Tools?</h2>
-    <p style="font-size: 1.2rem; margin: 1rem 0;">
-        These demos show REAL, working products we can launch in 90 days.
-    </p>
-    <p style="font-size: 1.2rem; margin: 1rem 0;">
-        Starting with just $2,000-3,000, we can build a $5M+ business.
-    </p>
-    <h3>Where Stories Take Shape 🚀📚✨</h3>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("## 🚀 Ready to Explore?")
+
+st.info("""
+### Try the Demos Now!
+
+Run the launcher script in your terminal:
+
+```bash
+bash demos/RUN_DEMOS.sh
+```
+
+Or run individual demos with the commands shown above! ⬆️
+
+### Questions?
+📧 Email: support@phoenixforge.ai
+🌐 Website: https://phoenixforge.ai
+📚 Docs: See `demos/DEPLOYMENT.md` for full setup guide
+""")
 
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style="text-align: center; color: #666; padding: 1rem;">
-    <p><strong>PhoenixForge AI Demo Suite</strong></p>
-    <p>Created for Hannah Pagade | Rohimaya Publishing</p>
-    <p>© 2025 | Revolutionary AI Creative Suite for Authors</p>
+<div style="text-align: center; color: #999; padding: 2rem 0;">
+    <p>🔥 <strong>PhoenixForge AI</strong> - Where Stories Take Shape</p>
+    <p>Built with ❤️ by the Rohimaya Publishing team</p>
 </div>
 """, unsafe_allow_html=True)
