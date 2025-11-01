@@ -11,16 +11,23 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ClerkProvider } from '@clerk/clerk-react';
 import './index.css';
 import App from './App';
+
+// Get Clerk publishable key from environment
+const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 // Get the root element from HTML (see public/index.html)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // Render our app inside React.StrictMode
 // StrictMode helps catch potential problems during development
+// ClerkProvider wraps the app to provide authentication
 root.render(
   <React.StrictMode>
-    <App />
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <App />
+    </ClerkProvider>
   </React.StrictMode>
 );
