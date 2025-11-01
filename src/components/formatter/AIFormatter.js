@@ -16,8 +16,11 @@
  * - Mammoth.js for Word doc parsing
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './AIFormatter.css';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AIFormatter() {
   // STATE
@@ -27,6 +30,47 @@ function AIFormatter() {
   const [formattedContent, setFormattedContent] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [jobId, setJobId] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [processingStatus, setProcessingStatus] = useState('');
+  const [selectedExports, setSelectedExports] = useState(['pdf', 'kindle']);
+  const [voice, setVoice] = useState('nova');
+  const [availableVoices, setAvailableVoices] = useState([]);
+
+  // Metadata from form
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [genre, setGenre] = useState('fiction');
+
+  // Load available voices on mount
+  useEffect(() => {
+    loadVoices();
+  }, []);
+
+  // Poll for job status when processing
+  useEffect(() => {
+    let interval;
+    if (step === 'processing' && jobId) {
+      interval = setInterval(() => {
+        checkJobStatus();
+      }, 2000); // Check every 2 seconds
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [step, jobId]);
+
+  // Load available voices
+  const loadVoices = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/formatter/voices`);
+      if (response.data.success) {
+        setAvailableVoices(response.data.data.voices);
+      }
+    } catch (error) {
+      console.error('Failed to load voices:', error);
+    }
+  };
 
   // STEP 1: Handle file upload
   const handleFileUpload = async (e) => {
@@ -46,71 +90,215 @@ function AIFormatter() {
       return;
     }
 
+    // Validate file size (50MB max)
+    if (file.size > 52428800) {
+      setError('File size must be less than 50MB');
+      return;
+    }
+
     setFileName(file.name);
+    setManuscript(file);
     setError('');
 
-    // Read file
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setManuscript(event.target.result);
-      console.log('File loaded:', file.name);
-    };
-
-    if (file.type === 'text/plain') {
-      reader.readAsText(file);
-    } else {
-      reader.readAsArrayBuffer(file);
+    // Auto-fill title from filename if empty
+    if (!title) {
+      const nameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
+      setTitle(nameWithoutExt);
     }
   };
 
-  // STEP 2: Process with AI
-  const processWithAI = async () => {
+  // STEP 2: Upload to backend and analyze
+  const uploadAndAnalyze = async () => {
+    if (!manuscript) {
+      setError('Please select a file first');
+      return;
+    }
+
+    if (!title.trim()) {
+      setError('Please enter a title');
+      return;
+    }
+
     setIsProcessing(true);
     setStep('processing');
+    setProcessingStatus('Uploading manuscript...');
+    setError('');
 
     try {
-      // TODO: Call backend API to process with OpenAI
-      // For now, simulate processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', manuscript);
+      formData.append('title', title);
+      formData.append('author', author || 'Unknown Author');
+      formData.append('genre', genre);
 
-      // Mock formatted content
-      const formatted = {
-        title: 'Your Book Title',
-        chapters: [
-          {
-            number: 1,
-            title: 'Chapter One: The Beginning',
-            content: 'Lorem ipsum dolor sit amet...'
+      // Upload and analyze
+      const response = await axios.post(
+        `${API_BASE_URL}/api/formatter/upload`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-          {
-            number: 2,
-            title: 'Chapter Two: Rising Action',
-            content: 'Consectetur adipiscing elit...'
-          }
-        ],
-        metadata: {
-          wordCount: 50000,
-          pageCount: 200,
-          readingTime: '4 hours'
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+          },
         }
-      };
+      );
 
-      setFormattedContent(formatted);
-      setStep('editing');
+      if (response.data.success) {
+        const { jobId: newJobId, wordCount, chapterCount, chapters } = response.data.data;
+
+        setJobId(newJobId);
+        setFormattedContent({
+          title,
+          author: author || 'Unknown Author',
+          wordCount,
+          chapterCount,
+          chapters: chapters || [],
+          pageCount: Math.ceil(wordCount / 250), // Rough estimate
+          readingTime: `${Math.ceil(wordCount / 200)} minutes`
+        });
+
+        setProcessingStatus('Analysis complete!');
+        setStep('editing');
+      } else {
+        throw new Error(response.data.error || 'Upload failed');
+      }
     } catch (err) {
-      setError('Processing failed: ' + err.message);
+      console.error('Upload error:', err);
+      setError(err.response?.data?.error || err.message || 'Upload failed');
       setStep('upload');
     } finally {
+      setIsProcessing(false);
+      setUploadProgress(0);
+    }
+  };
+
+  // STEP 3: Process exports (PDF, Kindle, Audiobook)
+  const processExports = async () => {
+    if (!jobId) {
+      setError('No job found. Please upload a manuscript first.');
+      return;
+    }
+
+    if (selectedExports.length === 0) {
+      setError('Please select at least one export format');
+      return;
+    }
+
+    setIsProcessing(true);
+    setStep('processing');
+    setProcessingStatus('Generating exports...');
+    setError('');
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/formatter/process`,
+        {
+          jobId,
+          exports: selectedExports,
+          voice: selectedExports.includes('audiobook') ? voice : undefined,
+          speed: 1.0
+        }
+      );
+
+      if (response.data.success) {
+        setProcessingStatus('Processing started...');
+        // Status will be updated by polling
+      } else {
+        throw new Error(response.data.error || 'Processing failed');
+      }
+    } catch (err) {
+      console.error('Processing error:', err);
+      setError(err.response?.data?.error || err.message || 'Processing failed');
+      setStep('editing');
       setIsProcessing(false);
     }
   };
 
-  // STEP 3: Export formatted book
-  const exportBook = async (format) => {
-    console.log('Exporting as:', format);
+  // Check job status
+  const checkJobStatus = async () => {
+    if (!jobId) return;
 
-    // TODO: Generate actual files
-    alert(`Export as ${format} - Coming soon!`);
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/formatter/status/${jobId}`
+      );
+
+      if (response.data.success) {
+        const { status, progress, exports: completedExports, error: jobError } = response.data.data;
+
+        if (status === 'completed') {
+          setIsProcessing(false);
+          setStep('export');
+          setProcessingStatus('All exports complete!');
+          setFormattedContent(prev => ({
+            ...prev,
+            exports: completedExports
+          }));
+        } else if (status === 'failed') {
+          setIsProcessing(false);
+          setError(jobError || 'Processing failed');
+          setStep('editing');
+        } else {
+          setProcessingStatus(`Processing... ${progress || 0}%`);
+        }
+      }
+    } catch (err) {
+      console.error('Status check error:', err);
+    }
+  };
+
+  // Download export
+  const downloadExport = async (exportType) => {
+    if (!jobId) return;
+
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/formatter/download/${jobId}/${exportType}`,
+        {
+          responseType: 'blob'
+        }
+      );
+
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Set filename based on export type
+      const extension = exportType === 'kindle' ? 'epub' : exportType === 'audiobook' ? 'zip' : exportType;
+      link.setAttribute('download', `${title.replace(/[^a-z0-9]/gi, '_')}.${extension}`);
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(`Failed to download ${exportType}: ${err.message}`);
+    }
+  };
+
+  // Reset to start over
+  const startOver = () => {
+    setStep('upload');
+    setManuscript(null);
+    setFileName('');
+    setFormattedContent(null);
+    setIsProcessing(false);
+    setError('');
+    setJobId(null);
+    setUploadProgress(0);
+    setProcessingStatus('');
+    setTitle('');
+    setAuthor('');
+    setGenre('fiction');
+    setSelectedExports(['pdf', 'kindle']);
   };
 
   // RENDER: Different UI based on current step
@@ -150,9 +338,9 @@ function AIFormatter() {
                   <p>✓ Selected: <strong>{fileName}</strong></p>
                   <button
                     className="btn btn-primary"
-                    onClick={processWithAI}
+                    onClick={uploadAndAnalyze}
                   >
-                    Start AI Formatting →
+                    Analyze Manuscript →
                   </button>
                 </div>
               )}
@@ -236,25 +424,25 @@ function AIFormatter() {
                 <div className="export-buttons">
                   <button
                     className="export-btn"
-                    onClick={() => exportBook('epub')}
+                    onClick={() => downloadExport('epub')}
                   >
                     📱 ePub
                   </button>
                   <button
                     className="export-btn"
-                    onClick={() => exportBook('pdf')}
+                    onClick={() => downloadExport('pdf')}
                   >
                     📄 PDF
                   </button>
                   <button
                     className="export-btn"
-                    onClick={() => exportBook('kindle')}
+                    onClick={() => downloadExport('kindle')}
                   >
                     📚 Kindle
                   </button>
                   <button
                     className="export-btn"
-                    onClick={() => exportBook('print')}
+                    onClick={() => downloadExport('print')}
                   >
                     🖨️ Print Ready
                   </button>
