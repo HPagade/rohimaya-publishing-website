@@ -33,6 +33,8 @@ import AIFormatter from './components/formatter/AIFormatter';
 import AICovers from './components/covers/AICovers';
 import AIImages from './components/images/AIImages';
 import AIVideos from './components/videos/AIVideos';
+import CookbookFormatter from './components/health/CookbookFormatter';
+import HealthContent from './components/health/HealthContent';
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
           <Route path="/covers" element={<AICovers />} />
           <Route path="/images" element={<AIImages />} />
           <Route path="/videos" element={<AIVideos />} />
+          <Route path="/cookbook" element={<CookbookFormatter />} />
+          <Route path="/health-content" element={<HealthContent />} />
 
           {/* MARKETING SITE - With header/footer */}
           <Route path="/*" element={

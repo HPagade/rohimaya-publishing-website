@@ -52,6 +52,12 @@ function Header() {
             <Link to="/videos" className="nav-link highlight">
               🎬 Videos
             </Link>
+            <Link to="/cookbook" className="nav-link highlight">
+              🍳 Cookbook
+            </Link>
+            <Link to="/health-content" className="nav-link highlight">
+              🏥 Health
+            </Link>
             <Link to="/pricing" className="nav-link">Pricing</Link>
             <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </nav>
@@ -84,6 +90,12 @@ function Header() {
             </Link>
             <Link to="/videos" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
               🎬 Videos
+            </Link>
+            <Link to="/cookbook" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🍳 Cookbook
+            </Link>
+            <Link to="/health-content" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🏥 Health
             </Link>
             <Link to="/pricing" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               Pricing

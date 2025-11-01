@@ -50,15 +50,16 @@ function HomePage() {
               <span className="highlight-peacock">Magic</span>
             </h1>
             <p className="hero-subtitle">
-              Discover enchanting cookbooks, epic fantasy romance, and tales
-              that celebrate culture, love, and the extraordinary in the everyday.
+              Discover enchanting cookbooks, epic fantasy romance, and powerful publishing tools.
+              From AI-powered formatting to nutrition analysis, we help authors create
+              professional books in any genre.
             </p>
             <div className="hero-buttons">
               <Link to="/books" className="btn btn-primary btn-large">
                 Explore Our Books
               </Link>
-              <Link to="/ai-formatter" className="btn btn-secondary btn-large">
-                Try AI Formatter ✨
+              <Link to="/formatter" className="btn btn-secondary btn-large">
+                Try AI Tools Free ✨
               </Link>
             </div>
           </div>
@@ -119,33 +120,40 @@ function HomePage() {
         </div>
       </section>
 
-      {/* AI FORMATTER FEATURE */}
+      {/* AI PUBLISHING PLATFORM FEATURE */}
       <section className="section ai-formatter-promo">
         <div className="container">
           <div className="promo-content">
             <div className="promo-text">
-              <h2>✨ AI Book Formatter</h2>
-              <h3>Format Your Manuscript in Minutes, Not Hours</h3>
+              <h2>🔥 PhoenixForge Platform</h2>
+              <h3>Complete AI Publishing Suite for Authors</h3>
               <p>
-                Revolutionary AI-powered tool for authors. Upload your manuscript,
-                and let AI handle formatting, chapter breaks, image placement, and
-                export to multiple formats (ePub, PDF, Kindle-ready).
+                Revolutionary AI-powered platform for authors, cookbook writers, and wellness creators.
+                Everything you need to publish professional books - formatting, covers, images, videos,
+                nutrition analysis, and health content generation.
               </p>
               <ul className="feature-list">
-                <li>🤖 Smart AI formatting</li>
-                <li>📷 Intelligent image placement</li>
-                <li>📱 Export to all major formats</li>
-                <li>⚡ Save hours of tedious work</li>
+                <li>📚 Smart AI manuscript formatting</li>
+                <li>🎨 Professional cover generation</li>
+                <li>🖼️ Custom image creation</li>
+                <li>🎬 Video book trailers</li>
+                <li>🍳 Cookbook formatting & nutrition analysis</li>
+                <li>🏥 Health content & medical citations</li>
               </ul>
-              <Link to="/ai-formatter" className="btn btn-primary btn-large">
-                Try It Free →
-              </Link>
+              <div className="hero-buttons" style={{ marginTop: '1.5rem' }}>
+                <Link to="/formatter" className="btn btn-primary btn-large">
+                  Try Free Tools →
+                </Link>
+                <Link to="/pricing" className="btn btn-secondary btn-large">
+                  View Pricing
+                </Link>
+              </div>
             </div>
             <div className="promo-visual">
               <div className="ai-demo-box">
-                <p className="demo-text">Upload Manuscript →</p>
+                <p className="demo-text">Upload Your Content →</p>
                 <p className="demo-text">AI Magic ✨</p>
-                <p className="demo-text">→ Perfect Format!</p>
+                <p className="demo-text">→ Professional Book!</p>
               </div>
             </div>
           </div>
