@@ -25,6 +25,8 @@ import HomePage from './pages/HomePage';
 import BooksPage from './pages/BooksPage';
 import AIFormatterPage from './pages/AIFormatterPage';
 import AboutPage from './pages/AboutPage';
+import PricingPage from './pages/PricingPage';
+import DashboardPage from './pages/DashboardPage';
 
 // App Components (full-screen apps)
 import AIFormatter from './components/formatter/AIFormatter';
@@ -53,6 +55,8 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/books" element={<BooksPage />} />
                   <Route path="/ai-formatter" element={<AIFormatterPage />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/about" element={<AboutPage />} />
                 </Routes>
               </main>

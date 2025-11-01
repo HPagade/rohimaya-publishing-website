@@ -15,6 +15,7 @@ import healthRoutes from './routes/health.routes.js';
 import coversRoutes from './routes/covers.routes.js';
 import imagesRoutes from './routes/images.routes.js';
 import videosRoutes from './routes/videos.routes.js';
+import subscriptionRoutes from './routes/subscription.routes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -54,6 +55,9 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Health check
 app.use('/api/health', healthRoutes);
 
+// Subscription & Billing
+app.use('/api/subscription', subscriptionRoutes);
+
 // AI Services
 app.use('/api/formatter', formatterRoutes);
 app.use('/api/covers', coversRoutes);
@@ -64,10 +68,11 @@ app.use('/api/videos', videosRoutes);
 app.get('/', (req, res) => {
   res.json({
     message: 'PhoenixForge AI - Complete Publishing Suite',
-    version: '2.0.0',
+    version: '3.0.0',
     status: 'running',
     endpoints: {
       health: '/api/health',
+      subscription: '/api/subscription',
       formatter: '/api/formatter',
       covers: '/api/covers',
       images: '/api/images',
@@ -77,7 +82,9 @@ app.get('/', (req, res) => {
       'AI Manuscript Formatting',
       'AI Cover Generation',
       'AI Image Creation',
-      'AI Video Trailers'
+      'AI Video Trailers',
+      'Subscription Management',
+      'Usage Tracking'
     ]
   });
 });

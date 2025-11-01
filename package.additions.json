@@ -1,0 +1,6 @@
+{
+  "comment": "Add these dependencies to your root package.json (frontend)",
+  "dependencies": {
+    "@clerk/clerk-react": "^4.30.0"
+  }
+}

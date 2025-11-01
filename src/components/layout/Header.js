@@ -40,7 +40,6 @@ function Header() {
           {/* DESKTOP NAVIGATION */}
           <nav className="nav-desktop">
             <Link to="/" className="nav-link">Home</Link>
-            <Link to="/books" className="nav-link">Books</Link>
             <Link to="/formatter" className="nav-link highlight">
               📚 Formatter
             </Link>
@@ -53,7 +52,8 @@ function Header() {
             <Link to="/videos" className="nav-link highlight">
               🎬 Videos
             </Link>
-            <Link to="/about" className="nav-link">About</Link>
+            <Link to="/pricing" className="nav-link">Pricing</Link>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </nav>
 
           {/* MOBILE MENU BUTTON */}
@@ -73,9 +73,6 @@ function Header() {
             <Link to="/" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
-            <Link to="/books" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
-              Books
-            </Link>
             <Link to="/formatter" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
               📚 Formatter
             </Link>
@@ -88,8 +85,11 @@ function Header() {
             <Link to="/videos" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
               🎬 Videos
             </Link>
-            <Link to="/about" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
-              About
+            <Link to="/pricing" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
+              Pricing
+            </Link>
+            <Link to="/dashboard" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
+              Dashboard
             </Link>
           </nav>
         )}

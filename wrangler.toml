@@ -1,0 +1,13 @@
+# Cloudflare Pages Configuration
+name = "phoenixforge-ai"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "npm run build"
+cwd = "/"
+
+[build.upload]
+format = "service-worker"
+
+[[pages_build_output_dir]]
+value = "build"
