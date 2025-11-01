@@ -44,8 +44,14 @@ function Header() {
             <Link to="/formatter" className="nav-link highlight">
               📚 Formatter
             </Link>
-            <Link to="/creative" className="nav-link highlight">
-              🎨 Creative Suite
+            <Link to="/covers" className="nav-link highlight">
+              🎨 Covers
+            </Link>
+            <Link to="/images" className="nav-link highlight">
+              🖼️ Images
+            </Link>
+            <Link to="/videos" className="nav-link highlight">
+              🎬 Videos
             </Link>
             <Link to="/about" className="nav-link">About</Link>
           </nav>
@@ -73,8 +79,14 @@ function Header() {
             <Link to="/formatter" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
               📚 Formatter
             </Link>
-            <Link to="/creative" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
-              🎨 Creative Suite
+            <Link to="/covers" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎨 Covers
+            </Link>
+            <Link to="/images" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🖼️ Images
+            </Link>
+            <Link to="/videos" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎬 Videos
             </Link>
             <Link to="/about" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               About

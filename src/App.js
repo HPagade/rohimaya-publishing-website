@@ -28,6 +28,9 @@ import AboutPage from './pages/AboutPage';
 
 // App Components (full-screen apps)
 import AIFormatter from './components/formatter/AIFormatter';
+import AICovers from './components/covers/AICovers';
+import AIImages from './components/images/AIImages';
+import AIVideos from './components/videos/AIVideos';
 
 function App() {
   return (
@@ -37,6 +40,9 @@ function App() {
         <Routes>
           {/* APPS - Full screen, no header/footer */}
           <Route path="/formatter" element={<AIFormatter />} />
+          <Route path="/covers" element={<AICovers />} />
+          <Route path="/images" element={<AIImages />} />
+          <Route path="/videos" element={<AIVideos />} />
 
           {/* MARKETING SITE - With header/footer */}
           <Route path="/*" element={
