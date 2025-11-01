@@ -35,6 +35,8 @@ import AIImages from './components/images/AIImages';
 import AIVideos from './components/videos/AIVideos';
 import CookbookFormatter from './components/health/CookbookFormatter';
 import HealthContent from './components/health/HealthContent';
+import AudiobookGenerator from './components/audiobook/AudiobookGenerator';
+import MarketingSuite from './components/marketing/MarketingSuite';
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
           <Route path="/videos" element={<AIVideos />} />
           <Route path="/cookbook" element={<CookbookFormatter />} />
           <Route path="/health-content" element={<HealthContent />} />
+          <Route path="/audiobook" element={<AudiobookGenerator />} />
+          <Route path="/marketing" element={<MarketingSuite />} />
 
           {/* MARKETING SITE - With header/footer */}
           <Route path="/*" element={
