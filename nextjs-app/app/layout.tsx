@@ -5,8 +5,8 @@ import { createServerClient } from '@/lib/supabase/server'
 import AuthButton from '@/components/AuthButton'
 
 export const metadata: Metadata = {
-  title: 'PhoenixForge - AI Book Formatter & Audiobook Generator',
-  description: 'Format your manuscript and create audiobooks in minutes with AI',
+  title: 'PhoenixForge - AI Publishing Platform | Format, Audiobooks & Covers',
+  description: 'Transform your manuscript with AI: Professional formatting, audiobook generation, and stunning book covers in minutes',
 }
 
 export default async function RootLayout({

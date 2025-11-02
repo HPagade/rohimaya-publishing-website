@@ -70,8 +70,7 @@ export default async function DashboardPage() {
       color: 'bg-pink-500',
       usage: usage?.covers_used || 0,
       limit: limits.covers,
-      phase: 2,
-      comingSoon: true,
+      phase: 1,
     },
     {
       name: 'AI Images',
@@ -172,10 +171,15 @@ export default async function DashboardPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Jobs</p>
-                <p className="text-2xl font-bold text-gray-900">{recentJobs?.length || 0}</p>
+                <p className="text-sm text-gray-600">Covers Generated</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {usage?.covers_used || 0}
+                  <span className="text-sm text-gray-500">
+                    {limits.covers === -1 ? ' / ∞' : ` / ${limits.covers}`}
+                  </span>
+                </p>
               </div>
-              <Crown className="h-12 w-12 text-orange-500" />
+              <Image className="h-12 w-12 text-pink-500" />
             </div>
           </div>
         </div>

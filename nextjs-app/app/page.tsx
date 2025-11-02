@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Zap, DollarSign, Clock } from 'lucide-react'
+import { ArrowRight, Zap, DollarSign, Clock, FileText, Headphones, Image } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -7,11 +7,11 @@ export default function HomePage() {
       {/* Hero */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="text-6xl font-bold mb-6">
-          Format Your Book in <span className="text-orange-500">5 Minutes</span>
+          Transform Your Manuscript with <span className="bg-gradient-to-r from-orange-500 to-purple-600 bg-clip-text text-transparent">AI</span>
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Upload your manuscript. Get professionally formatted PDF, EPUB, and audiobooks.
-          Powered by AI. No design skills required.
+          Professional formatting, audiobook narration, and stunning book covers—all in minutes.
+          Powered by AI. No design or technical skills required.
         </p>
         <div className="flex gap-4 justify-center">
           <Link href="/signup" className="bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 flex items-center gap-2">
@@ -27,22 +27,46 @@ export default function HomePage() {
       {/* Features */}
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-4">Complete AI Publishing Suite</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Everything you need to transform your manuscript into a professional, market-ready book
+          </p>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-sm">
-              <div className="text-4xl mb-4">📄</div>
-              <h3 className="text-2xl font-semibold mb-3">1. Upload</h3>
-              <p className="text-gray-600">Upload your .docx, .pdf, or .txt manuscript. We support up to 300 pages.</p>
+            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border-t-4 border-blue-500">
+              <FileText className="text-blue-500 mb-4" size={48} />
+              <h3 className="text-2xl font-semibold mb-3">AI Formatter</h3>
+              <p className="text-gray-600 mb-4">
+                Industry-standard formatting with automatic chapter detection, heading styles, and table of contents.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li>✓ PDF, EPUB, Kindle formats</li>
+                <li>✓ Professional layouts</li>
+                <li>✓ 5-minute processing</li>
+              </ul>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm">
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-semibold mb-3">2. AI Formats</h3>
-              <p className="text-gray-600">Our AI detects chapters, formats headings, and creates professional layouts.</p>
+            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border-t-4 border-purple-500">
+              <Headphones className="text-purple-500 mb-4" size={48} />
+              <h3 className="text-2xl font-semibold mb-3">Audiobook Generator</h3>
+              <p className="text-gray-600 mb-4">
+                Transform your book into professional audiobooks with AI narration in multiple voices.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li>✓ 6 professional voices</li>
+                <li>✓ Chapter-by-chapter generation</li>
+                <li>✓ HD audio quality</li>
+              </ul>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm">
-              <div className="text-4xl mb-4">📥</div>
-              <h3 className="text-2xl font-semibold mb-3">3. Download</h3>
-              <p className="text-gray-600">Get PDF, EPUB, and Kindle files ready to publish on Amazon KDP or anywhere.</p>
+            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border-t-4 border-pink-500">
+              <Image className="text-pink-500 mb-4" size={48} />
+              <h3 className="text-2xl font-semibold mb-3">Book Cover Creator</h3>
+              <p className="text-gray-600 mb-4">
+                Stunning book covers with AI art generation and text optimization for maximum impact.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li>✓ Front, back & spine designs</li>
+                <li>✓ AI-optimized copy</li>
+                <li>✓ Print-ready quality</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -59,8 +83,8 @@ export default function HomePage() {
             </div>
             <div>
               <DollarSign className="mx-auto mb-4 text-orange-500" size={48} />
-              <h3 className="text-2xl font-semibold mb-2">Save Money</h3>
-              <p className="text-gray-600">$29/month vs $300+ per book from designers</p>
+              <h3 className="text-2xl font-semibold mb-2">Save Thousands</h3>
+              <p className="text-gray-600">$29/month vs $1000+ for formatter, narrator, and designer</p>
             </div>
             <div>
               <Zap className="mx-auto mb-4 text-orange-500" size={48} />
@@ -74,11 +98,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="bg-gradient-to-r from-orange-500 to-purple-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Format Your Book?</h2>
-          <p className="text-xl mb-8 opacity-90">Join hundreds of authors who trust PhoenixForge</p>
-          <Link href="/signup" className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 inline-flex items-center gap-2">
-            Get Started Free <ArrowRight size={20} />
+          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Manuscript?</h2>
+          <p className="text-xl mb-8 opacity-90">Join authors who publish faster and smarter with PhoenixForge AI</p>
+          <Link href="/signup" className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 inline-flex items-center gap-2 text-lg">
+            Start Free Today <ArrowRight size={20} />
           </Link>
+          <p className="mt-4 text-sm opacity-75">✓ Free tier available • ✓ All 3 tools included • ✓ No credit card required</p>
         </div>
       </section>
     </main>
