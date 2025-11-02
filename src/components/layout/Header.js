@@ -40,14 +40,32 @@ function Header() {
           {/* DESKTOP NAVIGATION */}
           <nav className="nav-desktop">
             <Link to="/" className="nav-link">Home</Link>
-            <Link to="/books" className="nav-link">Books</Link>
             <Link to="/formatter" className="nav-link highlight">
               📚 Formatter
             </Link>
-            <Link to="/creative" className="nav-link highlight">
-              🎨 Creative Suite
+            <Link to="/covers" className="nav-link highlight">
+              🎨 Covers
             </Link>
-            <Link to="/about" className="nav-link">About</Link>
+            <Link to="/images" className="nav-link highlight">
+              🖼️ Images
+            </Link>
+            <Link to="/videos" className="nav-link highlight">
+              🎬 Videos
+            </Link>
+            <Link to="/cookbook" className="nav-link highlight">
+              🍳 Cookbook
+            </Link>
+            <Link to="/health-content" className="nav-link highlight">
+              🏥 Health
+            </Link>
+            <Link to="/audiobook" className="nav-link highlight">
+              🎙️ Audiobook
+            </Link>
+            <Link to="/marketing" className="nav-link highlight">
+              📢 Marketing
+            </Link>
+            <Link to="/pricing" className="nav-link">Pricing</Link>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </nav>
 
           {/* MOBILE MENU BUTTON */}
@@ -67,17 +85,35 @@ function Header() {
             <Link to="/" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
-            <Link to="/books" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
-              Books
-            </Link>
             <Link to="/formatter" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
               📚 Formatter
             </Link>
-            <Link to="/creative" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
-              🎨 Creative Suite
+            <Link to="/covers" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎨 Covers
             </Link>
-            <Link to="/about" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
-              About
+            <Link to="/images" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🖼️ Images
+            </Link>
+            <Link to="/videos" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎬 Videos
+            </Link>
+            <Link to="/cookbook" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🍳 Cookbook
+            </Link>
+            <Link to="/health-content" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🏥 Health
+            </Link>
+            <Link to="/audiobook" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              🎙️ Audiobook
+            </Link>
+            <Link to="/marketing" className="nav-link-mobile highlight" onClick={() => setMobileMenuOpen(false)}>
+              📢 Marketing
+            </Link>
+            <Link to="/pricing" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
+              Pricing
+            </Link>
+            <Link to="/dashboard" className="nav-link-mobile" onClick={() => setMobileMenuOpen(false)}>
+              Dashboard
             </Link>
           </nav>
         )}

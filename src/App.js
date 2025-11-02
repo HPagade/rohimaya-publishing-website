@@ -25,9 +25,18 @@ import HomePage from './pages/HomePage';
 import BooksPage from './pages/BooksPage';
 import AIFormatterPage from './pages/AIFormatterPage';
 import AboutPage from './pages/AboutPage';
+import PricingPage from './pages/PricingPage';
+import DashboardPage from './pages/DashboardPage';
 
 // App Components (full-screen apps)
 import AIFormatter from './components/formatter/AIFormatter';
+import AICovers from './components/covers/AICovers';
+import AIImages from './components/images/AIImages';
+import AIVideos from './components/videos/AIVideos';
+import CookbookFormatter from './components/health/CookbookFormatter';
+import HealthContent from './components/health/HealthContent';
+import AudiobookGenerator from './components/audiobook/AudiobookGenerator';
+import MarketingSuite from './components/marketing/MarketingSuite';
 
 function App() {
   return (
@@ -37,6 +46,13 @@ function App() {
         <Routes>
           {/* APPS - Full screen, no header/footer */}
           <Route path="/formatter" element={<AIFormatter />} />
+          <Route path="/covers" element={<AICovers />} />
+          <Route path="/images" element={<AIImages />} />
+          <Route path="/videos" element={<AIVideos />} />
+          <Route path="/cookbook" element={<CookbookFormatter />} />
+          <Route path="/health-content" element={<HealthContent />} />
+          <Route path="/audiobook" element={<AudiobookGenerator />} />
+          <Route path="/marketing" element={<MarketingSuite />} />
 
           {/* MARKETING SITE - With header/footer */}
           <Route path="/*" element={
@@ -47,6 +63,8 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/books" element={<BooksPage />} />
                   <Route path="/ai-formatter" element={<AIFormatterPage />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/about" element={<AboutPage />} />
                 </Routes>
               </main>

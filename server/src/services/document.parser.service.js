@@ -4,7 +4,9 @@
  */
 
 import mammoth from 'mammoth';
-import pdfParse from 'pdf-parse';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 import fs from 'fs-extra';
 
 class DocumentParserService {

@@ -1,0 +1,345 @@
+.cookbook-formatter {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.cookbook-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cookbook-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.cookbook-header p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+.cookbook-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #ecf0f1;
+  flex-wrap: wrap;
+}
+
+.cookbook-tabs button {
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #7f8c8d;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cookbook-tabs button:hover {
+  color: #2c3e50;
+}
+
+.cookbook-tabs button.active {
+  color: #e67e22;
+  border-bottom-color: #e67e22;
+  font-weight: 600;
+}
+
+.tab-content {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section,
+.add-recipe-section,
+.export-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #ecf0f1;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #e67e22;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.file-upload {
+  margin-bottom: 1.5rem;
+}
+
+.file-upload input[type="file"] {
+  width: 100%;
+  padding: 1rem;
+  border: 2px dashed #bdc3c7;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.file-upload input[type="file"]:hover {
+  border-color: #e67e22;
+}
+
+.file-name {
+  margin-top: 0.5rem;
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.primary-btn {
+  background: #e67e22;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: #d35400;
+}
+
+.primary-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.secondary-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #e74c3c;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.success-message {
+  background: #27ae60;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.warning-message {
+  background: #f39c12;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.recipes-list {
+  margin-bottom: 2rem;
+}
+
+.recipe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.recipe-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid #ecf0f1;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-card h4 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.diet-badge {
+  background: #e67e22;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center;
+  color: #7f8c8d;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+.nutrition-panel {
+  background: white;
+  border: 2px solid #2c3e50;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.nutrition-panel h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.nutrition-label {
+  font-family: 'Arial', sans-serif;
+  border-top: 8px solid #2c3e50;
+  padding-top: 0.5rem;
+}
+
+.nutrition-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.nutrition-row.bold {
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-bottom: 3px solid #2c3e50;
+}
+
+.nutrition-row.indent {
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.export-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.export-card {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid #ecf0f1;
+  text-align: center;
+}
+
+.export-card h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.export-card p {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .cookbook-formatter {
+    padding: 1rem;
+  }
+
+  .cookbook-header h1 {
+    font-size: 2rem;
+  }
+
+  .cookbook-tabs {
+    flex-direction: column;
+  }
+
+  .cookbook-tabs button {
+    width: 100%;
+    text-align: left;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .export-options {
+    grid-template-columns: 1fr;
+  }
+}

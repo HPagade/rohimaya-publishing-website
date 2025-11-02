@@ -1,0 +1,8 @@
+{
+  "comment": "Add these dependencies to your server/package.json",
+  "dependencies": {
+    "stripe": "^14.10.0",
+    "@clerk/clerk-sdk-node": "^4.13.14",
+    "pg": "^8.11.3"
+  }
+}

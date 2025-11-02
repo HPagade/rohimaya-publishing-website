@@ -17,6 +17,8 @@
   "author": "Rohimaya Publishing",
   "license": "ISC",
   "dependencies": {
+    "@clerk/clerk-react": "^4.32.5",
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "archiver": "^7.0.1",
     "axios": "^1.13.0",
     "cors": "^2.8.5",
@@ -32,7 +34,8 @@
     "openai": "^6.7.0",
     "pdf-parse": "^2.4.5",
     "pdfkit": "^0.17.2",
-    "stripe": "^19.1.0",
+    "pg": "^8.16.3",
+    "stripe": "^14.25.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
