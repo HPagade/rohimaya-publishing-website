@@ -1,11 +1,15 @@
 /**
- * APP.JS - Simplified PhoenixForge AI Formatter
+ * APP.JS - PhoenixForge Platform (7 Products)
  *
- * FOCUS: One product done right - AI Book Formatter
+ * PHASED ROLLOUT:
+ * Phase 1 (Weeks 1-3): Formatter + Audiobook
+ * Phase 2 (Weeks 4-6): Covers + Images
+ * Phase 3 (Weeks 7-9): Cookbook + Health + Marketing
+ *
  * FEATURES:
  * - Proper Clerk authentication
- * - Protected routes for paid features
- * - Simple, clean architecture
+ * - Protected routes for all products
+ * - Unified architecture
  * - Real payment integration ready
  */
 
@@ -25,8 +29,18 @@ import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
 import DashboardPage from './pages/DashboardPage';
 
-// AI Formatter App (ONLY PRODUCT IN MVP)
+// Phase 1 Apps (Launch First - Available Now)
 import AIFormatter from './components/formatter/AIFormatter';
+import AudiobookGenerator from './components/audiobook/AudiobookGenerator';
+
+// Phase 2 Apps (Week 4 - Coming Soon)
+import AICovers from './components/covers/AICovers';
+import AIImages from './components/images/AIImages';
+
+// Phase 3 Apps (Week 7 - Coming Soon)
+import CookbookFormatter from './components/health/CookbookFormatter';
+import HealthContent from './components/health/HealthContent';
+import MarketingSuite from './components/marketing/MarketingSuite';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -63,12 +77,68 @@ function App() {
             <Route path="/sign-in/*" element={<SignIn routing="path" path="/sign-in" />} />
             <Route path="/sign-up/*" element={<SignUp routing="path" path="/sign-up" />} />
 
-            {/* Protected App - AI Formatter (Full Screen) */}
+            {/* PHASE 1 APPS - Available Now (Full Screen, No Header/Footer) */}
             <Route
               path="/formatter"
               element={
                 <ProtectedRoute>
                   <AIFormatter />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/audiobook"
+              element={
+                <ProtectedRoute>
+                  <AudiobookGenerator />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* PHASE 2 APPS - Week 4 Launch (Full Screen) */}
+            <Route
+              path="/covers"
+              element={
+                <ProtectedRoute>
+                  <AICovers />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/images"
+              element={
+                <ProtectedRoute>
+                  <AIImages />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* PHASE 3 APPS - Week 7 Launch (Full Screen) */}
+            <Route
+              path="/cookbook"
+              element={
+                <ProtectedRoute>
+                  <CookbookFormatter />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/health-content"
+              element={
+                <ProtectedRoute>
+                  <HealthContent />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/marketing"
+              element={
+                <ProtectedRoute>
+                  <MarketingSuite />
                 </ProtectedRoute>
               }
             />
@@ -100,15 +170,9 @@ function App() {
                       <Route path="/pricing" element={<PricingPage />} />
                       <Route path="/about" element={<AboutPage />} />
 
-                      {/* Redirect old routes to focused experience */}
+                      {/* Redirect old/removed routes */}
                       <Route path="/ai-formatter" element={<Navigate to="/formatter" replace />} />
-                      <Route path="/covers" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/images" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/videos" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/cookbook" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/health-content" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/audiobook" element={<Navigate to="/pricing" replace />} />
-                      <Route path="/marketing" element={<Navigate to="/pricing" replace />} />
+                      <Route path="/videos" element={<Navigate to="/pricing" replace />} /> {/* Removed product */}
 
                       {/* 404 - Redirect to home */}
                       <Route path="*" element={<Navigate to="/" replace />} />

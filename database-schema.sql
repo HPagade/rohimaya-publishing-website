@@ -74,17 +74,24 @@ CREATE INDEX idx_jobs_created_at ON jobs(created_at DESC);
 -- ============================================
 -- USAGE TRACKING TABLE
 -- ============================================
--- Tracks monthly usage per user
+-- Tracks monthly usage per user (7 products)
 CREATE TABLE usage (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   month TEXT NOT NULL, -- Format: 'YYYY-MM'
 
-  -- Usage counters
+  -- Phase 1 Usage Counters
   formats_used INTEGER DEFAULT 0,
+  audiobooks_used INTEGER DEFAULT 0,
+
+  -- Phase 2 Usage Counters
   covers_used INTEGER DEFAULT 0,
   images_used INTEGER DEFAULT 0,
-  videos_used INTEGER DEFAULT 0,
+
+  -- Phase 3 Usage Counters
+  cookbooks_used INTEGER DEFAULT 0,
+  health_content_used INTEGER DEFAULT 0,
+  marketing_content_used INTEGER DEFAULT 0,
 
   -- Timestamps
   created_at TIMESTAMP DEFAULT NOW(),
@@ -100,18 +107,25 @@ CREATE INDEX idx_usage_user_month ON usage(user_id, month);
 -- ============================================
 -- SUBSCRIPTION PLANS TABLE
 -- ============================================
--- Define available subscription plans
+-- Define available subscription plans (7 products)
 CREATE TABLE subscription_plans (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT UNIQUE NOT NULL,
   stripe_price_id TEXT UNIQUE NOT NULL,
   price_monthly DECIMAL(10,2) NOT NULL,
 
-  -- Limits
+  -- Phase 1 Limits
   formats_per_month INTEGER, -- NULL = unlimited
+  audiobooks_per_month INTEGER,
+
+  -- Phase 2 Limits
   covers_per_month INTEGER,
   images_per_month INTEGER,
-  videos_per_month INTEGER,
+
+  -- Phase 3 Limits
+  cookbooks_per_month INTEGER,
+  health_content_per_month INTEGER,
+  marketing_content_per_month INTEGER,
 
   -- Features
   features JSONB DEFAULT '[]'::jsonb,
@@ -124,11 +138,62 @@ CREATE TABLE subscription_plans (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Insert default plans
-INSERT INTO subscription_plans (name, stripe_price_id, price_monthly, formats_per_month, covers_per_month, images_per_month, videos_per_month, features) VALUES
-('Free', 'free', 0, 1, 0, 0, 0, '["1 format per month", "Basic quality", "Email support"]'::jsonb),
-('Pro', 'price_pro', 29, NULL, NULL, NULL, NULL, '["Unlimited formats", "HD quality", "Priority support", "All export formats", "No watermarks"]'::jsonb),
-('Enterprise', 'price_enterprise', 99, NULL, NULL, NULL, NULL, '["Everything in Pro", "Team accounts", "API access", "White label", "Dedicated support"]'::jsonb);
+-- Insert phased rollout plans
+INSERT INTO subscription_plans (
+  name, stripe_price_id, price_monthly,
+  formats_per_month, audiobooks_per_month,
+  covers_per_month, images_per_month,
+  cookbooks_per_month, health_content_per_month, marketing_content_per_month,
+  features
+) VALUES
+-- Free Tier (Lead Generation)
+('free', 'free', 0,
+  1, 1, -- 1 format, 1 audiobook preview
+  3, 5, -- 3 covers, 5 images
+  0, 0, 0, -- No cookbook/health/marketing
+  '["1 format/month", "1 audiobook preview", "3 cover variations", "5 images", "Basic templates"]'::jsonb),
+
+-- Starter ($19) - Choose one product
+('starter', 'price_starter', 19,
+  10, 5, -- 10 formats OR 5 audiobooks
+  10, 20, -- OR 10 covers, 20 images
+  0, 0, 0,
+  '["Choose ONE product", "10 formats OR 5 audiobooks OR 10 covers", "Basic templates", "Email support"]'::jsonb),
+
+-- Author ($29) - Formatter + Audiobook Bundle ⭐ MOST POPULAR
+('author', 'price_author', 29,
+  NULL, 10, -- Unlimited formats, 10 audiobooks
+  10, 50, -- 10 covers, 50 images
+  0, 0, 0,
+  '["Unlimited formats", "10 audiobooks/month", "10 covers", "50 images", "Priority support", "No watermarks"]'::jsonb),
+
+-- Author Pro ($49) - Everything + Visual Suite
+('author_pro', 'price_author_pro', 49,
+  NULL, NULL, -- Unlimited formats & audiobooks
+  NULL, 100, -- Unlimited covers, 100 images
+  0, 0, 10, -- Basic marketing
+  '["Everything in Author", "Unlimited covers", "100 images/month", "Marketing suite (10/month)", "Advanced templates"]'::jsonb),
+
+-- Health Author ($49) - Specialized for cookbook/wellness writers
+('health_author', 'price_health_author', 49,
+  NULL, 10, -- Unlimited formats, 10 audiobooks
+  10, 50, -- 10 covers, 50 images
+  NULL, 100, 0, -- Unlimited cookbooks, 100 health content
+  '["Unlimited cookbook formatting", "Nutrition analysis (100/month)", "Medical citations", "Health content generation", "Diet-specific templates"]'::jsonb),
+
+-- Complete Suite ($79) - All 7 products
+('complete', 'price_complete', 79,
+  NULL, NULL, -- Unlimited
+  NULL, NULL, -- Unlimited
+  NULL, NULL, NULL, -- Unlimited
+  '["ALL 7 products unlimited", "Priority support", "No watermarks", "Advanced customization", "All templates"]'::jsonb),
+
+-- Enterprise ($149) - Teams & API
+('enterprise', 'price_enterprise', 149,
+  NULL, NULL,
+  NULL, NULL,
+  NULL, NULL, NULL,
+  '["Everything in Complete", "Team accounts (10 users)", "API access (10K calls/month)", "White label option", "Dedicated support", "Custom integrations"]'::jsonb);
 
 -- ============================================
 -- WEBHOOKS TABLE
@@ -225,10 +290,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to increment usage counter
+-- Function to increment usage counter (7 products)
 CREATE OR REPLACE FUNCTION increment_usage(
   p_user_id UUID,
-  p_feature TEXT -- 'formats', 'covers', 'images', 'videos'
+  p_feature TEXT -- 'formats', 'audiobooks', 'covers', 'images', 'cookbooks', 'health_content', 'marketing_content'
 )
 RETURNS BOOLEAN AS $$
 DECLARE
@@ -237,14 +302,23 @@ BEGIN
   v_usage_id := get_or_create_usage(p_user_id);
 
   CASE p_feature
+    -- Phase 1
     WHEN 'formats' THEN
       UPDATE usage SET formats_used = formats_used + 1 WHERE id = v_usage_id;
+    WHEN 'audiobooks' THEN
+      UPDATE usage SET audiobooks_used = audiobooks_used + 1 WHERE id = v_usage_id;
+    -- Phase 2
     WHEN 'covers' THEN
       UPDATE usage SET covers_used = covers_used + 1 WHERE id = v_usage_id;
     WHEN 'images' THEN
       UPDATE usage SET images_used = images_used + 1 WHERE id = v_usage_id;
-    WHEN 'videos' THEN
-      UPDATE usage SET videos_used = videos_used + 1 WHERE id = v_usage_id;
+    -- Phase 3
+    WHEN 'cookbooks' THEN
+      UPDATE usage SET cookbooks_used = cookbooks_used + 1 WHERE id = v_usage_id;
+    WHEN 'health_content' THEN
+      UPDATE usage SET health_content_used = health_content_used + 1 WHERE id = v_usage_id;
+    WHEN 'marketing_content' THEN
+      UPDATE usage SET marketing_content_used = marketing_content_used + 1 WHERE id = v_usage_id;
   END CASE;
 
   RETURN true;
@@ -255,7 +329,7 @@ $$ LANGUAGE plpgsql;
 -- VIEWS
 -- ============================================
 
--- View to get user subscription details
+-- View to get user subscription details (7 products)
 CREATE OR REPLACE VIEW user_subscription_details AS
 SELECT
   u.id,
@@ -265,17 +339,41 @@ SELECT
   u.subscription_status,
   sp.name AS plan_name,
   sp.price_monthly,
+
+  -- Phase 1 Limits
   sp.formats_per_month,
+  sp.audiobooks_per_month,
+
+  -- Phase 2 Limits
   sp.covers_per_month,
   sp.images_per_month,
-  sp.videos_per_month,
+
+  -- Phase 3 Limits
+  sp.cookbooks_per_month,
+  sp.health_content_per_month,
+  sp.marketing_content_per_month,
+
+  -- Features
   sp.features,
+
+  -- Subscription dates
   u.subscription_start_date,
   u.subscription_end_date,
+
+  -- Phase 1 Usage
   COALESCE(usage.formats_used, 0) AS formats_used_this_month,
+  COALESCE(usage.audiobooks_used, 0) AS audiobooks_used_this_month,
+
+  -- Phase 2 Usage
   COALESCE(usage.covers_used, 0) AS covers_used_this_month,
   COALESCE(usage.images_used, 0) AS images_used_this_month,
-  COALESCE(usage.videos_used, 0) AS videos_used_this_month,
+
+  -- Phase 3 Usage
+  COALESCE(usage.cookbooks_used, 0) AS cookbooks_used_this_month,
+  COALESCE(usage.health_content_used, 0) AS health_content_used_this_month,
+  COALESCE(usage.marketing_content_used, 0) AS marketing_content_used_this_month,
+
+  -- Current month
   TO_CHAR(NOW(), 'YYYY-MM') AS current_month
 FROM users u
 LEFT JOIN subscription_plans sp ON u.subscription_tier = sp.name
