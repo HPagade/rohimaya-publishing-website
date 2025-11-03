@@ -17,6 +17,21 @@
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
+- **[📚 Complete Documentation Index](docs/INDEX.md)** - All planning docs, guides, and resources
+
+---
+
+## 📚 Documentation & Planning
+
+This repository contains the complete PhoenixForge AI platform plus extensive business planning:
+
+- **[📖 Complete Documentation Index](docs/INDEX.md)** - Central hub for all documentation
+- **[🎨 AI Creative Suite Master Plan](docs/planning/AI_CREATIVE_SUITE_MASTER_PLAN.md)** - Complete product strategy
+- **[📚 Publishing Master Plan](docs/planning/ROHIMAYA_PUBLISHING_MASTER_PLAN.md)** - Website & feature specifications
+- **[🌍 Global Venture Plan](docs/planning/GLOBAL_PUBLISHING_VENTURE_PLAN.md)** - Multi-author business model
+- **[💰 Financial Projections](docs/planning/COMPLETE_TIMELINE_COSTS_REVENUE.md)** - 5-year timeline & costs
+- **[🚀 Quick Start Guide](QUICKSTART.md)** - Get running in 10 minutes
+- **[✅ Beginner's Checklist](docs/setup/guides/BEGINNER-CHECKLIST.md)** - Step-by-step setup (3-6 hours)
 
 ---
 
