@@ -81,7 +81,6 @@ export default async function DashboardPage() {
       usage: usage?.images_used || 0,
       limit: limits.images,
       phase: 2,
-      comingSoon: true,
     },
     {
       name: 'Cookbook Formatter',
@@ -92,7 +91,6 @@ export default async function DashboardPage() {
       usage: usage?.cookbooks_used || 0,
       limit: limits.cookbooks,
       phase: 3,
-      comingSoon: true,
     },
     {
       name: 'Health Content',
@@ -103,7 +101,6 @@ export default async function DashboardPage() {
       usage: usage?.health_content_used || 0,
       limit: limits.health_content,
       phase: 3,
-      comingSoon: true,
     },
     {
       name: 'Marketing Suite',
@@ -114,7 +111,6 @@ export default async function DashboardPage() {
       usage: usage?.marketing_content_used || 0,
       limit: limits.marketing_content,
       phase: 3,
-      comingSoon: true,
     },
   ]
 
@@ -195,42 +191,32 @@ export default async function DashboardPage() {
               return (
                 <Link
                   key={app.name}
-                  href={app.comingSoon ? '#' : app.href}
-                  className={`bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow ${
-                    app.comingSoon ? 'opacity-60 cursor-not-allowed' : ''
-                  }`}
-                  onClick={(e) => app.comingSoon && e.preventDefault()}
+                  href={app.href}
+                  className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className={`${app.color} p-3 rounded-lg`}>
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    {app.comingSoon && (
-                      <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
-                        Phase {app.phase}
-                      </span>
-                    )}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{app.name}</h3>
                   <p className="text-sm text-gray-600 mb-4">{app.description}</p>
-                  {!app.comingSoon && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Usage this month</span>
-                        <span className="font-semibold">
-                          {app.usage} / {app.limit === -1 ? '∞' : app.limit}
-                        </span>
-                      </div>
-                      {app.limit !== -1 && (
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className={`${app.color} h-2 rounded-full transition-all`}
-                            style={{ width: `${Math.min(usagePercent, 100)}%` }}
-                          />
-                        </div>
-                      )}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Usage this month</span>
+                      <span className="font-semibold">
+                        {app.usage} / {app.limit === -1 ? '∞' : app.limit}
+                      </span>
                     </div>
-                  )}
+                    {app.limit !== -1 && (
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`${app.color} h-2 rounded-full transition-all`}
+                          style={{ width: `${Math.min(usagePercent, 100)}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </Link>
               )
             })}
@@ -320,8 +306,8 @@ function getPlanLimits(plan: string) {
     free: {
       formats: 3,
       audiobooks: 1,
-      covers: 0,
-      images: 0,
+      covers: 2,
+      images: 5,
       cookbooks: 0,
       health_content: 0,
       marketing_content: 0,
@@ -329,20 +315,20 @@ function getPlanLimits(plan: string) {
     creator: {
       formats: 50,
       audiobooks: 10,
-      covers: 5,
-      images: 10,
-      cookbooks: 0,
-      health_content: 0,
-      marketing_content: 0,
+      covers: 15,
+      images: 30,
+      cookbooks: 5,
+      health_content: 20,
+      marketing_content: 50,
     },
     professional: {
       formats: -1, // unlimited
       audiobooks: -1,
-      covers: 20,
-      images: 50,
-      cookbooks: 10,
-      health_content: 20,
-      marketing_content: 30,
+      covers: -1,
+      images: -1,
+      cookbooks: -1,
+      health_content: -1,
+      marketing_content: -1,
     },
   }
 
