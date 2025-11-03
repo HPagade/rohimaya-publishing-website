@@ -85,10 +85,11 @@ export default function PricingPage() {
         body: JSON.stringify({
           priceId,
           billingInterval,
+          enableTrial: true, // Enable 7-day free trial
         }),
       })
 
-      const { url, error } = await response.json()
+      const { url, error, hasTrial, trialDays } = await response.json()
 
       if (error) {
         alert(error)
@@ -96,6 +97,16 @@ export default function PricingPage() {
       }
 
       if (url) {
+        // Show trial message if applicable
+        if (hasTrial && trialDays > 0) {
+          const confirmed = window.confirm(
+            `You'll get a ${trialDays}-day free trial! No payment required until the trial ends. Continue?`
+          )
+          if (!confirmed) {
+            setLoading(null)
+            return
+          }
+        }
         window.location.href = url
       }
     } catch (error) {
@@ -172,6 +183,16 @@ export default function PricingPage() {
                   </p>
                 )}
               </div>
+              {tier.price > 0 && (
+                <div className="mt-2">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                    </svg>
+                    7-Day Free Trial
+                  </span>
+                </div>
+              )}
               <p className="mt-4 text-sm leading-6 text-gray-600">{tier.description}</p>
               <p className="mt-6 flex items-baseline gap-x-1">
                 <span className="text-4xl font-bold tracking-tight text-gray-900">
