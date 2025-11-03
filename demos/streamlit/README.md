@@ -1,262 +1,299 @@
-# PhoenixForge AI - Streamlit Demo Prototypes
+# PhoenixForge AI - Complete Streamlit Demo
 
-This directory contains working Streamlit prototypes for demonstrating PhoenixForge AI features to potential users, investors, and stakeholders.
+**All 7 Products in One Interactive Demo** - Fully working prototypes with real API integration!
 
-## What is Streamlit?
+## 🎯 What's Inside
 
-Streamlit is a Python framework that turns Python scripts into interactive web applications in minutes. Perfect for creating demos and prototypes.
+This is a **complete, production-ready demo** of all 7 PhoenixForge AI products:
 
-## Quick Start
+1. **📄 AI Manuscript Formatter** - Transform manuscripts into professional files
+2. **🎙️ Audiobook Narrator** - Convert text to professional narration
+3. **🎨 Cover Generator** - Create stunning book covers with DALL-E 3
+4. **🖼️ Image Creator** - Generate unlimited custom images
+5. **🍳 Cookbook Formatter** - Format recipes into beautiful cookbooks
+6. **🏥 Health Content** - Generate workout plans, meal plans, and articles
+7. **📱 Marketing Suite** - Create social media posts, emails, ads, and descriptions
 
-### Install Streamlit
+## 🚀 Quick Start
+
+### 1. Install Dependencies
 
 ```bash
-pip install streamlit
-# Or for all requirements:
+cd demos/streamlit
 pip install -r requirements.txt
 ```
 
-### Run Individual Demos
-
-```bash
-# Manuscript Formatter Demo
-streamlit run formatter_demo.py
-
-# Cover Generator Demo
-streamlit run cover_generator_demo.py
-
-# Complete Platform Demo
-streamlit run complete_platform_demo.py
-```
-
-### Run All Demos (Menu)
+### 2. Run the Demo
 
 ```bash
 streamlit run main_demo.py
 ```
 
-Then open your browser to http://localhost:8501
+Then open your browser to **http://localhost:8501**
 
-## Available Demos
+### 3. Try It Out!
 
-### 1. `formatter_demo.py` - AI Manuscript Formatter
-**Purpose:** Demonstrate manuscript formatting capabilities
+The demo works in two modes:
 
-**Features:**
-- Upload DOCX/PDF files
-- Select genre and template
-- AI-powered chapter detection
-- Generate formatted PDF/EPUB
-- Download formatted files
+**🎭 Demo Mode (Default):**
+- No API keys needed
+- Uses mock data for instant results
+- Perfect for presentations
 
-**Best For:** Authors, publishers, formatting services
+**✅ Live Mode (with API):**
+- Real AI generation
+- Requires OpenAI API key
+- Shows actual capabilities
 
-### 2. `cover_generator_demo.py` - AI Book Cover Generator  
-**Purpose:** Show AI cover generation in action
+## 🔑 Enable Real API Calls
 
-**Features:**
-- Enter book details (title, author, genre)
-- Select style preferences
-- Generate 6 cover variations
-- A/B testing view
-- Download high-res covers
+To use real AI generation:
 
-**Best For:** Authors, designers, marketing teams
+### Step 1: Create .env file
 
-### 3. `image_generator_demo.py` - AI Image Creator
-**Purpose:** Demonstrate character and scene generation
+Create a file named `.env` in the `demos/streamlit` folder:
 
-**Features:**
-- Text-to-image generation
-- Character consistency
-- Style variations
-- Batch generation
-- Gallery view
+```bash
+# demos/streamlit/.env
+OPENAI_API_KEY=sk-your-key-here
+```
 
-**Best For:** Illustrators, children's book authors
+### Step 2: Get Your OpenAI API Key
 
-### 4. `audiobook_demo.py` - AI Audiobook Narrator
-**Purpose:** Show text-to-speech capabilities
+1. Go to https://platform.openai.com
+2. Sign in/Sign up
+3. Go to API Keys
+4. Create new secret key
+5. Copy and paste into `.env`
 
-**Features:**
-- Enter text or upload manuscript
-- Select voice (50+ options)
-- Preview audio samples
-- Generate full audiobook
+### Step 3: Restart Streamlit
+
+```bash
+# Stop the app (Ctrl+C)
+# Start again
+streamlit run main_demo.py
+```
+
+You'll see ✅ **Live Mode** in the sidebar!
+
+## ✨ Features
+
+### Real API Integration
+
+When you add your OpenAI API key, you can:
+
+✅ **Format Manuscripts** - Real AI chapter detection and analysis
+✅ **Generate Audiobooks** - Actual text-to-speech with multiple voices  
+✅ **Create Covers** - Real DALL-E 3 image generation
+✅ **Generate Images** - Custom AI images for your books
+✅ **Parse Recipes** - AI extracts ingredients and instructions
+✅ **Create Workout Plans** - Personalized fitness programs
+✅ **Write Marketing Copy** - AI-generated social media posts and ads
+
+### Demo Mode
+
+Without an API key:
+- See full interface
+- Try all features
+- View mock results
+- Perfect for presentations
+
+## 📁 File Structure
+
+```
+demos/streamlit/
+├── main_demo.py           # Complete demo (USE THIS!)
+├── requirements.txt       # Python dependencies
+├── README.md             # This file
+├── .env.example          # Example environment file
+└── main_demo_old.py      # Backup of previous version
+```
+
+## 🎨 What Each Product Does
+
+### 1. Manuscript Formatter
+- Upload DOCX, PDF, or TXT files
+- AI analyzes structure and chapters
+- Real-time word count and page estimates
+- Export to multiple formats
+
+**Real API:** Analyzes manuscript structure with GPT-4
+
+### 2. Audiobook Narrator
+- Convert any text to speech
+- Choose from 6 different voices (alloy, echo, fable, onyx, nova, shimmer)
+- Adjust speed (0.5x to 2.0x)
 - Download MP3 files
 
-**Best For:** Authors, audiobook narrators
+**Real API:** Uses OpenAI TTS to generate actual audio
 
-### 5. `complete_platform_demo.py` - Full Platform
-**Purpose:** Show complete end-to-end workflow
+### 3. Cover Generator
+- Enter book title, author, genre
+- Describe your ideal cover
+- Select art style
+- Generate professional covers
 
-**Features:**
-- All tools in one interface
-- Dashboard with usage stats
-- Sample projects
-- Pricing calculator
-- ROI demonstration
+**Real API:** Creates real covers with DALL-E 3
 
-**Best For:** Presentations, investor pitches
+### 4. Image Creator
+- Create custom illustrations
+- Choose size (square, portrait, landscape)
+- Select quality (standard or HD)
+- Generate multiple variations
 
-### 6. `main_demo.py` - Demo Menu
-**Purpose:** Navigate between all demos
+**Real API:** Generates actual images with DALL-E 3
 
-**Features:**
-- Clean menu interface
-- Quick access to all demos
-- About/FAQ section
-- Contact information
+### 5. Cookbook Formatter
+- Enter recipes manually or paste text
+- AI parses ingredients and instructions
+- Beautiful formatting options
+- Export to PDF/ePub
 
-## Demo Data
+**Real API:** GPT-4 parses recipe text intelligently
 
-Sample data files are included in the `demo_data/` directory:
-- `sample_manuscript.txt` - Sample book text
-- `sample_cover_specs.json` - Cover generation examples
-- `sample_images.json` - Image generation prompts
+### 6. Health Content
+- **Workout Plans:** Generate personalized fitness programs
+- **Meal Plans:** Create nutrition plans with recipes
+- **Health Articles:** Write evidence-based health content
 
-## Customization
+**Real API:** GPT-4 creates detailed, personalized content
 
-### Branding
-Edit `config.py` to customize:
-- Company name and logo
-- Color scheme
-- Contact information
-- Feature flags
+### 7. Marketing Suite
+- **Social Media:** Posts for Twitter, Facebook, Instagram, LinkedIn
+- **Email Campaigns:** Launch announcements, newsletters
+- **Ad Copy:** Facebook, Google, Amazon ads
+- **Book Descriptions:** Amazon/Goodreads listings
 
-### API Integration
-The demos can work in two modes:
+**Real API:** GPT-4 writes professional marketing copy
 
-**Mock Mode (Default):**
-- Uses placeholder data
-- No API keys needed
-- Fast for demonstrations
+## 💡 Tips for Best Results
 
-**Live Mode:**
-- Calls real APIs
-- Requires API keys in `.env`
-- Shows actual results
+### For Presentations
+1. Run in Demo Mode (fast, no delays)
+2. Use fullscreen mode (F11)
+3. Prepare talking points for each section
+4. Show the pricing calculator at the end
 
-To enable live mode, set in `.env`:
-```
-DEMO_MODE=live
-OPENAI_API_KEY=sk-...
-```
+### For Testing Real APIs
+1. Start with small text samples
+2. Monitor your OpenAI usage dashboard
+3. Set spending limits on OpenAI account
+4. Cache results to avoid repeat charges
 
-## Tips for Presentations
+### For Development
+1. Check the code comments
+2. Each function is self-contained
+3. Easy to modify or extend
+4. Error handling included
 
-### 1. Pre-load Examples
-Run demos before presentations to cache results:
+## 🐛 Troubleshooting
+
+### "Command not found: streamlit"
 ```bash
-python preload_demos.py
-```
-
-### 2. Offline Mode
-Enable offline mode for demos without internet:
-```bash
-export OFFLINE_MODE=true
-streamlit run main_demo.py
-```
-
-### 3. Full Screen Mode
-Press `F11` in browser for full-screen presentation
-
-### 4. Hide Streamlit Branding
-Add to `~/.streamlit/config.toml`:
-```toml
-[server]
-headless = true
-
-[ui]
-hideTopBar = true
-```
-
-## Deployment
-
-### Deploy to Streamlit Cloud (Free)
-
-1. Push demos to GitHub
-2. Go to https://share.streamlit.io
-3. Connect your GitHub repo
-4. Select `main_demo.py` as main file
-5. Add secrets (API keys) in dashboard
-6. Deploy!
-
-Your demo will be live at: `https://your-app.streamlit.app`
-
-### Deploy to Heroku
-
-```bash
-# Create Procfile
-echo "web: streamlit run main_demo.py --server.port=$PORT" > Procfile
-
-# Create setup.sh
-cat > setup.sh << 'EOF'
-mkdir -p ~/.streamlit/
-echo "[server]
-headless = true
-port = $PORT
-enableCORS = false
-" > ~/.streamlit/config.toml
-EOF
-
-# Deploy
-heroku create phoenixforge-demo
-git push heroku main
-```
-
-### Deploy to Your Own Server
-
-```bash
-# Install on server
 pip install streamlit
-
-# Run with supervisor or systemd
-streamlit run main_demo.py --server.port 8501 --server.address 0.0.0.0
 ```
 
-## Demo Scripts
-
-Sample talking points are provided in `demo_scripts/`:
-- `investor_pitch.md` - 10-minute investor demo
-- `author_demo.md` - 5-minute author onboarding
-- `feature_showcase.md` - Detailed feature walkthrough
-
-## Troubleshooting
-
-### Port Already in Use
+### "Module not found: openai"
 ```bash
-# Kill existing Streamlit processes
-pkill -f streamlit
-# Or use different port
+pip install -r requirements.txt
+```
+
+### Port already in use
+```bash
 streamlit run main_demo.py --server.port 8502
 ```
 
-### Slow Loading
+### API key not working
+- Check the key starts with `sk-`
+- Make sure `.env` is in the correct folder
+- Restart Streamlit after adding the key
+- Check your OpenAI account has credits
+
+### Demo is slow
+- This is normal with real API calls
+- DALL-E generation takes 10-30 seconds
+- Use Demo Mode for faster presentations
+
+## 📊 What's Different from Old Version
+
+✅ **All 7 products included** (was missing 3)
+✅ **Real API integration** (not just mockups)
+✅ **Proper error handling** (won't crash)
+✅ **Demo/Live mode toggle** (flexible usage)
+✅ **Working prototypes** (actually generate content)
+✅ **Better UI/UX** (cleaner interface)
+✅ **Comprehensive documentation** (this README!)
+
+## 🚀 Deployment Options
+
+### Option 1: Streamlit Cloud (Easiest, Free)
+
+1. Push code to GitHub
+2. Go to https://share.streamlit.io
+3. Connect repo and select `main_demo.py`
+4. Add OPENAI_API_KEY in Secrets
+5. Deploy!
+
+### Option 2: Your Own Server
+
 ```bash
-# Enable caching
-export STREAMLIT_CACHE=true
+# On your server
+git clone your-repo
+cd demos/streamlit
+pip install -r requirements.txt
+
+# Run with nohup
+nohup streamlit run main_demo.py --server.port 8501 &
 ```
 
-### Memory Issues with Large Files
-```bash
-# Limit file size
-export MAX_FILE_SIZE=10  # MB
+### Option 3: Docker
+
+```dockerfile
+FROM python:3.9
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["streamlit", "run", "main_demo.py", "--server.port=8501"]
 ```
 
-## Adding New Demos
+## 📞 Support
 
-1. Create new file: `your_demo.py`
-2. Follow template in `_demo_template.py`
-3. Add to menu in `main_demo.py`
-4. Update this README
+**Having issues?**
+- Check the troubleshooting section above
+- Review OpenAI API documentation
+- Check your API key and credits
 
-## Support
+**Want to customize?**
+- All code is commented
+- Each product is in its own function
+- Easy to modify or extend
 
-- **Questions:** demos@phoenixforge.ai
-- **Bug Reports:** GitHub Issues
-- **Feature Requests:** GitHub Discussions
+## ✅ Success Checklist
+
+You know it's working when:
+
+- [ ] Streamlit app loads without errors
+- [ ] You can navigate all 7 products
+- [ ] Demo mode shows mock results
+- [ ] (With API key) Live mode generates real content
+- [ ] Audio plays in Audiobook section
+- [ ] Images generate in Cover/Image sections
+- [ ] Text generates in Marketing section
+
+## 🎉 You're Ready!
+
+This is a **complete, production-ready demo** of all 7 PhoenixForge AI products. Use it for:
+
+- 🎤 Investor presentations
+- 📱 Customer demos
+- 🧪 Testing features
+- 📚 Training materials
+- 💼 Sales pitches
+
+**Start the demo:** `streamlit run main_demo.py`
 
 ---
 
-**Ready to impress?** Run `streamlit run main_demo.py` and start demo! 🚀
+*Last updated: November 3, 2025*
+*Questions? Check the main repository README.md*
