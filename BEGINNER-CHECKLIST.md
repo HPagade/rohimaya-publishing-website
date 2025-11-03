@@ -76,7 +76,7 @@ You should see a list of folders like `website`, `backend`, `docs`, etc.
 
 ### Step 3: Run Your First Demo ⏱️ 15 minutes
 
-Let's start with the easiest thing - the **Streamlit demo** (requires no setup!):
+Let's start with the easiest thing - the **Streamlit demo** (now includes ALL 7 products!):
 
 ```bash
 # Navigate to demos folder
@@ -85,22 +85,30 @@ cd demos/streamlit
 # Install required packages (first time only)
 pip install -r requirements.txt
 
-# Run the demo
+# Run the complete demo
 streamlit run main_demo.py
 ```
 
 **What should happen:**
 - Your web browser will open automatically
 - You'll see the PhoenixForge AI demo interface
-- You can click through all the features!
+- You can navigate through all 7 products!
 
 🎉 **Congratulations!** You just ran your first component!
 
 **What you can do now:**
+- Try all 7 products: Formatter, Audiobook, Covers, Images, Cookbook, Health, Marketing
 - Click through the different demos
 - Show it to friends/family
 - Use it for presentations
-- No API keys needed - it uses mock data
+- No API keys needed initially - it uses mock data
+- Add your OpenAI API key to see REAL AI generation!
+
+**To enable real AI (optional):**
+1. Create a file called `.env` in the `demos/streamlit` folder
+2. Add one line: `OPENAI_API_KEY=sk-your-key-here`
+3. Restart the demo
+4. Now you'll see ACTUAL AI-generated content!
 
 **Close the demo:** Press `Ctrl+C` in the terminal when done
 
