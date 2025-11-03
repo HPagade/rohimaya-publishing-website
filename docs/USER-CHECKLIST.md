@@ -27,7 +27,7 @@ This checklist outlines what YOU need to complete that cannot be done automatica
 - [ ] Add to Vercel:
   - `STRIPE_SECRET_KEY=sk_test_...` (or sk_live_...)
   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...` (or pk_live_...)
-  - `STRIPE_WEBHOOK_SECRET=whsec_...`
+  - `STRIPE_WEBHOOK_SECRET=whsec_YOUR_SECRET_HERE`
 - [ ] Create 3 subscription products in Stripe:
   - Creator Plan: $29/month
   - Professional Plan: $79/month

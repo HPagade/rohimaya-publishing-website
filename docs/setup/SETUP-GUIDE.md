@@ -350,10 +350,10 @@ Should open browser to `http://localhost:3000`
    - `customer.subscription.deleted`
    - `invoice.payment_succeeded`
    - `invoice.payment_failed`
-5. **Copy Webhook Secret:** `whsec_...`
+5. **Copy Webhook Secret:** `whsec_YOUR_SECRET_HERE`
 6. Add to Railway environment variables:
    ```
-   STRIPE_WEBHOOK_SECRET=whsec_...
+   STRIPE_WEBHOOK_SECRET=whsec_YOUR_SECRET_HERE
    ```
 
 **C. Update Railway CORS:**

@@ -184,7 +184,7 @@ OPENAI_API_KEY=sk-your-key
 # Stripe
 STRIPE_SECRET_KEY=sk_live_your-key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_your-key
-STRIPE_WEBHOOK_SECRET=whsec_your-webhook-secret
+STRIPE_WEBHOOK_SECRET=whsec_YOUR_SECRET_HERE
 
 # Stripe Price IDs
 STRIPE_PRICE_CREATOR_MONTHLY=price_xxxxx
