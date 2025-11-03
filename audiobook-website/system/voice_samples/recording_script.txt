@@ -1,0 +1,58 @@
+# 🎙️ VOICE RECORDING SCRIPT
+# Record 10-15 minutes each person for voice cloning
+
+## FOR HANNAH (Aaravi - Female Lead):
+
+1. DETERMINED: "We leave at dawn. I've made my decision, and nothing will change my mind."
+
+2. ANXIOUS: "Something's wrong. I can feel it through the bond. The fear is overwhelming."
+
+3. LOVING: "When I close my eyes, I feel you beside me. You've become my home, Vihan."
+
+4. FIERCE: "How dare you try to protect me by pushing me away? I will stand beside you."
+
+5. SCARED: "I'm terrified of losing control. What if I hurt someone? What if I hurt you?"
+
+6. JOYFUL: "Did you see that? I did it! For the first time, I was dancing with the power!"
+
+7. NEUTRAL: "The temple bells rang through the morning mist, echoing across the valley."
+
+8. CONVERSATIONAL: "Do you really think we can find them all? Can we convince them to help?"
+
+9. DEFIANT: "Tell Sharvani I'm done running. If she wants me, she'll come through you."
+
+10. WEARY: "I'm so tired. Not just physically. Tired of fighting, of being afraid."
+
+---
+
+## FOR PRASAD (Vihan - Male Lead):
+
+1. PROTECTIVE: "I won't let them take you. No one touches you while I still draw breath."
+
+2. CONCERNED: "Something's wrong with the bond. It feels fractured. Aaravi, can you hear me?"
+
+3. TENDER: "Every time I look at you, I wonder how I got so lucky. You still choose me."
+
+4. FURIOUS: "Sharvani wants war? Fine. I'll give her a war she'll never forget."
+
+5. VULNERABLE: "I'm afraid of what I'm becoming. The phoenix fire is consuming me."
+
+6. DETERMINED: "This ends tonight. No more running, no more hiding. We fight."
+
+7. NEUTRAL: "Vihan stood at the cliff edge, watching the sun rise over the mountains."
+
+8. CONVERSATIONAL: "I was talking to Varun. Should we head north? What do you think?"
+
+9. REMORSEFUL: "I'm sorry. For everything. You deserved better than this. Better than me."
+
+10. EXHAUSTED: "How many more battles can we survive? I don't know how much longer."
+
+---
+
+## RECORDING TIPS:
+- Find quiet room
+- Record 10-15 minutes total per person
+- Show emotional variety
+- Natural speaking pace
+- Phone or computer mic is fine!
+- Save as WAV or M4A format

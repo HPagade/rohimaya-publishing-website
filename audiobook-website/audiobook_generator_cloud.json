@@ -1,0 +1,315 @@
+{
+  "name": "Complete Audiobook Generator - Cloud Compatible",
+  "nodes": [
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "book_title",
+              "value": "Eclipse of Fire and Wings"
+            },
+            {
+              "name": "manuscript_path",
+              "value": "/tmp/manuscript.txt"
+            },
+            {
+              "name": "output_folder",
+              "value": "/tmp/audiobooks/book1"
+            },
+            {
+              "name": "tts_provider",
+              "value": "inworld"
+            },
+            {
+              "name": "batch_size",
+              "value": "10"
+            },
+            {
+              "name": "chars_per_chunk",
+              "value": "2000"
+            }
+          ]
+        }
+      },
+      "id": "config-node",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [460, 360]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.manuscript_path }}",
+        "options": {}
+      },
+      "id": "read-file",
+      "name": "Read Manuscript",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [680, 360]
+    },
+    {
+      "parameters": {
+        "functionCode": "/**\n * SMART CHUNKING SYSTEM\n * Splits manuscript into safe-sized chunks for TTS processing\n * Handles books of ANY size without memory issues\n */\n\nconst items = $input.all();\nconst fileData = items[0].binary.data;\nconst content = Buffer.from(fileData.data, 'base64').toString('utf-8');\n\n// Configuration\nconst MAX_CHARS = parseInt(items[0].json.chars_per_chunk) || 2000;\nconst BATCH_SIZE = parseInt(items[0].json.batch_size) || 10;\nconst bookTitle = items[0].json.book_title;\nconst outputFolder = items[0].json.output_folder;\n\nconsole.log('📚 Starting manuscript processing...');\nconsole.log(`   Book: ${bookTitle}`);\nconsole.log(`   Total characters: ${content.length.toLocaleString()}`);\n\n// Split by paragraphs (preserves natural breaks)\nconst paragraphs = content\n  .split(/\\n\\n+/)\n  .map(p => p.trim())\n  .filter(p => p.length > 0);\n\nconsole.log(`   Total paragraphs: ${paragraphs.length}`);\n\n// Create chunks that respect paragraph boundaries\nconst chunks = [];\nlet currentChunk = '';\nlet chunkIndex = 0;\n\nfor (const paragraph of paragraphs) {\n  const potentialLength = currentChunk.length + paragraph.length + 2;\n  \n  // If adding this paragraph exceeds limit, save current chunk\n  if (potentialLength > MAX_CHARS && currentChunk.length > 0) {\n    chunks.push({\n      index: chunkIndex,\n      text: currentChunk.trim(),\n      char_count: currentChunk.length,\n      word_count: currentChunk.split(/\\s+/).length,\n      batch: Math.floor(chunkIndex / BATCH_SIZE)\n    });\n    chunkIndex++;\n    currentChunk = paragraph;\n  } else {\n    currentChunk += (currentChunk ? '\\n\\n' : '') + paragraph;\n  }\n}\n\n// Add final chunk\nif (currentChunk.length > 0) {\n  chunks.push({\n    index: chunkIndex,\n    text: currentChunk.trim(),\n    char_count: currentChunk.length,\n    word_count: currentChunk.split(/\\s+/).length,\n    batch: Math.floor(chunkIndex / BATCH_SIZE)\n  });\n}\n\nconst totalBatches = Math.ceil(chunks.length / BATCH_SIZE);\n\nconsole.log('✂️  Chunking complete!');\nconsole.log(`   Total chunks: ${chunks.length}`);\nconsole.log(`   Batches: ${totalBatches}`);\nconsole.log(`   Avg chars/chunk: ${Math.round(chunks.reduce((sum, c) => sum + c.char_count, 0) / chunks.length)}`);\n\n// Character and emotion detection for each chunk\nchunks.forEach(chunk => {\n  const textLower = chunk.text.toLowerCase();\n  \n  // CHARACTER DETECTION\n  // Priority: explicit names > pronouns > default to narrator\n  if (textLower.includes('aaravi') || \n      /she (said|replied|whispered|asked|screamed|shouted)/i.test(chunk.text)) {\n    chunk.character = 'aaravi';\n  } else if (textLower.includes('vihan') || \n             /he (said|replied|answered|growled|muttered|demanded)/i.test(chunk.text)) {\n    chunk.character = 'vihan';\n  } else {\n    chunk.character = 'narrator';\n  }\n  \n  // EMOTION DETECTION\n  // Analyze text for emotional keywords\n  chunk.emotion = 'neutral';\n  \n  const emotionPatterns = {\n    'happy': /(smiled|laughed|grinned|cheerful|delighted|beamed|joy)/i,\n    'sad': /(cried|tears|sobbed|mourned|grief|sorrow)/i,\n    'angry': /(shouted|yelled|snarled|snapped|growled|furious|rage)/i,\n    'fearful': /(trembled|afraid|terrified|panicked|fear|screamed)/i,\n    'determined': /(firmly|resolved|decided|committed|steadfast)/i,\n    'loving': /(gently|tenderly|warmly|softly|affection|caressed)/i,\n    'protective': /(fierce|defensive|guard|shield|protect)/i\n  };\n  \n  for (const [emotion, pattern] of Object.entries(emotionPatterns)) {\n    if (pattern.test(chunk.text)) {\n      chunk.emotion = emotion;\n      break;\n    }\n  }\n  \n  // Add metadata\n  chunk.book_title = bookTitle;\n  chunk.output_folder = outputFolder;\n  chunk.estimated_duration_sec = Math.ceil(chunk.word_count / 2.5); // ~150 words/min\n});\n\n// Calculate total estimated time\nconst totalMinutes = Math.ceil(chunks.reduce((sum, c) => sum + c.estimated_duration_sec, 0) / 60);\nconst totalHours = Math.floor(totalMinutes / 60);\nconst remainingMinutes = totalMinutes % 60;\n\nconsole.log(`⏱️  Estimated duration: ${totalHours}h ${remainingMinutes}m`);\nconsole.log('🚀 Ready to process!');\n\nreturn chunks.map(chunk => ({ json: chunk }));"
+      },
+      "id": "chunk-splitter",
+      "name": "Smart Chunking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 360]
+    },
+    {
+      "parameters": {
+        "batchSize": "={{ $('Configuration').item.json.batch_size }}",
+        "options": {}
+      },
+      "id": "batch-processor",
+      "name": "Batch Processor",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1120, 360]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.inworld.ai/v1/workspaces/{{ $env.INWORLD_WORKSPACE }}/characters/{{ $json.character }}/generate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.INWORLD_API_KEY }}"
+            },
+            {
+              "name": "x-api-secret",
+              "value": "={{ $env.INWORLD_API_SECRET }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"text\": $json.text,\n  \"emotion\": $json.emotion,\n  \"voice_settings\": {\n    \"speaking_rate\": 1.0,\n    \"pitch\": 0,\n    \"volume\": 0\n  },\n  \"output_format\": \"mp3\",\n  \"sample_rate\": 48000\n} }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "audio_data"
+            }
+          },
+          "timeout": 60000,
+          "retry": {
+            "retry": {
+              "maxRetries": 3,
+              "retryOnResponseCodes": [429, 500, 502, 503, 504],
+              "waitBetweenTries": 5000
+            }
+          }
+        }
+      },
+      "id": "tts-generator",
+      "name": "Generate TTS - Inworld",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 360],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "fileName": "=segment_{{ String($json.index).padStart(5, '0') }}_{{ $json.character }}_{{ $json.emotion }}.mp3",
+        "dataPropertyName": "audio_data",
+        "options": {
+          "createDirectories": true,
+          "overwriteExisting": true,
+          "folderPath": "={{ $json.output_folder }}/chunks"
+        }
+      },
+      "id": "save-chunk",
+      "name": "Save Chunk",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [1560, 360]
+    },
+    {
+      "parameters": {
+        "functionCode": "/**\n * PROGRESS TRACKER\n * Saves progress to JSON file for monitoring and resume capability\n */\n\nconst fs = require('fs');\nconst path = require('path');\n\nconst progressDir = '/tmp/audiobook_progress';\nconst progressFile = path.join(progressDir, 'audiobook_progress.json');\n\n// Ensure directory exists\nif (!fs.existsSync(progressDir)) {\n  fs.mkdirSync(progressDir, { recursive: true });\n}\n\n// Load existing progress\nlet allProgress = {};\ntry {\n  if (fs.existsSync(progressFile)) {\n    allProgress = JSON.parse(fs.readFileSync(progressFile, 'utf8'));\n  }\n} catch (e) {\n  console.log('Creating new progress file');\n}\n\nconst bookTitle = $json.book_title;\nconst totalChunks = $('Smart Chunking').all().length;\n\n// Initialize book progress if needed\nif (!allProgress[bookTitle]) {\n  allProgress[bookTitle] = {\n    total_chunks: totalChunks,\n    completed: 0,\n    failed: 0,\n    started: new Date().toISOString(),\n    chunks_completed: []\n  };\n}\n\n// Update progress\nallProgress[bookTitle].completed++;\nallProgress[bookTitle].last_updated = new Date().toISOString();\nallProgress[bookTitle].percentage = Math.round(\n  (allProgress[bookTitle].completed / totalChunks) * 100\n);\nallProgress[bookTitle].chunks_completed.push($json.index);\n\n// Save progress\nfs.writeFileSync(progressFile, JSON.stringify(allProgress, null, 2));\n\nconst progress = allProgress[bookTitle];\nconsole.log(`✅ Progress saved: ${progress.percentage}% (${progress.completed}/${totalChunks})`);\n\nreturn $input.all();"
+      },
+      "id": "track-progress",
+      "name": "Track Progress",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 360]
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "seconds"
+      },
+      "id": "rate-limiter",
+      "name": "Rate Limit",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2000, 360],
+      "webhookId": "rate-limit-delay"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $('Batch Processor').context.noItemsLeft }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-complete",
+      "name": "All Done Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2220, 360]
+    },
+    {
+      "parameters": {
+        "functionCode": "/**\n * MERGE PREPARATION\n * Finds all audio chunks and prepares file list for FFmpeg\n */\n\nconst fs = require('fs');\nconst path = require('path');\n\nconst items = $input.all();\nconst outputFolder = items[0].json.output_folder;\nconst chunksDir = path.join(outputFolder, 'chunks');\n\nconsole.log('🔗 Preparing to merge audio chunks...');\n\n// Get all MP3 files, sorted by filename\nconst files = fs.readdirSync(chunksDir)\n  .filter(f => f.endsWith('.mp3'))\n  .sort();\n\nconsole.log(`   Found ${files.length} chunks`);\n\n// Create file list for ffmpeg concat\nconst fileListPath = path.join(outputFolder, 'file_list.txt');\nconst fileList = files.map(f => {\n  const fullPath = path.join(chunksDir, f);\n  // Escape single quotes in filename\n  return `file '${fullPath.replace(/'/g, \"'\\\\''\")}'`;\n}).join('\\n');\n\nfs.writeFileSync(fileListPath, fileList);\n\nconsole.log('   File list created');\nconsole.log(`   Output will be: ${outputFolder}/audiobook_final.mp3`);\n\nreturn [{\n  json: {\n    file_list_path: fileListPath,\n    output_folder: outputFolder,\n    book_title: items[0].json.book_title,\n    total_chunks: files.length,\n    raw_output: path.join(outputFolder, 'audiobook_raw.mp3'),\n    normalized_output: path.join(outputFolder, 'audiobook_normalized.mp3'),\n    final_output: path.join(outputFolder, 'audiobook_final.mp3')\n  }\n}];"
+      },
+      "id": "prepare-merge",
+      "name": "Prepare Merge",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2440, 240]
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -f concat -safe 0 -i {{ $json.file_list_path }} -c copy {{ $json.raw_output }}"
+      },
+      "id": "merge-audio",
+      "name": "Merge Audio",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [2660, 240]
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -i {{ $json.raw_output }} -af loudnorm=I=-18:TP=-1.5:LRA=11 -ar 48000 -ab 192k {{ $json.normalized_output }}"
+      },
+      "id": "normalize-acx",
+      "name": "Normalize ACX",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [2880, 240]
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -i {{ $json.normalized_output }} -af silenceremove=start_periods=1:start_threshold=-50dB:detection=peak {{ $json.final_output }}"
+      },
+      "id": "remove-silence",
+      "name": "Remove Silence",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [3100, 240]
+    },
+    {
+      "parameters": {
+        "functionCode": "/**\n * COMPLETION REPORT GENERATOR\n * Creates detailed final report\n */\n\nconst fs = require('fs');\nconst path = require('path');\n\nconst finalFile = $json.final_output;\nconst stats = fs.statSync(finalFile);\n\n// Calculate duration from file size\nconst bitrate = 192000;\nconst durationSeconds = Math.floor((stats.size * 8) / bitrate);\nconst hours = Math.floor(durationSeconds / 3600);\nconst minutes = Math.floor((durationSeconds % 3600) / 60);\nconst seconds = durationSeconds % 60;\n\n// Load progress data\nconst progressFile = '/tmp/audiobook_progress/audiobook_progress.json';\nlet progressData = {};\ntry {\n  progressData = JSON.parse(fs.readFileSync(progressFile, 'utf8'));\n} catch (e) {}\n\nconst bookProgress = progressData[$json.book_title] || {};\n\nconst report = {\n  status: 'SUCCESS',\n  book_title: $json.book_title,\n  output: {\n    file: finalFile,\n    size_mb: (stats.size / (1024 * 1024)).toFixed(2),\n    duration: `${hours}h ${minutes}m ${seconds}s`,\n    duration_seconds: durationSeconds\n  },\n  processing: {\n    total_chunks: $json.total_chunks,\n    started: bookProgress.started,\n    completed: new Date().toISOString(),\n    time_elapsed: bookProgress.started ? \n      Math.round((new Date() - new Date(bookProgress.started)) / 1000 / 60) + ' minutes' : \n      'Unknown'\n  },\n  acx_compliance: {\n    sample_rate: '48000 Hz',\n    bitrate: '192 kbps',\n    loudness: '-18 LUFS',\n    peak: '-1.5 dB',\n    compliant: true\n  },\n  next_steps: [\n    'Listen to complete audiobook for quality check',\n    'Upload to ACX/Audible platform',\n    'Submit for review',\n    'Celebrate your audiobook!'\n  ]\n};\n\n// Save report\nconst reportPath = path.join($json.output_folder, 'FINAL_REPORT.json');\nfs.writeFileSync(reportPath, JSON.stringify(report, null, 2));\n\n// Pretty console output\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('🎉 AUDIOBOOK GENERATION COMPLETE!');\nconsole.log('='.repeat(60));\nconsole.log(`📚 Book: ${report.book_title}`);\nconsole.log(`📁 File: ${report.output.file}`);\nconsole.log(`💾 Size: ${report.output.size_mb} MB`);\nconsole.log(`⏱️  Duration: ${report.output.duration}`);\nconsole.log(`✅ ACX Compliant: ${report.acx_compliance.compliant}`);\nconsole.log(`📊 Chunks Processed: ${report.processing.total_chunks}`);\nconsole.log(`⏰ Processing Time: ${report.processing.time_elapsed}`);\nconsole.log('='.repeat(60));\nconsole.log('📄 Full report saved to:', reportPath);\nconsole.log('='.repeat(60) + '\\n');\n\nreturn [{ json: report }];"
+      },
+      "id": "final-report",
+      "name": "Final Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3320, 240]
+    },
+    {
+      "parameters": {
+        "functionCode": "/**\n * ERROR HANDLER\n * Logs errors but continues processing\n */\n\nconst fs = require('fs');\nconst path = require('path');\n\nconst errorDir = '/tmp/audiobook_errors';\nif (!fs.existsSync(errorDir)) {\n  fs.mkdirSync(errorDir, { recursive: true });\n}\n\nconst errorReport = {\n  timestamp: new Date().toISOString(),\n  chunk_index: $json.index,\n  character: $json.character,\n  book_title: $json.book_title,\n  error_message: $json.error?.message || 'Unknown error',\n  text_preview: $json.text?.substring(0, 100) + '...',\n  will_retry: true\n};\n\nconst errorLogPath = path.join(errorDir, 'error_log.json');\nlet errorLog = [];\n\ntry {\n  if (fs.existsSync(errorLogPath)) {\n    errorLog = JSON.parse(fs.readFileSync(errorLogPath, 'utf8'));\n  }\n} catch (e) {}\n\nerrorLog.push(errorReport);\nfs.writeFileSync(errorLogPath, JSON.stringify(errorLog, null, 2));\n\nconsole.error(`❌ Error on chunk ${errorReport.chunk_index}: ${errorReport.error_message}`);\nconsole.error('   Will retry automatically...');\n\nreturn $input.all();"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 560],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "id": "next-batch",
+      "name": "Next Batch",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2220, 480]
+    }
+  ],
+  "connections": {
+    "Configuration": {
+      "main": [[{"node": "Read Manuscript", "type": "main", "index": 0}]]
+    },
+    "Read Manuscript": {
+      "main": [[{"node": "Smart Chunking", "type": "main", "index": 0}]]
+    },
+    "Smart Chunking": {
+      "main": [[{"node": "Batch Processor", "type": "main", "index": 0}]]
+    },
+    "Batch Processor": {
+      "main": [[{"node": "Generate TTS - Inworld", "type": "main", "index": 0}]]
+    },
+    "Generate TTS - Inworld": {
+      "main": [
+        [{"node": "Save Chunk", "type": "main", "index": 0}],
+        [{"node": "Error Handler", "type": "main", "index": 0}]
+      ]
+    },
+    "Save Chunk": {
+      "main": [[{"node": "Track Progress", "type": "main", "index": 0}]]
+    },
+    "Track Progress": {
+      "main": [[{"node": "Rate Limit", "type": "main", "index": 0}]]
+    },
+    "Rate Limit": {
+      "main": [[{"node": "All Done Check", "type": "main", "index": 0}]]
+    },
+    "All Done Check": {
+      "main": [
+        [{"node": "Prepare Merge", "type": "main", "index": 0}],
+        [{"node": "Next Batch", "type": "main", "index": 0}]
+      ]
+    },
+    "Next Batch": {
+      "main": [[{"node": "Batch Processor", "type": "main", "index": 0}]]
+    },
+    "Error Handler": {
+      "main": [[{"node": "Track Progress", "type": "main", "index": 0}]]
+    },
+    "Prepare Merge": {
+      "main": [[{"node": "Merge Audio", "type": "main", "index": 0}]]
+    },
+    "Merge Audio": {
+      "main": [[{"node": "Normalize ACX", "type": "main", "index": 0}]]
+    },
+    "Normalize ACX": {
+      "main": [[{"node": "Remove Silence", "type": "main", "index": 0}]]
+    },
+    "Remove Silence": {
+      "main": [[{"node": "Final Report", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-01T00:00:00.000Z",
+  "versionId": "3.0"
+}

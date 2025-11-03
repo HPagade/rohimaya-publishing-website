@@ -1,0 +1,150 @@
+{
+  "name": "Audiobook Generation Pipeline",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Read manuscript file and split into segments\nconst fs = require('fs');\nconst manuscript = fs.readFileSync('/path/to/manuscript.txt', 'utf8');\n\n// Split by paragraphs\nconst segments = manuscript.split('\\n\\n').filter(s => s.trim());\n\n// Detect character for each segment\nconst processedSegments = segments.map((text, index) => {\n  let character = 'narrator';\n  \n  if (text.includes('Aaravi') || text.includes('she said')) {\n    character = 'aaravi';\n  } else if (text.includes('Vihan') || text.includes('he said')) {\n    character = 'vihan';\n  }\n  \n  return {\n    index,\n    text,\n    character\n  };\n});\n\nreturn processedSegments.map(s => ({ json: s }));"
+      },
+      "name": "Process Manuscript",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/={{$json.character === 'aaravi' ? $env.HANNAH_VOICE_ID : $json.character === 'vihan' ? $env.PRASAD_VOICE_ID : '21m00Tcm4TlvDq8ikWAM'}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "={{$env.ELEVENLABS_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{$json.text}}"
+            },
+            {
+              "name": "voice_settings",
+              "value": "={\"stability\": 0.5, \"similarity_boost\": 0.75}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "name": "Generate Speech - ElevenLabs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Save audio file\nconst binaryData = items[0].binary;\nconst fileName = `segment_${$json.index}.mp3`;\nconst outputPath = `/output/chapters/${fileName}`;\n\nawait $binary.write(binaryData, outputPath);\n\nreturn {\n  json: {\n    index: $json.index,\n    character: $json.character,\n    filePath: outputPath,\n    status: 'completed'\n  }\n};"
+      },
+      "name": "Save Audio File",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "command": "ffmpeg -f concat -safe 0 -i /output/chapters/file_list.txt -c copy /output/audiobook_complete.mp3"
+      },
+      "name": "Merge All Chapters",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "command": "ffmpeg -i /output/audiobook_complete.mp3 -af loudnorm=I=-18:TP=-1.5:LRA=11 -ar 48000 /output/audiobook_final_acx.mp3"
+      },
+      "name": "Normalize for ACX",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Process Manuscript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Manuscript": {
+      "main": [
+        [
+          {
+            "node": "Generate Speech - ElevenLabs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Speech - ElevenLabs": {
+      "main": [
+        [
+          {
+            "node": "Save Audio File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Audio File": {
+      "main": [
+        [
+          {
+            "node": "Merge All Chapters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Chapters": {
+      "main": [
+        [
+          {
+            "node": "Normalize for ACX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "pinData": {},
+  "versionId": "1"
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhoenixForge AI - Master Deployment Prompt</title>
+    <style>
+        /* CSS from Pitch Deck: Used to keep styling professional and on-brand */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #1a1a2e; color: #e0e0e0; margin: 0; padding: 0; }
+        .slide { height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 50px; box-sizing: border-box; background-color: #1a1a2e; color: #e0e0e0; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        h1 { color: #FF6B35; font-size: 3em; margin-bottom: 0.5em; }
+        .logo-img { max-width: 180px; margin-bottom: 20px; border-radius: 50%; border: 4px solid #f7931e; }
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 40px; }
+        .metric-box { background-color: #242436; padding: 25px; border-radius: 12px; border-top: 5px solid #FF6B35; text-align: center; }
+        .deck-footer { position: absolute; bottom: 20px; right: 20px; color: #444; font-size: 0.8em; }
+        .highlight { color: #FF6B35; font-weight: bold; }
+
+        /* Writer Editor CSS (Simplified from previous prompt) */
+        .app-container { display: flex; height: 100vh; }
+        .editor-area { flex: 3; padding: 20px; background-color: #161625; overflow-y: scroll; }
+        .context-panel { flex: 1; padding: 20px; background-color: #1a1a2e; border-left: 1px solid #333; overflow-y: scroll; }
+        .generate-btn { padding: 10px 20px; background-color: #FF6B35; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .context-box { padding: 15px; margin-bottom: 20px; background-color: #242436; border-radius: 8px; border-left: 3px solid #FF6B35; }
+
+        /* Hidden Documentation Block */
+        .documentation { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="editor-wireframe">
+    <div class="editor-area">
+        <header class="editor-header">
+            <h1>PhoenixForge Writer: Long-Form Editor</h1>
+            <span class="word-count">Word Count: 0</span>
+        </header>
+        <textarea id="manuscript-editor" class="long-form-textarea" style="width: 100%; height: 70vh;" placeholder="Start writing or paste your existing manuscript here. The AI will automatically analyze your style."></textarea>
+
+        <div class="action-area" style="display:flex; gap: 10px; margin-top: 20px;">
+            <input id="prompt-input" type="text" style="flex-grow: 1;" class="action-input" placeholder="e.g., Generate the next 500 words where Anya faces the Council Elder.">
+            <button id="generate-button" class="generate-btn">
+                Generate Scene (Claude Opus)
+            </button>
+        </div>
+        <div id="ai-response" style="margin-top: 20px; padding: 15px; border: 1px dashed #9B59B6; border-radius: 4px; background-color: #161625;">AI Response will stream here...</div>
+    </div>
+
+    <div class="context-panel">
+        <h2>Context & Controls</h2>
+        
+        <div class="context-box" id="tone-training">
+            <h3>Style & Tone Training ✍️</h3>
+            <p><strong>Current Tone:</strong> [AI Must Detect and Display Here]</p>
+            <p style="color: #FF6B35;">*AI will mimic your writing style for seamless prose.</p>
+        </div>
+
+        <div class="context-box" id="lore-database">
+            <h3>Lore/Codex Database (PostgreSQL) 📖</h3>
+            <p><strong>Status:</strong> [Load/Show Lore Entries]</p>
+            <button class="generate-btn" style="background-color: #3e5c76;">Manage Lore/Characters</button>
+        </div>
+
+        <div class="context-box" id="quick-prompts">
+            <h3>Quick Commands</h3>
+            <button class="generate-btn" style="background-color: #3e5c76; margin-bottom: 5px;">Generate Chapter Outline</button>
+            <button class="generate-btn" style="background-color: #3e5c76;">AI Proof-Listener Check (Voice API)</button>
+        </div>
+    </div>
+</div>
+
+<div class="documentation" id="branding-assets">
+    <p id="logo-url">rohimaya-publishing-circle-logo.jpg</p>
+    <p id="author-photo-url">Author Photo.jpg</p>
+    <p id="primary-color">#FF6B35 (Phoenix Orange)</p>
+    <p id="secondary-color">#f7931e (Forge Gold)</p>
+    <p id="accent-color">#9B59B6 (Creation Purple)</p>
+    <p id="tagline">Where Stories Take Shape</p>
+</div>
+
+<section class="slide" style="background: linear-gradient(135deg, #1a1a2e 0%, #0d0d18 100%);">
+    <img src="rohimaya-publishing-circle-logo.jpg" alt="PhoenixForge AI Logo - Phoenix and Peacock" class="logo-img">
+    <h1>PHOENIXFORGE AI</h1>
+    <h3 style="color: #e0e0e0;">The AI-Powered Operating System for Authors & Publishers</h3>
+</section>
+
+<section class="slide">
+    <h2>1. The Problem: The Publishing Barrier</h2>
+    <div class="data-grid" style="max-width: 900px; grid-template-columns: 1fr 1fr;">
+        <div class="metric-box" style="border-top: 5px solid #f7931e;">
+            <h3 style="color: #f7931e;">$2,500 - $5,000</h3>
+            <p>Average cost for covers, editing, formatting, and audiobooks—per book.</p>
+        </div>
+        <div class="metric-box" style="border-top: 5px solid #f7931e;">
+            <h3 style="color: #f7931e;">4 - 8 WEEKS</h3>
+            <p>Minimum timeline for coordinating freelancers, restricting author output.</p>
+        </div>
+    </div>
+</section>
+
+<section class="slide">
+    <h2>2. The Solution: The 5-Tool Suite</h2>
+    <p>We replace 5 freelancers with one platform, automating the workflow from manuscript to market in <span class="highlight">one hour</span>, not eight weeks.</p>
+    <div class="data-grid" style="max-width: 1000px; grid-template-columns: repeat(5, 1fr);">
+        <div class="metric-box"><h3>Format</h3><p>AI Manuscript Formatting</p></div>
+        <div class="metric-box"><h3>Covers</h3><p>AI Cover Generation</p></div>
+        <div class="metric-box"><h3>Writer</h3><p>AI Long-Form Drafting</p></div>
+        <div class="metric-box"><h3>Videos</h3><p>AI Trailer Production</p></div>
+        <div class="metric-box"><h3>Voice</h3><p>AI Audiobook Creator</p></div>
+    </div>
+</section>
+
+<section class="slide">
+    <h2>3. Financials & Projections</h2>
+    <div class="data-grid">
+        <div class="metric-box">
+            <h3>$3.14M</h3>
+            <p>Projected Total Revenue (5 Years)</p>
+        </div>
+        <div class="metric-box">
+            <h3>411%</h3>
+            <p>Projected ROI in Year 1 (Bootstrap)</p>
+        </div>
+        <div class="metric-box">
+            <h3>$49/Month</h3>
+            <p>Most Popular Tier (Blaze), with 93% Gross Margin.</p>
+        </div>
+    </div>
+    <h3 style="margin-top: 40px; color: #9B59B6;">Revenue Growth (Conservative)</h3>
+    <div class="data-grid" style="grid-template-columns: repeat(5, 1fr); font-size: 0.9em; max-width: 900px;">
+        <div>Y1: $79K</div>
+        <div>Y2: $468K</div>
+        <div>Y3: $1.15M</div>
+        <div>Y4: $2.06M</div>
+        <div>Y5: $3.14M</div>
+    </div>
+</section>
+
+<section class="slide">
+    <h2>4. The Team: Experience Meets Execution</h2>
+    <div class="data-grid" style="grid-template-columns: 1fr;">
+        <div class="team-member">
+            <img src="Author Photo.jpg" alt="Hannah Pagade Author Photo" style="border-radius: 50%; max-width: 150px; border: 4px solid #9B59B6; margin-bottom: 15px;">
+            <h3 style="color: #FF6B35; font-size: 1.8em;">Hannah Pagade</h3>
+            <p style="color: #f7931e; font-weight: bold;">Founder & CEO</p>
+            <p style="font-size: 1em;">38-book author, Healthcare Operations Leader, AI/ML Strategy. Leads Product Vision and Execution.</p>
+        </div>
+    </div>
+</section>
+
+<div class="documentation">
+    
+    <div id="documentation-tech-stack">
+        <h3>Core Technology Stack</h3>
+        <ul>
+            <li><strong>Framework:</strong> Next.js (React/TypeScript)</li>
+            <li><strong>Hosting:</strong> Vercel (Optimized for Next.js Serverless Functions)</li>
+            <li><strong>Database:</strong> PostgreSQL (Neon Recommended for Serverless/Scale)</li>
+            <li><strong>File Storage:</strong> AWS S3 (Bucket: phoenixforge-files)</li>
+            <li><strong>Authentication:</strong> NextAuth (Google/GitHub OAuth)</li>
+            <li><strong>CI/CD:</strong> GitHub Actions (for automated testing and deployment)</li>
+        </ul>
+    </div>
+
+    <div id="documentation-deployment">
+        <h3>Deployment Plan: Vercel & Cloudflare</h3>
+        <ul>
+            <li><strong>Vercel Connection:</strong> The GitHub Actions workflow must connect the repository to Vercel for deployment (Vercel is the production environment).</li>
+            <li><strong>Cloudflare Domain:</strong> The final Vercel deployment URL must be connected to the domain managed on Cloudflare (Set CNAME or A records to point to Vercel).</li>
+            <li><strong>Secrets Management:</strong> All API keys must be stored as <strong>Environment Variables</strong> in the Vercel project settings and accessed securely via `process.env`.</li>
+            <li><strong>Database URL:</strong> Use the remote PostgreSQL connection string (`DATABASE_URL`).</li>
+        </ul>
+    </div>
+
+    <div id="documentation-apis">
+        <h3>Required LLM & Financial APIs (Environment Variables)</h3>
+        <ul>
+            <li><strong>Payment:</strong> STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET</li>
+            <li><strong>AI (Long-Form):</strong> ANTHROPIC_API_KEY (for Claude Writer/Format)</li>
+            <li><strong>AI (Visuals):</strong> OPENAI_API_KEY (for Covers/Images via DALL-E)</li>
+            <li><strong>AI (Voice):</strong> ELEVENLABS_API_KEY (for Audiobooks)</li>
+            <li><strong>AWS:</strong> AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_S3_BUCKET</li>
+        </ul>
+    </div>
+
+    <div id="documentation-features">
+        <h3>Full 5-Product Suite & Suggested Enhancements (To Implement)</h3>
+        <p><strong>PhoenixForge Format:</strong> ACX/IngramSpark Pre-Check, Automated Metadata Optimization.</p>
+        <p><strong>PhoenixForge Writer (NEW):</strong> Context Window Manager, Lore/Codex Database (PostgreSQL), Style/Tone Training.</p>
+        <p><strong>PhoenixForge Covers:</strong> "Brand Kit" Generator (JSON Output) for series consistency.</p>
+        <p><strong>PhoenixForge Voice:</strong> AI Proof-Listener (Dual-Voice Validation), Character Voice Memory.</p>
+        <p><strong>PhoenixForge Videos:</strong> Automated B-Roll Suggestion from AI text analysis.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

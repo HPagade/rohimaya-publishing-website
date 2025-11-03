@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# macOS system files
+.DS_Store
+
+# Logs
+*.log
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Output / build artifacts
+output/
+dist/
+build/
+*.egg-info/
+
+# Temporary data
+*.tmp
+*.bak

@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.local
+
+# Audio files
+*.mp3
+*.wav
+*.m4a
+*.flac
+output/
+temp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# N8N
+.n8n/
+
+# Temporary files
+tmp/
+*.tmp
+*.bak
+*.cache
+
+# Node modules (if using n8n locally)
+node_modules/
+
+# Voice samples (keep folder, ignore large files)
+system/voice_samples/*.wav
+system/voice_samples/*.mp3
+system/voice_samples/*.m4a
+
+# Output folders
+system/output/
+system/temp/
