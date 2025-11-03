@@ -1,0 +1,71 @@
+{
+  "name": "PhoenixForge - AI Image Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "images",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-images",
+      "name": "Webhook - Image Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.openai.com/v1/images/generations",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "dall-e-3"
+            },
+            {
+              "name": "prompt",
+              "value": "={{$json.body.prompt}}"
+            },
+            {
+              "name": "size",
+              "value": "={{$json.body.dimensions || '1024x1024'}}"
+            },
+            {
+              "name": "quality",
+              "value": "standard"
+            }
+          ]
+        }
+      },
+      "id": "dalle-image",
+      "name": "Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'completed', imageUrl: $json.data[0].url, jobId: 'img_' + Date.now() } }}"
+      },
+      "id": "respond-image",
+      "name": "Return Image",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Image Request": {
+      "main": [[{"node": "Generate Image", "type": "main", "index": 0}]]
+    },
+    "Generate Image": {
+      "main": [[{"node": "Return Image", "type": "main", "index": 0}]]
+    }
+  },
+  "tags": ["PhoenixForge", "AI", "Images"]
+}

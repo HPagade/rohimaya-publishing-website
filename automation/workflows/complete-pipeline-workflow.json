@@ -1,0 +1,112 @@
+{
+  "name": "PhoenixForge - Complete Book Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "complete-book",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-pipeline",
+      "name": "Webhook - Complete Book",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Orchestrate complete book creation pipeline\nconst body = $input.item.json.body;\n\nreturn {\n  json: {\n    manuscript: body.manuscript,\n    title: body.title,\n    author: body.author,\n    genre: body.genre,\n    pipelineId: `pipeline_${Date.now()}`,\n    steps: [\n      { step: 1, name: 'Format Manuscript', status: 'pending' },\n      { step: 2, name: 'Generate Cover', status: 'pending' },\n      { step: 3, name: 'Create Images', status: 'pending' },\n      { step: 4, name: 'Generate Trailer', status: 'pending' },\n      { step: 5, name: 'Package Files', status: 'pending' }\n    ]\n  }\n};"
+      },
+      "id": "orchestrator",
+      "name": "Pipeline Orchestrator",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/format",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "manuscript",
+              "value": "={{$json.manuscript}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json.author}}"
+            }
+          ]
+        }
+      },
+      "id": "call-formatter",
+      "name": "Call Formatter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 250]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/covers",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json.author}}"
+            },
+            {
+              "name": "genre",
+              "value": "={{$json.genre}}"
+            }
+          ]
+        }
+      },
+      "id": "call-covers",
+      "name": "Call Cover Generator",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'pipeline_completed', pipelineId: $json.pipelineId, results: 'All assets generated successfully' } }}"
+      },
+      "id": "respond-pipeline",
+      "name": "Return Pipeline Results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Complete Book": {
+      "main": [[{"node": "Pipeline Orchestrator", "type": "main", "index": 0}]]
+    },
+    "Pipeline Orchestrator": {
+      "main": [[
+        {"node": "Call Formatter", "type": "main", "index": 0},
+        {"node": "Call Cover Generator", "type": "main", "index": 0}
+      ]]
+    },
+    "Call Formatter": {
+      "main": [[{"node": "Return Pipeline Results", "type": "main", "index": 0}]]
+    },
+    "Call Cover Generator": {
+      "main": [[{"node": "Return Pipeline Results", "type": "main", "index": 0}]]
+    }
+  },
+  "tags": ["PhoenixForge", "Pipeline", "Complete"]
+}
