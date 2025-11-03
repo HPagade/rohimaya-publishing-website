@@ -6,6 +6,15 @@ A revolutionary AI-powered creative suite for authors and publishers. Profession
 
 ---
 
+> ## 🆕 NEW TO THIS PROJECT?
+> 
+> **👉 Start here:** [BEGINNER-CHECKLIST.md](BEGINNER-CHECKLIST.md)
+> 
+> A complete, beginner-friendly, step-by-step guide to get your platform running.
+> Takes 3-6 hours total and explains everything in simple terms. Perfect if you're not super technical!
+
+---
+
 ## 📋 Table of Contents
 
 - [Quick Start](#-quick-start)
