@@ -1,0 +1,330 @@
+{
+  "name": "PhoenixForge - AI Manuscript Formatter",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "format",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook - Format Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "format-manuscript"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract manuscript data from webhook\nconst body = $input.item.json.body;\n\nreturn {\n  json: {\n    filename: body.filename || 'manuscript.docx',\n    fileContent: body.fileContent || body.file,\n    genre: body.genre || 'general',\n    template: body.template || 'standard',\n    formats: body.formats || ['pdf', 'epub'],\n    title: body.title || 'Untitled',\n    author: body.author || 'Unknown Author'\n  }\n};"
+      },
+      "id": "function-1",
+      "name": "Parse Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are a professional manuscript formatter. Analyze the manuscript and identify chapters, sections, and proper formatting structure.\"}, {\"role\": \"user\", \"content\": \"Analyze this manuscript and identify: 1) Chapter breaks 2) Section divisions 3) Special formatting needs (italics, bold, quotes) 4) Front matter and back matter. Manuscript: \" + $json.fileContent.substring(0, 4000)}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-1",
+      "name": "Analyze with GPT-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "openai-api",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse GPT-4 response and structure the manuscript\nconst gptResponse = $input.item.json.choices[0].message.content;\nconst manuscriptData = $('Parse Request').first().json;\n\nreturn {\n  json: {\n    ...manuscriptData,\n    structure: gptResponse,\n    processedAt: new Date().toISOString(),\n    chapterCount: (gptResponse.match(/Chapter/gi) || []).length\n  }\n};"
+      },
+      "id": "function-2",
+      "name": "Structure Manuscript",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "url": "={{$env.API_URL}}/api/format/generate-pdf",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{$json.fileContent}}"
+            },
+            {
+              "name": "structure",
+              "value": "={{$json.structure}}"
+            },
+            {
+              "name": "template",
+              "value": "={{$json.template}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json.author}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-2",
+      "name": "Generate PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 250],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "backend-api",
+          "name": "PhoenixForge Backend"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "url": "={{$env.API_URL}}/api/format/generate-epub",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{$json.fileContent}}"
+            },
+            {
+              "name": "structure",
+              "value": "={{$json.structure}}"
+            },
+            {
+              "name": "template",
+              "value": "={{$json.template}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json.author}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-3",
+      "name": "Generate EPUB",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 350],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "backend-api",
+          "name": "PhoenixForge Backend"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Combine results from PDF and EPUB generation\nconst pdfData = $('Generate PDF').first().json;\nconst epubData = $('Generate EPUB').first().json;\nconst manuscriptData = $('Structure Manuscript').first().json;\n\nreturn {\n  json: {\n    status: 'completed',\n    jobId: `fmt_${Date.now()}`,\n    title: manuscriptData.title,\n    author: manuscriptData.author,\n    chapterCount: manuscriptData.chapterCount,\n    files: [\n      {\n        format: 'pdf',\n        url: pdfData.url,\n        size: pdfData.size || 'Unknown'\n      },\n      {\n        format: 'epub',\n        url: epubData.url,\n        size: epubData.size || 'Unknown'\n      }\n    ],\n    processedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "function-3",
+      "name": "Combine Results",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-1",
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Error handler\nconst error = $input.item.json.error || 'Unknown error occurred';\n\nreturn {\n  json: {\n    status: 'failed',\n    error: error,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "function-error",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1250, 450]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "id": "respond-error",
+      "name": "Return Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1450, 450]
+    }
+  ],
+  "connections": {
+    "Webhook - Format Request": {
+      "main": [
+        [
+          {
+            "node": "Parse Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Request": {
+      "main": [
+        [
+          {
+            "node": "Analyze with GPT-4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze with GPT-4": {
+      "main": [
+        [
+          {
+            "node": "Structure Manuscript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Manuscript": {
+      "main": [
+        [
+          {
+            "node": "Generate PDF",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate EPUB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate PDF": {
+      "main": [
+        [
+          {
+            "node": "Combine Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate EPUB": {
+      "main": [
+        [
+          {
+            "node": "Combine Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Results": {
+      "main": [
+        [
+          {
+            "node": "Return Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PhoenixForge",
+      "id": "phoenixforge"
+    },
+    {
+      "name": "AI",
+      "id": "ai"
+    },
+    {
+      "name": "Publishing",
+      "id": "publishing"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-03T00:00:00.000Z",
+  "versionId": "1"
+}

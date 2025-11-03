@@ -3,21 +3,50 @@ node_modules/
 /.pnp
 .pnp.js
 package-lock.json
+*/node_modules/
+*/package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
 
 # Testing
 /coverage
+*.cover
+.coverage
+.coverage.*
+.hypothesis/
+/tests/__pycache__/
 
 # Production
 /build
 /.next
 /nextjs-app/.next
 /nextjs-app/out
+/website/.next
+/website/out
 /dist
+/backend/dist
+*.o
+*.a
+*.exe
 
 # Cache
 .turbo
 .vercel
 .cache
+.parcel-cache
+*.cache
 
 # Misc
 .DS_Store
@@ -26,6 +55,7 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
+*.local
 
 # Logs
 npm-debug.log*
@@ -33,6 +63,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+*.log
 
 # Editor directories and files
 .vscode/
@@ -40,22 +71,54 @@ lerna-debug.log*
 *.swp
 *.swo
 *~
+.fleet/
+.sublime-*
 
 # OS files
 Thumbs.db
+.AppleDouble
+.LSOverride
 
 # Temporary files
 /tmp
 *.tmp
 *.temp
+.reorganize.sh
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
 
-# Server uploads
+# Server/Backend uploads
 /server/uploads/*
 /server/exports/*
+/backend/uploads/*
+/backend/exports/*
 !/server/uploads/.gitkeep
 !/server/exports/.gitkeep
+!/backend/uploads/.gitkeep
+!/backend/exports/.gitkeep
+
+# Mobile
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+ios/Pods/
+android/.gradle/
+android/build/
+android/app/build/
+mobile-apps/ios/Pods/
+mobile-apps/android/.gradle/
+mobile-apps/android/build/
+mobile-apps/android/app/build/
+
+# n8n
+.n8n/
+
+# Docker
+*.log
+docker-compose.override.yml

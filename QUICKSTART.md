@@ -1,200 +1,251 @@
 # 🚀 PhoenixForge AI - Quick Start Guide
 
-Get up and running with PhoenixForge AI in 15 minutes!
+Get up and running with PhoenixForge AI in under 10 minutes!
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Quick Setup](#quick-setup)
+3. [Running Components](#running-components)
+4. [Testing](#testing)
+5. [Next Steps](#next-steps)
 
 ---
 
-## 📦 Prerequisites
+## Prerequisites
 
-Before you begin, ensure you have:
+### Required
+- **Node.js 18+** - [Download](https://nodejs.org/)
+- **npm** or **yarn**
+- **Git**
 
-- ✅ **Node.js 20+** - [Download](https://nodejs.org)
-- ✅ **npm or yarn** - Comes with Node.js
-- ✅ **PostgreSQL 15+** - [Download](https://www.postgresql.org/download/)
-- ✅ **Redis 7+** - [Download](https://redis.io/download)
-- ✅ **Git** - [Download](https://git-scm.com/downloads)
+### Optional (for specific components)
+- **Python 3.9+** - For Streamlit demos
+- **Docker** - For containerized deployment
+- **Expo Go App** - For mobile app testing (iOS/Android)
 
-### Check Your Setup
-
+### Check Installation
 ```bash
-node --version  # Should be v20 or higher
+node --version  # Should be v18+
 npm --version
-psql --version
-redis-cli --version
 git --version
+python --version  # For demos only
 ```
 
 ---
 
-## ⚡ 15-Minute Setup
+## Quick Setup
 
-### 1. Clone the Repository (1 min)
+### 1. Clone Repository
 
 ```bash
-# Clone the repo
-git clone https://github.com/rohimaya/rohimaya-publishing-website.git
-
-# Navigate to directory
-cd rohimaya-publishing-website
-
-# Or if you forked it:
-git clone https://github.com/YOUR_USERNAME/rohimaya-publishing-website.git
+git clone https://github.com/HPagade/rohimaya-publishing-website.git
 cd rohimaya-publishing-website
 ```
 
----
-
-### 2. Install Dependencies (3 min)
-
-```bash
-# Install all packages
-npm install
-
-# Or with yarn
-yarn install
-```
-
-This will install ~500MB of dependencies. Grab a coffee! ☕
-
----
-
-### 3. Set Up Database (2 min)
-
-```bash
-# Create PostgreSQL database
-createdb phoenixforge
-
-# Or manually:
-psql postgres
-CREATE DATABASE phoenixforge;
-\q
-```
-
----
-
-### 4. Configure Environment (3 min)
+### 2. Environment Setup
 
 ```bash
 # Copy environment template
 cp .env.example .env
 
-# Edit with your favorite editor
-nano .env  # or vim, code, etc.
+# Edit with your API keys (optional for demo mode)
+nano .env  # or use your preferred editor
 ```
 
-**Minimum required for local development:**
-
+**Minimal .env for testing:**
 ```bash
-# Application
-NODE_ENV=development
-PORT=3000
-APP_URL=http://localhost:3000
-
-# Database
-DATABASE_URL="postgresql://postgres:password@localhost:5432/phoenixforge"
-
-# Redis
-REDIS_URL="redis://localhost:6379"
-
-# OpenAI (for AI features - get key at platform.openai.com)
-OPENAI_API_KEY="sk-your-key-here"
-
-# NextAuth (generate random string)
-NEXTAUTH_SECRET="your-random-secret-min-32-chars"
-NEXTAUTH_URL="http://localhost:3000"
-```
-
-**Generate a secure NextAuth secret:**
-```bash
-openssl rand -base64 32
+# Leave empty for demo mode, or add real keys for live API calls
+OPENAI_API_KEY=
+STRIPE_SECRET_KEY=
+API_URL=http://localhost:3001
 ```
 
 ---
 
-### 5. Run Database Migrations (2 min)
+## Running Components
+
+### 🌐 Option 1: Website (Next.js)
+
+**Best for: Testing the main web application**
 
 ```bash
-# Apply database schema
-npm run db:migrate
-
-# Or with Prisma directly
-npx prisma migrate dev
-```
-
----
-
-### 6. Seed the Database (Optional - 1 min)
-
-```bash
-# Add sample data
-npm run db:seed
-```
-
-This creates:
-- Test user account
-- Sample book covers
-- Genre templates
-- Demo content
-
----
-
-### 7. Start Development Server (1 min)
-
-```bash
-# Start all services
+cd website
+npm install
 npm run dev
-
-# Or start individually:
-npm run dev:web    # Frontend (port 3000)
-npm run dev:api    # Backend API (port 4000)
-npm run dev:worker # Background jobs
 ```
 
-**You should see:**
+✅ **Access at:** http://localhost:3000
+
+**What you'll see:**
+- Landing page
+- All product interfaces (Formatter, Covers, Images, etc.)
+- Dashboard
+- Pricing page
+
+---
+
+### 🎨 Option 2: Streamlit Demo (Fastest!)
+
+**Best for: Quick demo, presentations, showing to clients**
+
+```bash
+cd demos/streamlit
+pip install -r requirements.txt
+streamlit run main_demo.py
 ```
-✓ Ready on http://localhost:3000
-✓ API running on http://localhost:4000
-✓ Worker processing jobs
+
+✅ **Access at:** http://localhost:8501
+
+**What you'll see:**
+- Interactive demos of all features
+- Mock data (no API keys needed!)
+- Professional presentation interface
+- Pricing calculator
+
+**Perfect for:**
+- Investor pitches
+- Client demonstrations
+- Team showcases
+- Testing UX without APIs
+
+---
+
+### 📱 Option 3: Mobile App
+
+**Best for: Testing mobile experience**
+
+```bash
+cd mobile-apps
+npm install
+npm start
+```
+
+**On your phone:**
+1. Install **Expo Go** app ([iOS](https://apps.apple.com/app/expo-go/id982107779) | [Android](https://play.google.com/store/apps/details?id=host.exp.exponent))
+2. Scan the QR code shown in terminal
+3. App loads on your device!
+
+**What you'll see:**
+- Mobile-optimized interface
+- All features accessible
+- Native app feel
+
+---
+
+### 🔄 Option 4: n8n Workflows
+
+**Best for: Testing automation, API integration**
+
+```bash
+cd automation
+npx n8n
+```
+
+✅ **Access at:** http://localhost:5678
+
+**To import workflows:**
+1. Click "Workflows" → "Import from File"
+2. Select workflow from `automation/workflows/`
+3. Configure credentials (OpenAI, etc.)
+4. Click "Execute Workflow" to test
+
+**Available workflows:**
+- `formatter-workflow.json` - Format manuscripts
+- `cover-generator-workflow.json` - Generate covers
+- `image-generator-workflow.json` - Create images
+- `complete-pipeline-workflow.json` - Full book pipeline
+
+---
+
+### 🔧 Option 5: Backend API
+
+**Best for: API development, integration testing**
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+✅ **API at:** http://localhost:3001
+
+**Test endpoints:**
+```bash
+# Health check
+curl http://localhost:3001/api/health
+
+# (Add more endpoints as they're implemented)
 ```
 
 ---
 
-### 8. Open in Browser (30 sec)
+## Testing
 
-Visit: **http://localhost:3000**
+### Quick Tests
 
-You should see the PhoenixForge AI homepage! 🎉
+**1. Streamlit Demo** (No setup required!)
+```bash
+cd demos/streamlit
+pip install -r requirements.txt
+streamlit run main_demo.py
+# Navigate through all demos
+```
+
+**2. Mobile App** (Requires Expo Go)
+```bash
+cd mobile-apps
+npm install
+npm start
+# Scan QR code with Expo Go
+```
+
+**3. n8n Workflows** (Requires API keys for live testing)
+```bash
+cd automation
+npx n8n
+# Import and test workflows
+```
+
+### What to Test
+
+#### Website
+- [ ] Landing page loads
+- [ ] Can navigate to all product pages
+- [ ] Forms are responsive
+- [ ] Dashboard displays correctly
+
+#### Streamlit Demo
+- [ ] All demos load without errors
+- [ ] Can navigate between sections
+- [ ] Mock data displays correctly
+- [ ] Download buttons work
+
+#### Mobile App
+- [ ] App loads on Expo Go
+- [ ] All features are accessible
+- [ ] Navigation works smoothly
+- [ ] UI renders correctly
+
+#### n8n Workflows
+- [ ] Workflows import successfully
+- [ ] Can view workflow structure
+- [ ] Test mode works (with mock data)
+- [ ] (With API keys) Live execution works
 
 ---
 
-## 🎯 Quick Test
+## Common Issues & Solutions
 
-### Test the Cover Generator
+### "Command not found: npm"
+```bash
+# Install Node.js from https://nodejs.org/
+# Or use nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+nvm install 18
+```
 
-1. **Navigate to:** http://localhost:3000/covers
-2. **Fill in:**
-   - Title: "Test Book"
-   - Author: "Your Name"
-   - Genre: "Fantasy"
-   - Description: "An epic tale..."
-3. **Click "Generate"**
-4. **Wait 30-60 seconds**
-5. **See 6 AI-generated covers!**
-
-### Test the Formatter
-
-1. **Navigate to:** http://localhost:3000/format
-2. **Upload a .docx file** (sample provided in `/samples/manuscript.docx`)
-3. **Choose format:** ePub
-4. **Click "Format"**
-5. **Download formatted book!**
-
----
-
-## 🐛 Troubleshooting
-
-### Port Already in Use
-
+### "Port already in use"
 ```bash
 # Kill process on port 3000
 lsof -ti:3000 | xargs kill -9
@@ -203,193 +254,153 @@ lsof -ti:3000 | xargs kill -9
 PORT=3001 npm run dev
 ```
 
-### Database Connection Error
-
-```bash
-# Check PostgreSQL is running
-pg_isready
-
-# Restart PostgreSQL
-brew services restart postgresql  # macOS
-sudo systemctl restart postgresql  # Linux
-```
-
-### Redis Connection Error
-
-```bash
-# Check Redis is running
-redis-cli ping  # Should return "PONG"
-
-# Start Redis
-brew services start redis  # macOS
-sudo systemctl start redis  # Linux
-```
-
-### Missing Dependencies
-
+### "Module not found"
 ```bash
 # Clean install
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-### API Key Issues
-
-Make sure your OpenAI API key is valid:
+### Python/Streamlit issues
 ```bash
-# Test API key
-curl https://api.openai.com/v1/models \
-  -H "Authorization: Bearer YOUR_API_KEY"
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
----
-
-## 📚 Next Steps
-
-### Learn the Codebase
-
-1. **Read the docs:** `/docs` folder
-2. **Explore components:** `/src/components`
-3. **Check API routes:** `/src/pages/api`
-4. **Review services:** `/src/services`
-
-### Make Your First Change
-
+### Mobile app won't load
 ```bash
-# Create a branch
-git checkout -b feature/my-first-change
+# Clear cache
+npm start -- --clear
 
-# Make changes
-# ... edit files ...
-
-# Test
-npm test
-
-# Commit
-git add .
-git commit -m "feat: my first change"
-
-# Push
-git push origin feature/my-first-change
-```
-
-### Join the Community
-
-- **Discord:** https://discord.gg/phoenixforge
-- **GitHub Discussions:** Ask questions
-- **Twitter:** @phoenixforge - Follow for updates
-
----
-
-## 🎓 Useful Commands
-
-```bash
-# Development
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run start        # Start production server
-
-# Database
-npm run db:migrate   # Run migrations
-npm run db:seed      # Seed database
-npm run db:reset     # Reset database
-npm run db:studio    # Open Prisma Studio
-
-# Testing
-npm test             # Run tests
-npm run test:watch   # Watch mode
-npm run test:e2e     # End-to-end tests
-npm run test:coverage # Coverage report
-
-# Linting & Formatting
-npm run lint         # Check code style
-npm run lint:fix     # Fix issues
-npm run format       # Format code
-
-# Type Checking
-npm run type-check   # Check TypeScript
-
-# Build & Deploy
-npm run build        # Production build
-npm run analyze      # Analyze bundle
+# Restart bundler
+npm start -- --reset-cache
 ```
 
 ---
 
-## 🔧 Configuration Files
+## Next Steps
 
-Important files in the root:
+### For Developers
+
+1. **Read the docs:**
+   - [Development Guide](../docs/DEVELOPMENT-GUIDE.md)
+   - [API Documentation](../docs/api/)
+   - [Contributing Guide](../docs/CONTRIBUTING.md)
+
+2. **Set up development environment:**
+   ```bash
+   # Install dev dependencies
+   npm install
+   
+   # Run tests
+   npm test
+   ```
+
+3. **Start coding:**
+   - Pick a feature from issues
+   - Create a branch
+   - Submit PR
+
+### For Product Demos
+
+1. **Use Streamlit demo:**
+   ```bash
+   cd demos/streamlit
+   streamlit run main_demo.py
+   ```
+
+2. **Customize for your audience:**
+   - Edit demo data in `main_demo.py`
+   - Add your branding
+   - Focus on features relevant to your audience
+
+3. **Deploy demo:**
+   - [Streamlit Cloud](https://streamlit.io/cloud) (Free)
+   - Or self-host on your server
+
+### For Testing Automation
+
+1. **Import n8n workflows:**
+   ```bash
+   cd automation
+   npx n8n
+   ```
+
+2. **Configure credentials:**
+   - OpenAI API key
+   - Stripe (for payment testing)
+   - Your backend API URL
+
+3. **Test complete pipeline:**
+   - Import `complete-pipeline-workflow.json`
+   - Execute with sample data
+   - Verify all steps complete
+
+### For Production Deployment
+
+1. **Read deployment guides:**
+   - [Deployment Guide](../docs/deployment/DEPLOYMENT-GUIDE.md)
+   - [Docker Setup](../deployment/docker/README.md)
+   - [Production Ready](../docs/PRODUCTION-READY.md)
+
+2. **Choose hosting:**
+   - Vercel (website) - Easiest
+   - Railway (backend) - Simple
+   - AWS/GCP (full stack) - Most control
+
+3. **Deploy:**
+   ```bash
+   # Website to Vercel
+   cd website
+   vercel
+   
+   # Backend to Railway
+   cd backend
+   railway up
+   ```
+
+---
+
+## Support
+
+**Need help?**
+- 📧 Email: support@phoenixforge.ai
+- 💬 Discord: [Join our community](https://discord.gg/phoenixforge)
+- 📚 Docs: [Full documentation](../docs/)
+- 🐛 Issues: [GitHub Issues](https://github.com/HPagade/rohimaya-publishing-website/issues)
+
+---
+
+## Quick Reference Card
 
 ```
-.
-├── .env                 # Your environment variables
-├── .env.example         # Template for .env
-├── .eslintrc.json       # ESLint configuration
-├── .prettierrc          # Prettier configuration
-├── tsconfig.json        # TypeScript configuration
-├── next.config.js       # Next.js configuration
-├── tailwind.config.js   # Tailwind CSS configuration
-├── prisma/schema.prisma # Database schema
-└── package.json         # Dependencies & scripts
+┌─────────────────────────────────────────────────────┐
+│  QUICK REFERENCE - PhoenixForge AI                  │
+├─────────────────────────────────────────────────────┤
+│                                                      │
+│  🌐 Website:       cd website && npm run dev         │
+│     → http://localhost:3000                          │
+│                                                      │
+│  🎨 Demo:          cd demos/streamlit               │
+│                    streamlit run main_demo.py        │
+│     → http://localhost:8501                          │
+│                                                      │
+│  📱 Mobile:        cd mobile-apps && npm start      │
+│     → Scan QR with Expo Go                          │
+│                                                      │
+│  🔄 Workflows:     cd automation && npx n8n         │
+│     → http://localhost:5678                          │
+│                                                      │
+│  🔧 Backend:       cd backend && npm run dev        │
+│     → http://localhost:3001                          │
+│                                                      │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📖 Documentation
+**Ready to build?** Pick an option above and get started! 🚀
 
-- **README.md** - Main documentation
-- **CONTRIBUTING.md** - How to contribute
-- **API.md** - API documentation
-- **DEPLOYMENT.md** - Deployment guide
-- **/docs** - Detailed docs folder
-
----
-
-## 🆘 Getting Help
-
-**Can't get it working?**
-
-1. **Check Issues:** Someone might have had the same problem
-2. **GitHub Discussions:** Ask the community
-3. **Discord:** Real-time help
-4. **Email:** dev@phoenixforge.ai
-
-**When asking for help, include:**
-- Your OS (Windows, Mac, Linux)
-- Node.js version
-- Error messages (full output)
-- What you've tried already
-
----
-
-## ✅ Verification Checklist
-
-Before moving forward, verify:
-
-- [ ] Application loads at http://localhost:3000
-- [ ] You can log in / create an account
-- [ ] Cover generator works
-- [ ] Format tool works
-- [ ] No console errors
-- [ ] Database connected
-- [ ] Redis connected
-- [ ] Tests pass (`npm test`)
-
----
-
-## 🎉 You're Ready!
-
-Congratulations! You now have PhoenixForge AI running locally.
-
-**What's next?**
-
-1. Explore the features
-2. Read the full README
-3. Join the community
-4. Start contributing!
-
----
-
-**Where Stories Take Shape** 🔥
-
-Need help? **dev@phoenixforge.ai** | Join us on **Discord**
+*Last updated: November 3, 2025*

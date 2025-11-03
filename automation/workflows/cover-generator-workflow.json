@@ -1,0 +1,326 @@
+{
+  "name": "PhoenixForge - AI Book Cover Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "covers",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-covers",
+      "name": "Webhook - Cover Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "cover-generation"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse cover generation request\nconst body = $input.item.json.body;\n\n// Genre-specific prompt templates\nconst genrePrompts = {\n  'fantasy': 'Epic fantasy book cover, magical atmosphere, mystical elements',\n  'fantasy-romance': 'Romantic fantasy cover, ethereal couple, magical setting',\n  'thriller': 'Dark thriller cover, suspenseful mood, urban setting',\n  'romance': 'Romantic cover, intimate scene, soft lighting',\n  'scifi': 'Science fiction cover, futuristic, space or tech elements',\n  'mystery': 'Mystery book cover, shadowy, intriguing atmosphere',\n  'horror': 'Horror cover, dark and eerie, unsettling atmosphere'\n};\n\nconst genre = body.genre || 'general';\nconst basePrompt = genrePrompts[genre] || 'Professional book cover design';\n\nreturn {\n  json: {\n    title: body.title || 'Untitled',\n    author: body.author || 'Author Name',\n    genre: genre,\n    style: body.style || 'dramatic',\n    basePrompt: basePrompt,\n    customPrompt: body.description || '',\n    colors: body.colors || ['#667eea', '#764ba2'],\n    variations: body.variations || 6,\n    jobId: `cov_${Date.now()}`\n  }\n};"
+      },
+      "id": "parse-cover",
+      "name": "Parse Cover Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate DALL-E prompts for each variation\nconst data = $input.item.json;\nconst variations = data.variations;\nconst results = [];\n\nconst styleVariations = [\n  'photorealistic, dramatic lighting',\n  'digital art, vibrant colors',\n  'oil painting style, classic',\n  'minimalist, modern design',\n  'illustrated, artistic',\n  'cinematic, movie poster style'\n];\n\nfor (let i = 0; i < variations; i++) {\n  const prompt = `${data.basePrompt}, ${styleVariations[i]}, ${data.customPrompt}, professional book cover design, high quality, no text`;\n  \n  results.push({\n    json: {\n      ...data,\n      variationNumber: i + 1,\n      prompt: prompt\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "generate-prompts",
+      "name": "Generate Prompts",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.openai.com/v1/images/generations",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "dall-e-3"
+            },
+            {
+              "name": "prompt",
+              "value": "={{$json.prompt}}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1792"
+            },
+            {
+              "name": "quality",
+              "value": "standard"
+            },
+            {
+              "name": "n",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "dalle-generate",
+      "name": "Generate with DALL-E 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [850, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "openai-api",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "split-batch",
+      "name": "Process One at a Time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "amount": 20,
+        "unit": "seconds"
+      },
+      "id": "wait-rate-limit",
+      "name": "Wait for Rate Limit",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [950, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract image URL and add text overlay information\nconst imageData = $input.item.json.data[0];\nconst coverData = $input.item.json;\n\nreturn {\n  json: {\n    variationNumber: coverData.variationNumber,\n    imageUrl: imageData.url,\n    prompt: coverData.prompt,\n    title: coverData.title,\n    author: coverData.author,\n    jobId: coverData.jobId,\n    needsTextOverlay: true\n  }\n};"
+      },
+      "id": "extract-image",
+      "name": "Extract Image URL",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "url": "={{$env.API_URL}}/api/covers/add-text",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "imageUrl",
+              "value": "={{$json.imageUrl}}"
+            },
+            {
+              "name": "title",
+              "value": "={{$json.title}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json.author}}"
+            },
+            {
+              "name": "variationNumber",
+              "value": "={{$json.variationNumber}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "add-text-overlay",
+      "name": "Add Text Overlay",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1250, 300],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "backend-api",
+          "name": "PhoenixForge Backend"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "aggregate-results",
+      "name": "Aggregate All Covers",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Compile all cover variations into response\nconst allCovers = $input.all();\nconst firstCover = allCovers[0].json;\n\nconst covers = allCovers.map(item => ({\n  id: `${item.json.jobId}_v${item.json.variationNumber}`,\n  variationNumber: item.json.variationNumber,\n  url: item.json.finalUrl || item.json.imageUrl,\n  thumbnail: item.json.thumbnailUrl,\n  format: 'png',\n  dimensions: '1024x1792'\n}));\n\nreturn {\n  json: {\n    status: 'completed',\n    jobId: firstCover.jobId,\n    title: firstCover.title,\n    author: firstCover.author,\n    estimatedTime: 120,\n    covers: covers,\n    processedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "compile-response",
+      "name": "Compile Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-covers",
+      "name": "Return Covers",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Cover Request": {
+      "main": [
+        [
+          {
+            "node": "Parse Cover Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Cover Request": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Prompts": {
+      "main": [
+        [
+          {
+            "node": "Process One at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process One at a Time": {
+      "main": [
+        [
+          {
+            "node": "Generate with DALL-E 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate with DALL-E 3": {
+      "main": [
+        [
+          {
+            "node": "Wait for Rate Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Rate Limit": {
+      "main": [
+        [
+          {
+            "node": "Extract Image URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Image URL": {
+      "main": [
+        [
+          {
+            "node": "Add Text Overlay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Text Overlay": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Covers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate All Covers": {
+      "main": [
+        [
+          {
+            "node": "Compile Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Response": {
+      "main": [
+        [
+          {
+            "node": "Return Covers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PhoenixForge",
+      "id": "phoenixforge"
+    },
+    {
+      "name": "AI",
+      "id": "ai"
+    },
+    {
+      "name": "Covers",
+      "id": "covers"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-03T00:00:00.000Z",
+  "versionId": "1"
+}
