@@ -501,7 +501,7 @@ NEXTAUTH_URL="http://localhost:3000"
 # Stripe (payments)
 STRIPE_PUBLIC_KEY="pk_test_..."
 STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
+STRIPE_WEBHOOK_SECRET="whsec_YOUR_SECRET_HERE"
 ```
 
 ---
