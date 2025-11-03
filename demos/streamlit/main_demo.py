@@ -137,8 +137,7 @@ def main():
             "🎙️ Audiobook Narrator",
             "🎨 Cover Generator",
             "🖼️ Image Creator",
-            "🍳 Cookbook Formatter",
-            "🏥 Health Content",
+            "🎬 Book Trailer Creator",
             "📱 Marketing Suite",
             "💰 Pricing & ROI",
             "📊 Dashboard Demo"
@@ -147,7 +146,7 @@ def main():
     
     st.sidebar.markdown("---")
     st.sidebar.info("""
-    **7 Complete Products**
+    **5 Core Products for Authors**
     
     All features are working prototypes.
     Switch to Live Mode to use real AI!
@@ -164,10 +163,8 @@ def main():
         show_cover_generator()
     elif page == "🖼️ Image Creator":
         show_image_creator()
-    elif page == "🍳 Cookbook Formatter":
-        show_cookbook()
-    elif page == "🏥 Health Content":
-        show_health()
+    elif page == "🎬 Book Trailer Creator":
+        show_video_creator()
     elif page == "📱 Marketing Suite":
         show_marketing()
     elif page == "💰 Pricing & ROI":
@@ -243,12 +240,12 @@ def show_home():
     with col2:
         st.markdown("""
         <div class="feature-card">
-            <h3>🍳 Cookbook</h3>
-            <p>Format recipes into beautiful cookbooks</p>
+            <h3>🎬 Book Trailers</h3>
+            <p>Create promotional videos for your books</p>
             <ul>
-                <li>Recipe parsing</li>
-                <li>Nutrition calculation</li>
-                <li>Professional layouts</li>
+                <li>30-180 second videos</li>
+                <li>AI voiceover & music</li>
+                <li>Multi-platform export</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -256,23 +253,8 @@ def show_home():
     with col3:
         st.markdown("""
         <div class="feature-card">
-            <h3>🏥 Health Content</h3>
-            <p>Generate health and fitness content</p>
-            <ul>
-                <li>Workout plans</li>
-                <li>Meal plans</li>
-                <li>Health articles</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Feature overview - Row 3 (Marketing centered)
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
             <h3>📱 Marketing Suite</h3>
-            <p>AI-powered marketing content</p>
+            <p>AI-powered marketing content for authors</p>
             <ul>
                 <li>Social media posts</li>
                 <li>Email campaigns</li>
@@ -301,7 +283,7 @@ def show_home():
         st.info("""
         **Demo Mode Active**
         
-        1. Select any tool from the sidebar (7 products available!)
+        1. Select any tool from the sidebar (5 author-focused products!)
         2. Try the interface and see mock results
         3. Add your OpenAI API key to see real AI generation
         
@@ -316,7 +298,7 @@ def show_home():
         3. Click generate to see REAL AI in action!
         4. Download your results
         
-        All 7 products are ready to use with real APIs!
+        All 5 author products are ready to use with real APIs!
         """)
 
 def show_formatter():
@@ -710,220 +692,157 @@ def show_image_creator():
                         </div>
                         """, unsafe_allow_html=True)
 
-def show_cookbook():
-    """Cookbook Formatter with AI recipe parsing"""
-    st.title("🍳 Cookbook Formatter")
-    st.markdown("Transform recipes into beautiful cookbooks")
+def show_video_creator():
+    """Book Trailer Creator with AI"""
+    st.title("🎬 Book Trailer Creator")
+    st.markdown("Create professional book trailers to promote your work")
     
     st.markdown("---")
     
-    input_method = st.radio("Input Method", ["Manual Entry", "AI Parse Recipe"], horizontal=True)
+    # Book information
+    col1, col2 = st.columns(2)
+    with col1:
+        book_title = st.text_input("Book Title", "The Phoenix Chronicles")
+        author_name = st.text_input("Author Name", "Jane Author")
+    with col2:
+        genre = st.selectbox("Genre", ["Fantasy", "Science Fiction", "Romance", "Thriller", "Mystery", "Horror", "Literary Fiction", "Historical Fiction"])
+        duration = st.selectbox("Video Duration", ["30 seconds", "60 seconds", "90 seconds", "2 minutes"])
     
-    if input_method == "AI Parse Recipe":
-        recipe_text = st.text_area(
-            "Paste recipe text (AI will parse it)",
-            """Classic Chocolate Chip Cookies
-
-Ingredients:
-2 1/4 cups all-purpose flour
-1 tsp baking soda
-1 tsp salt
-1 cup butter, softened
-3/4 cup granulated sugar
-3/4 cup packed brown sugar
-2 large eggs
-2 tsp vanilla extract
-2 cups chocolate chips
-
-Instructions:
-1. Preheat oven to 375°F (190°C)
-2. Mix flour, baking soda, and salt in a bowl
-3. Beat butter and both sugars until creamy
-4. Add eggs and vanilla, beat well
-5. Gradually blend in flour mixture
-6. Stir in chocolate chips
-7. Drop rounded tablespoons onto ungreased cookie sheets
-8. Bake 9-11 minutes or until golden brown
-9. Cool on baking sheet for 2 minutes
-
-Makes 60 cookies. Prep time: 15 min. Cook time: 11 min.""",
-            height=250
-        )
-        
-        if st.button("🤖 Parse Recipe with AI", type="primary"):
-            api_status = check_api_status()
-            
-            with st.spinner("🤖 AI parsing recipe..."):
-                time.sleep(2)
-                
-                if not api_status["demo_mode"]:
-                    client = get_openai_client()
-                    if client:
-                        try:
-                            response = client.chat.completions.create(
-                                model="gpt-4",
-                                messages=[
-                                    {"role": "system", "content": "You are a recipe parser. Extract title, ingredients, instructions, servings, prep time, and cook time from the recipe text. Format as JSON."},
-                                    {"role": "user", "content": recipe_text}
-                                ],
-                                max_tokens=1000
-                            )
-                            
-                            parsed_data = response.choices[0].message.content
-                            st.success("✨ Recipe parsed successfully!")
-                            st.json(parsed_data)
-                            
-                        except Exception as e:
-                            st.error(f"API Error: {str(e)}")
-                            api_status["demo_mode"] = True
-                
-                if api_status["demo_mode"]:
-                    st.success("✨ Recipe parsed! (Demo Mode)")
-                    st.json({
-                        "title": "Classic Chocolate Chip Cookies",
-                        "servings": 60,
-                        "prep_time": "15 min",
-                        "cook_time": "11 min",
-                        "ingredients_count": 9,
-                        "instructions_steps": 9
-                    })
-    else:
-        st.text_input("Recipe Title", "Classic Chocolate Chip Cookies")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.number_input("Servings", 1, 100, 12)
-        with col2:
-            st.number_input("Prep Time (min)", 1, 300, 15)
-        with col3:
-            st.number_input("Cook Time (min)", 1, 300, 12)
-        
-        st.text_area("Ingredients (one per line)", height=150)
-        st.text_area("Instructions (one per line)", height=150)
-        
-        if st.button("📚 Generate Cookbook", type="primary"):
-            st.success("✨ Cookbook formatted successfully!")
-            st.info("📖 Preview and download options would appear here")
-
-def show_health():
-    """Health Content Generator with AI"""
-    st.title("🏥 Health Content Generator")
-    st.markdown("Generate professional health and fitness content")
-    
-    st.markdown("---")
-    
-    content_type = st.radio(
-        "Content Type",
-        ["🏋️ Workout Plan", "🥗 Meal Plan", "📝 Health Article"],
-        horizontal=True
+    book_description = st.text_area(
+        "Book Description",
+        "An epic fantasy about a phoenix rider who must save her kingdom from ancient evil.",
+        height=100
     )
     
-    if content_type == "🏋️ Workout Plan":
+    # Video style
+    st.markdown("### Video Style")
+    col1, col2 = st.columns(2)
+    with col1:
+        video_style = st.selectbox("Visual Style", ["Cinematic", "Minimalist", "Dynamic", "Dramatic", "Elegant"])
+    with col2:
+        music_style = st.selectbox("Music Style", ["Epic Orchestral", "Mysterious", "Upbeat", "Ambient", "Dramatic"])
+    
+    # Voice options
+    st.markdown("### Narration")
+    col1, col2 = st.columns(2)
+    with col1:
+        voice_type = st.selectbox("Voice Type", ["Professional Male", "Professional Female", "Young Adult Male", "Young Adult Female", "Dramatic Male", "Dramatic Female"])
+    with col2:
+        pace = st.selectbox("Narration Pace", ["Slow & Dramatic", "Normal", "Fast & Exciting"])
+    
+    # Generate button
+    if st.button("🎬 Generate Book Trailer", type="primary", use_container_width=True):
+        api_status = check_api_status()
+        
+        with st.spinner("🎬 Creating your book trailer... This may take 2-3 minutes"):
+            # Progress indicators
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            status_text.text("📝 Generating script...")
+            time.sleep(1)
+            progress_bar.progress(25)
+            
+            status_text.text("🎨 Creating visuals...")
+            time.sleep(1)
+            progress_bar.progress(50)
+            
+            status_text.text("🎙️ Adding voiceover...")
+            time.sleep(1)
+            progress_bar.progress(75)
+            
+            status_text.text("🎵 Adding music and effects...")
+            time.sleep(1)
+            progress_bar.progress(100)
+            
+            status_text.text("✨ Finalizing video...")
+            time.sleep(0.5)
+        
+        st.success("✨ Book trailer generated successfully!")
+        
+        # Display trailer info
         col1, col2 = st.columns(2)
         with col1:
-            level = st.selectbox("Fitness Level", ["Beginner", "Intermediate", "Advanced"])
+            st.metric("Video Duration", duration)
+            st.metric("Resolution", "1920x1080 (Full HD)")
         with col2:
-            goal = st.selectbox("Goal", ["Weight Loss", "Muscle Gain", "Strength", "Endurance"])
+            st.metric("Format", "MP4")
+            st.metric("File Size", "~45 MB")
         
-        if st.button("💪 Generate Workout Plan", type="primary"):
-            api_status = check_api_status()
-            
-            with st.spinner("🤖 Creating personalized workout plan..."):
-                time.sleep(2)
-                
-                if not api_status["demo_mode"]:
-                    client = get_openai_client()
-                    if client:
-                        try:
-                            response = client.chat.completions.create(
-                                model="gpt-4",
-                                messages=[
-                                    {"role": "system", "content": "You are a certified fitness trainer. Create a detailed workout plan."},
-                                    {"role": "user", "content": f"Create a 4-week {level} workout plan for {goal}. Include specific exercises, sets, reps, and rest periods."}
-                                ],
-                                max_tokens=1500
-                            )
-                            
-                            plan = response.choices[0].message.content
-                            st.success("✨ Workout plan generated!")
-                            st.markdown(plan)
-                            
-                        except Exception as e:
-                            st.error(f"API Error: {str(e)}")
-                            api_status["demo_mode"] = True
-                
-                if api_status["demo_mode"]:
-                    st.success("✨ Workout plan generated! (Demo Mode)")
-                    st.markdown(f"""
-                    ### 4-Week {level} Workout Plan - {goal}
-                    
-                    **Week 1:**
-                    - Day 1: Full Body Strength
-                    - Day 2: Cardio & Core
-                    - Day 3: Rest
-                    - Day 4: Upper Body
-                    - Day 5: Lower Body
-                    - Day 6: Active Recovery
-                    - Day 7: Rest
-                    
-                    *Full detailed plan would be generated with real API*
-                    """)
-    
-    elif content_type == "🥗 Meal Plan":
-        calorie_target = st.number_input("Daily Calorie Target", 1200, 4000, 2000, step=100)
+        # Show preview placeholder
+        st.markdown("### 🎥 Preview")
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    padding: 4rem; border-radius: 10px; text-align: center;
+                    align-items: center; justify-content: center; color: white;">
+            <p style="font-size: 2rem;">📹</p>
+            <p style="font-size: 1.2rem;">Book Trailer Preview</p>
+            <p>"{}" by {}</p>
+            <p style="font-size: 0.9rem; margin-top: 1rem;">In production mode, your video would be displayed here</p>
+        </div>
+        """.format(book_title, author_name), unsafe_allow_html=True)
         
-        if st.button("🥗 Generate Meal Plan", type="primary"):
-            st.success("✨ Meal plan generated! (Demo Mode)")
-            st.markdown(f"""
-            ### 7-Day Meal Plan ({calorie_target} calories/day)
-            
-            **Monday:**
-            - Breakfast: Oatmeal with berries (400 cal)
-            - Lunch: Grilled chicken salad (600 cal)
-            - Dinner: Salmon with quinoa (700 cal)
-            - Snacks: Greek yogurt (300 cal)
-            
-            *Full week plan would be generated with recipes*
-            """)
-    
-    else:  # Health Article
-        topic = st.text_input("Article Topic", "Benefits of Regular Exercise")
+        # Script preview
+        st.markdown("### 📝 Generated Script")
+        if not api_status["demo_mode"]:
+            client = get_openai_client()
+            if client:
+                try:
+                    response = client.chat.completions.create(
+                        model="gpt-4",
+                        messages=[
+                            {"role": "system", "content": f"You are a book trailer scriptwriter. Write compelling {duration} trailer scripts."},
+                            {"role": "user", "content": f"Write a {duration} book trailer script for '{book_title}' by {author_name}. Genre: {genre}. Description: {book_description}. Make it compelling and dramatic."}
+                        ],
+                        max_tokens=500
+                    )
+                    
+                    script = response.choices[0].message.content
+                    st.markdown(script)
+                    
+                except Exception as e:
+                    st.error(f"API Error: {str(e)}")
+                    api_status["demo_mode"] = True
         
-        if st.button("📝 Generate Article", type="primary"):
-            api_status = check_api_status()
+        if api_status["demo_mode"]:
+            st.markdown("""
+            **[Opening shot fades in]**
             
-            with st.spinner("🤖 Writing health article..."):
-                time.sleep(2)
-                
-                if not api_status["demo_mode"]:
-                    client = get_openai_client()
-                    if client:
-                        try:
-                            response = client.chat.completions.create(
-                                model="gpt-4",
-                                messages=[
-                                    {"role": "system", "content": "You are a health content writer. Write professional, evidence-based health articles."},
-                                    {"role": "user", "content": f"Write a 1000-word article about: {topic}. Include scientific references and practical advice."}
-                                ],
-                                max_tokens=1500
-                            )
-                            
-                            article = response.choices[0].message.content
-                            st.success("✨ Article generated!")
-                            st.markdown(article)
-                            
-                        except Exception as e:
-                            st.error(f"API Error: {str(e)}")
-                            api_status["demo_mode"] = True
-                
-                if api_status["demo_mode"]:
-                    st.success("✨ Article generated! (Demo Mode)")
-                    st.markdown(f"""
-                    # {topic}
-                    
-                    Regular physical exercise provides numerous benefits...
-                    
-                    *Full article would be generated with real API*
-                    """)
+            *In a world where magic has faded...*
+            
+            **[Dramatic music swells]**
+            
+            *One woman holds the key to salvation.*
+            
+            **[Action montage]**
+            
+            *"{}" - Coming Soon*
+            
+            **[Title card]**
+            
+            *By {}*
+            
+            *Available on Amazon, Kindle, and all major retailers.*
+            """.format(book_title, author_name))
+        
+        # Download options
+        st.markdown("### 📥 Download Options")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.button("⬇️ Download MP4 (1080p)", type="secondary", use_container_width=True)
+        with col2:
+            st.button("⬇️ Download MP4 (720p)", type="secondary", use_container_width=True)
+        with col3:
+            st.button("⬇️ Download Script (TXT)", type="secondary", use_container_width=True)
+        
+        st.info("""
+        **Pro Tip:** Use your book trailer on:
+        - Social media (Facebook, Instagram, TikTok)
+        - YouTube book channel
+        - Amazon Author Central
+        - Book launch events
+        - Email newsletters
+        """)
 
 def show_marketing():
     """Marketing Suite with real AI content generation"""
