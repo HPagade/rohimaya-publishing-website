@@ -1,0 +1,282 @@
+{
+  "name": "Audiobook Generator - n8n Cloud Edition",
+  "nodes": [
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "book_title",
+              "value": "Eclipse of Fire and Wings"
+            },
+            {
+              "name": "google_drive_file_id",
+              "value": "YOUR_FILE_ID_HERE"
+            },
+            {
+              "name": "tts_provider",
+              "value": "inworld"
+            },
+            {
+              "name": "batch_size",
+              "value": "10"
+            },
+            {
+              "name": "chars_per_chunk",
+              "value": "2000"
+            },
+            {
+              "name": "output_drive_folder_id",
+              "value": "YOUR_OUTPUT_FOLDER_ID_HERE"
+            }
+          ]
+        }
+      },
+      "id": "config-node",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.google_drive_file_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "google-drive-download",
+      "name": "Download Manuscript from Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [460, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// SMART CHUNKING SYSTEM FOR N8N CLOUD\n// Splits manuscript into safe-sized chunks for TTS processing\n\nconst items = $input.all();\nconst fileData = items[0].binary.data;\nconst content = Buffer.from(fileData.data, 'base64').toString('utf-8');\n\n// Configuration\nconst MAX_CHARS = parseInt(items[0].json.chars_per_chunk) || 2000;\nconst BATCH_SIZE = parseInt(items[0].json.batch_size) || 10;\nconst bookTitle = items[0].json.book_title;\nconst outputFolderId = items[0].json.output_drive_folder_id;\n\nconsole.log('📚 Starting manuscript processing...');\nconsole.log(`   Book: ${bookTitle}`);\nconsole.log(`   Total characters: ${content.length.toLocaleString()}`);\n\n// Split by paragraphs (preserves natural breaks)\nconst paragraphs = content\n  .split(/\\n\\n+/)\n  .map(p => p.trim())\n  .filter(p => p.length > 0);\n\nconsole.log(`   Total paragraphs: ${paragraphs.length}`);\n\n// Create chunks that respect paragraph boundaries\nconst chunks = [];\nlet currentChunk = '';\nlet chunkIndex = 0;\n\nfor (const paragraph of paragraphs) {\n  const potentialLength = currentChunk.length + paragraph.length + 2;\n  \n  if (potentialLength > MAX_CHARS && currentChunk.length > 0) {\n    chunks.push({\n      index: chunkIndex,\n      text: currentChunk.trim(),\n      char_count: currentChunk.length,\n      word_count: currentChunk.split(/\\s+/).length,\n      batch: Math.floor(chunkIndex / BATCH_SIZE)\n    });\n    chunkIndex++;\n    currentChunk = paragraph;\n  } else {\n    currentChunk += (currentChunk ? '\\n\\n' : '') + paragraph;\n  }\n}\n\n// Add final chunk\nif (currentChunk.length > 0) {\n  chunks.push({\n    index: chunkIndex,\n    text: currentChunk.trim(),\n    char_count: currentChunk.length,\n    word_count: currentChunk.split(/\\s+/).length,\n    batch: Math.floor(chunkIndex / BATCH_SIZE)\n  });\n}\n\nconst totalBatches = Math.ceil(chunks.length / BATCH_SIZE);\n\nconsole.log('✂️  Chunking complete!');\nconsole.log(`   Total chunks: ${chunks.length}`);\nconsole.log(`   Batches: ${totalBatches}`);\n\n// Character and emotion detection\nchunks.forEach(chunk => {\n  const textLower = chunk.text.toLowerCase();\n  \n  // CHARACTER DETECTION\n  if (textLower.includes('aaravi') || \n      /she (said|replied|whispered|asked|screamed|shouted)/i.test(chunk.text)) {\n    chunk.character = 'aaravi';\n  } else if (textLower.includes('vihan') || \n             /he (said|replied|answered|growled|muttered|demanded)/i.test(chunk.text)) {\n    chunk.character = 'vihan';\n  } else {\n    chunk.character = 'narrator';\n  }\n  \n  // EMOTION DETECTION\n  chunk.emotion = 'neutral';\n  \n  const emotionPatterns = {\n    'happy': /(smiled|laughed|grinned|cheerful|delighted|beamed|joy)/i,\n    'sad': /(cried|tears|sobbed|mourned|grief|sorrow)/i,\n    'angry': /(shouted|yelled|snarled|snapped|growled|furious|rage)/i,\n    'fearful': /(trembled|afraid|terrified|panicked|fear|screamed)/i,\n    'determined': /(firmly|resolved|decided|committed|steadfast)/i,\n    'loving': /(gently|tenderly|warmly|softly|affection|caressed)/i,\n    'protective': /(fierce|defensive|guard|shield|protect)/i\n  };\n  \n  for (const [emotion, pattern] of Object.entries(emotionPatterns)) {\n    if (pattern.test(chunk.text)) {\n      chunk.emotion = emotion;\n      break;\n    }\n  }\n  \n  // Add metadata\n  chunk.book_title = bookTitle;\n  chunk.output_folder_id = outputFolderId;\n  chunk.estimated_duration_sec = Math.ceil(chunk.word_count / 2.5);\n});\n\nconst totalMinutes = Math.ceil(chunks.reduce((sum, c) => sum + c.estimated_duration_sec, 0) / 60);\nconst totalHours = Math.floor(totalMinutes / 60);\nconst remainingMinutes = totalMinutes % 60;\n\nconsole.log(`⏱️  Estimated duration: ${totalHours}h ${remainingMinutes}m`);\nconsole.log('🚀 Ready to process!');\n\nreturn chunks.map(chunk => ({ json: chunk }));"
+      },
+      "id": "chunk-splitter",
+      "name": "Smart Chunking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": "={{ $('Configuration').item.json.batch_size }}",
+        "options": {}
+      },
+      "id": "batch-processor",
+      "name": "Batch Processor",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.inworld.ai/v1/workspaces/{{ $env.INWORLD_WORKSPACE }}/characters/{{ $json.character }}/generate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.INWORLD_API_KEY }}"
+            },
+            {
+              "name": "x-api-secret",
+              "value": "={{ $env.INWORLD_API_SECRET }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"text\": $json.text,\n  \"emotion\": $json.emotion,\n  \"voice_settings\": {\n    \"speaking_rate\": 1.0,\n    \"pitch\": 0,\n    \"volume\": 0\n  },\n  \"output_format\": \"mp3\",\n  \"sample_rate\": 48000\n} }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "audio_data"
+            }
+          },
+          "timeout": 60000,
+          "retry": {
+            "retry": {
+              "maxRetries": 3,
+              "retryOnResponseCodes": [429, 500, 502, 503, 504],
+              "waitBetweenTries": 5000
+            }
+          }
+        }
+      },
+      "id": "tts-generator",
+      "name": "Generate TTS - Inworld",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "name": "=segment_{{ String($json.index).padStart(5, '0') }}_{{ $json.character }}_{{ $json.emotion }}.mp3",
+        "parents": {
+          "__rl": true,
+          "value": "={{ $json.output_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "upload-to-drive",
+      "name": "Upload Chunk to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1340, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// PROGRESS TRACKER FOR N8N CLOUD\n// Creates a summary log for monitoring\n\nconst items = $input.all();\nconst item = items[0];\n\nconst progressInfo = {\n  chunk_index: item.json.index,\n  character: item.json.character,\n  emotion: item.json.emotion,\n  word_count: item.json.word_count,\n  book_title: item.json.book_title,\n  file_name: item.json.name,\n  file_id: item.json.id,\n  timestamp: new Date().toISOString(),\n  status: 'completed'\n};\n\nconst totalChunks = $('Smart Chunking').all().length;\nconst currentChunk = item.json.index + 1;\nconst percentage = Math.round((currentChunk / totalChunks) * 100);\n\nconsole.log(`✅ Chunk ${currentChunk}/${totalChunks} (${percentage}%) - ${item.json.character} [${item.json.emotion}]`);\n\nreturn [{ json: progressInfo }];"
+      },
+      "id": "track-progress",
+      "name": "Track Progress",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "rate-limiter",
+      "name": "Rate Limit",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1780, 300],
+      "webhookId": "rate-limit-delay"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $('Batch Processor').context.noItemsLeft }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-complete",
+      "name": "All Done Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// COMPLETION REPORT FOR N8N CLOUD\n\nconst allChunks = $('Smart Chunking').all();\nconst totalChunks = allChunks.length;\n\nconst totalWords = allChunks.reduce((sum, chunk) => sum + chunk.json.word_count, 0);\nconst totalMinutes = Math.ceil(totalWords / 150); // ~150 words per minute\nconst hours = Math.floor(totalMinutes / 60);\nconst minutes = totalMinutes % 60;\n\nconst report = {\n  status: 'SUCCESS',\n  book_title: allChunks[0].json.book_title,\n  processing: {\n    total_chunks: totalChunks,\n    total_words: totalWords,\n    estimated_duration: `${hours}h ${minutes}m`,\n    completed: new Date().toISOString()\n  },\n  next_steps: [\n    '1. Go to your Google Drive output folder',\n    '2. Download all MP3 chunks',\n    '3. Use an audio merger tool to combine them:',\n    '   - Online: https://audio-joiner.com/',\n    '   - Mac Terminal: see instructions below',\n    '4. Listen to the complete audiobook',\n    '5. Upload to ACX/Audible'\n  ],\n  mac_merge_instructions: [\n    'Open Terminal and navigate to your downloads folder:',\n    'cd ~/Downloads/audiobook_chunks',\n    '',\n    'Merge all MP3s in order:',\n    'for f in segment_*.mp3; do echo \"file \\'$f\\'\" >> list.txt; done',\n    'ffmpeg -f concat -safe 0 -i list.txt -c copy audiobook_complete.mp3',\n    '',\n    '(FFmpeg must be installed: brew install ffmpeg)'\n  ]\n};\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('🎉 AUDIOBOOK CHUNKS GENERATED!');\nconsole.log('='.repeat(60));\nconsole.log(`📚 Book: ${report.book_title}`);\nconsole.log(`📊 Chunks: ${report.processing.total_chunks}`);\nconsole.log(`📝 Words: ${report.processing.total_words.toLocaleString()}`);\nconsole.log(`⏱️  Duration: ${report.processing.estimated_duration}`);\nconsole.log('='.repeat(60));\nconsole.log('📁 Check your Google Drive output folder for all chunks!');\nconsole.log('='.repeat(60) + '\\n');\n\nreturn [{ json: report }];"
+      },
+      "id": "final-report",
+      "name": "Final Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 180]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ERROR HANDLER FOR N8N CLOUD\n\nconst error = $input.item?.json?.error || { message: 'Unknown error' };\n\nconst errorReport = {\n  timestamp: new Date().toISOString(),\n  chunk_index: $json.index,\n  character: $json.character,\n  book_title: $json.book_title,\n  error_message: error.message,\n  text_preview: $json.text?.substring(0, 100) + '...',\n  will_retry: true\n};\n\nconsole.error(`❌ Error on chunk ${errorReport.chunk_index}: ${errorReport.error_message}`);\nconsole.error('   Will retry automatically...');\n\nreturn [{ json: errorReport }];"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 480],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "id": "next-batch",
+      "name": "Next Batch",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2000, 420]
+    }
+  ],
+  "connections": {
+    "Configuration": {
+      "main": [[{"node": "Download Manuscript from Google Drive", "type": "main", "index": 0}]]
+    },
+    "Download Manuscript from Google Drive": {
+      "main": [[{"node": "Smart Chunking", "type": "main", "index": 0}]]
+    },
+    "Smart Chunking": {
+      "main": [[{"node": "Batch Processor", "type": "main", "index": 0}]]
+    },
+    "Batch Processor": {
+      "main": [[{"node": "Generate TTS - Inworld", "type": "main", "index": 0}]]
+    },
+    "Generate TTS - Inworld": {
+      "main": [
+        [{"node": "Upload Chunk to Google Drive", "type": "main", "index": 0}],
+        [{"node": "Error Handler", "type": "main", "index": 0}]
+      ]
+    },
+    "Upload Chunk to Google Drive": {
+      "main": [[{"node": "Track Progress", "type": "main", "index": 0}]]
+    },
+    "Track Progress": {
+      "main": [[{"node": "Rate Limit", "type": "main", "index": 0}]]
+    },
+    "Rate Limit": {
+      "main": [[{"node": "All Done Check", "type": "main", "index": 0}]]
+    },
+    "All Done Check": {
+      "main": [
+        [{"node": "Final Report", "type": "main", "index": 0}],
+        [{"node": "Next Batch", "type": "main", "index": 0}]
+      ]
+    },
+    "Next Batch": {
+      "main": [[{"node": "Batch Processor", "type": "main", "index": 0}]]
+    },
+    "Error Handler": {
+      "main": [[{"node": "Track Progress", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-01T00:00:00.000Z",
+  "versionId": "4.0"
+}

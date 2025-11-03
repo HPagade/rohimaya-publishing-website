@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Memory-efficient audiobook generation system for Eclipse of Fire and Wings">
+    <title>Audiobook TTS System | Rohimaya Publishing</title>
+    
+    <style>
+        /* ========================================
+           GLOBAL STYLES & RESET
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Phoenix & Peacock Colors */
+            --phoenix-orange: #FF6B35;
+            --phoenix-red: #D9534F;
+            --peacock-teal: #1a9b8e;
+            --peacock-blue: #2C5F7C;
+            --gold-accent: #FFD700;
+            --dark-bg: #1a1a2e;
+            --darker-bg: #0f0f1e;
+            --light-text: #f8f9fa;
+            --gray-text: #a8a8a8;
+            --success-green: #28a745;
+            --card-bg: #252539;
+            --card-hover: #2d2d47;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ========================================
+           NAVIGATION
+        ======================================== */
+        nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--peacock-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--gold-accent);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* ========================================
+           HERO SECTION
+        ======================================== */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(26, 155, 142, 0.1));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '🎙️';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--peacock-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--gray-text);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            padding-top: 1rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-block;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--phoenix-red));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--peacock-teal);
+            color: var(--peacock-teal);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--peacock-teal);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* ========================================
+           STATS SECTION
+        ======================================== */
+        .stats {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+        }
+        
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--peacock-teal);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--gold-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: var(--gray-text);
+            margin-top: 0.5rem;
+        }
+        
+        /* ========================================
+           FEATURES SECTION
+        ======================================== */
+        .features {
+            padding: 4rem 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .features-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            background: var(--card-hover);
+            border-color: var(--peacock-teal);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(26, 155, 142, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--phoenix-orange);
+            margin-bottom: 1rem;
+        }
+        
+        /* ========================================
+           TABS SECTION (Interactive)
+        ======================================== */
+        .tabs-section {
+            padding: 4rem 2rem;
+            background: var(--darker-bg);
+        }
+        
+        .tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            color: var(--light-text);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .tab-btn:hover {
+            border-color: var(--peacock-teal);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--peacock-teal));
+            border-color: transparent;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-panel {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+        
+        /* ========================================
+           TIMELINE/STEPS
+        ======================================== */
+        .timeline {
+            padding: 4rem 2rem;
+        }
+        
+        .timeline-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .timeline-number {
+            min-width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--peacock-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-content h3 {
+            color: var(--phoenix-orange);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            width: 2px;
+            height: calc(100% + 1rem);
+            background: linear-gradient(180deg, var(--peacock-teal), transparent);
+        }
+        
+        /* ========================================
+           ACCORDION (Interactive FAQ)
+        ======================================== */
+        .faq {
+            padding: 4rem 2rem;
+            background: var(--darker-bg);
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .accordion-item {
+            background: var(--card-bg);
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .accordion-header:hover {
+            background: var(--card-hover);
+        }
+        
+        .accordion-header h3 {
+            color: var(--phoenix-orange);
+            font-size: 1.1rem;
+        }
+        
+        .accordion-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        /* ========================================
+           COST CALCULATOR (Interactive)
+        ======================================== */
+        .calculator {
+            padding: 4rem 2rem;
+        }
+        
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+        }
+        
+        .calculator-input {
+            margin-bottom: 2rem;
+        }
+        
+        .calculator-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--phoenix-orange);
+            font-weight: 600;
+        }
+        
+        .calculator-input input,
+        .calculator-input select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--darker-bg);
+            border: 2px solid var(--peacock-teal);
+            border-radius: 10px;
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+        
+        .calculator-input input:focus,
+        .calculator-input select:focus {
+            outline: none;
+            border-color: var(--phoenix-orange);
+        }
+        
+        .calculator-result {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(26, 155, 142, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .calculator-result h3 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--phoenix-orange), var(--gold-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ========================================
+           DOWNLOAD SECTION
+        ======================================== */
+        .download {
+            padding: 4rem 2rem;
+            background: var(--darker-bg);
+        }
+        
+        .download-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .download-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .download-card:hover {
+            border-color: var(--peacock-teal);
+            transform: translateY(-5px);
+        }
+        
+        .download-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .download-card h3 {
+            color: var(--phoenix-orange);
+            margin-bottom: 1rem;
+        }
+        
+        .download-card .btn {
+            margin-top: 1rem;
+        }
+        
+        /* ========================================
+           FOOTER
+        ======================================== */
+        footer {
+            background: var(--darker-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 2px solid var(--peacock-teal);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--phoenix-orange);
+        }
+        
+        /* ========================================
+           RESPONSIVE DESIGN
+        ======================================== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(26, 26, 46, 0.98);
+                padding: 2rem;
+                gap: 1rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero-content {
+                padding: 1rem;
+            }
+            
+            .hero p {
+                margin-bottom: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 1.2rem 2rem;
+            }
+            
+            .stats-container,
+            .features-grid,
+            .download-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .timeline-item::after {
+                left: 30px;
+            }
+            
+            .calculator-container {
+                padding: 2rem 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+        }
+        
+        /* ========================================
+           SCROLL ANIMATIONS
+        ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ========================================
+           UTILITY CLASSES
+        ======================================== */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul.checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        ul.checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        code {
+            background: var(--darker-bg);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            color: var(--phoenix-orange);
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: var(--darker-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🎙️ Audiobook TTS System</div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#cost">Cost</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#download">Download</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Professional Audiobooks with Your Voice</h1>
+            <p>Memory-efficient TTS system for "Eclipse of Fire and Wings" • Clone Hannah & Prasad's voices • ACX-compliant output • Save $2,500+ per book</p>
+            <div class="cta-buttons">
+                <a href="#download" class="btn btn-primary">Download System</a>
+                <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card fade-in">
+                <div class="stat-number">$58</div>
+                <div class="stat-label">Total Cost First Book</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">$2,442</div>
+                <div class="stat-label">Savings vs Traditional</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">&lt;2GB</div>
+                <div class="stat-label">RAM Usage</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">6-8h</div>
+                <div class="stat-label">Processing Time</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why This System is Perfect</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🧠</div>
+                <h3>Solves RAM Problem</h3>
+                <p>Cloud-based ElevenLabs API means no local processing strain. Process chapter-by-chapter for maximum efficiency.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎭</div>
+                <h3>Voice Cloning</h3>
+                <p>Clone Hannah's voice for Aaravi and Prasad's voice for Vihan. Your characters in your actual voices!</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">😊</div>
+                <h3>Emotion Control</h3>
+                <p>Built-in emotion parameters: happy, sad, scared, determined, loving, fierce, and more.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">✅</div>
+                <h3>ACX Compliant</h3>
+                <p>Professional audio quality (48kHz, -18 LUFS) ready to upload directly to Audible/ACX.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">💰</div>
+                <h3>Cost Effective</h3>
+                <p>$36 per book vs $2,500+ for professional narrator. Save $17,000+ on your 7-book series!</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">⚙️</div>
+                <h3>Two Implementation Options</h3>
+                <p>Use cloud-based ElevenLabs API (fast start) OR build custom AI agent with n8n and your own APIs (full control).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABS SECTION -->
+    <section class="tabs-section" id="how-it-works">
+        <div class="tabs-container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('setup')">Setup</button>
+                <button class="tab-btn" onclick="showTab('recording')">Voice Recording</button>
+                <button class="tab-btn" onclick="showTab('processing')">Processing</button>
+                <button class="tab-btn" onclick="showTab('distribution')">Distribution</button>
+            </div>
+            
+            <div id="setup" class="tab-content active">
+                <div class="tab-panel">
+                    <h3>⚙️ System Setup</h3>
+                    
+                    <p><strong>Two Architecture Options Available:</strong></p>
+                    
+                    <h4 style="color: var(--phoenix-orange); margin-top: 1.5rem;">Option A: ElevenLabs API (Fastest - Recommended to Start)</h4>
+                    <ul class="checklist">
+                        <li>Setup time: 1-2 hours</li>
+                        <li>Cloud-based, no GPU required</li>
+                        <li>RAM usage: &lt;2GB</li>
+                        <li>Cost: $22/month + $36/book</li>
+                        <li>Perfect for quick deployment</li>
+                    </ul>
+                    
+                    <h4 style="color: var(--peacock-teal); margin-top: 1.5rem;">Option B: Custom AI Agent (Prasad's Preference)</h4>
+                    <ul class="checklist">
+                        <li>Setup time: 1-2 weeks development</li>
+                        <li>Self-hosted with your own APIs</li>
+                        <li>Requires GPU (8GB+ VRAM recommended)</li>
+                        <li>No per-book API costs after setup</li>
+                        <li>Full control and customization</li>
+                        <li>Uses Coqui XTTS v2 or StyleTTS2</li>
+                        <li>Integrates perfectly with n8n</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem;"><strong>💡 Hybrid Approach:</strong> Start with ElevenLabs to get Book 1 done quickly, then build custom AI agent in parallel. Both work seamlessly with n8n!</p>
+                    
+                    <p style="margin-top: 1rem;"><em>See ARCHITECTURE_OPTIONS.md for detailed comparison and implementation guide.</em></p>
+                </div>
+            </div>
+            
+            <div id="recording" class="tab-content">
+                <div class="tab-panel">
+                    <h3>🎙️ Voice Recording (30 minutes)</h3>
+                    <ul class="checklist">
+                        <li>Find quiet room</li>
+                        <li>Record 5-10 minutes each (Hannah & Prasad)</li>
+                        <li>Read provided script with emotional variety</li>
+                        <li>Upload to ElevenLabs for cloning</li>
+                        <li>Get Voice IDs and add to configuration</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Read passages from your actual book for most authentic cloning!</p>
+                </div>
+            </div>
+            
+            <div id="processing" class="tab-content">
+                <div class="tab-panel">
+                    <h3>🔄 Processing (6-8 hours automated)</h3>
+                    <ul class="checklist">
+                        <li>Tag manuscript with character emotions (optional)</li>
+                        <li>Test with Chapter 1 first (15 minutes)</li>
+                        <li>Run full book processing overnight</li>
+                        <li>System processes chapter-by-chapter</li>
+                        <li>Automatic audio normalization</li>
+                        <li>Creates individual chapters + full audiobook</li>
+                    </ul>
+                    <pre><code># Process entire book
+python scripts/generate_audiobook.py \
+  --input manuscript/eclipse_of_fire_and_wings.txt</code></pre>
+                </div>
+            </div>
+            
+            <div id="distribution" class="tab-content">
+                <div class="tab-panel">
+                    <h3>📤 Distribution</h3>
+                    <ul class="checklist">
+                        <li>Upload to ACX/Audible (largest platform)</li>
+                        <li>Choose exclusive (40% royalty) or non-exclusive (25%)</li>
+                        <li>Add Findaway Voices for 40+ platforms</li>
+                        <li>Direct sales via BookFunnel or your website</li>
+                        <li>Start earning from day 1!</li>
+                    </ul>
+                    <p><strong>Recommended:</strong> Start with ACX exclusive, expand to wide distribution after Year 1.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="timeline">
+        <h2 class="section-title">Step-by-Step Process</h2>
+        <div class="timeline-container">
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h3>Download & Setup</h3>
+                    <p>Clone repository, install dependencies, set up ElevenLabs account. Takes 1-2 hours.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h3>Record Voices</h3>
+                    <p>Hannah and Prasad each record 5-10 minutes of speech. Upload to ElevenLabs for cloning.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h3>Prepare Manuscript</h3>
+                    <p>Tag characters and emotions (or use auto-detection). Place in manuscript folder.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h3>Test Chapter 1</h3>
+                    <p>Process first chapter to verify voices and quality. Adjust settings if needed.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">5</div>
+                <div class="timeline-content">
+                    <h3>Run Full Production</h3>
+                    <p>Process entire book overnight (6-8 hours). Wake up to completed audiobook!</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item fade-in">
+                <div class="timeline-number">6</div>
+                <div class="timeline-content">
+                    <h3>Upload & Distribute</h3>
+                    <p>Upload to ACX/Audible. Wait 5-7 days for approval. Start selling!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COST CALCULATOR -->
+    <section class="calculator" id="cost">
+        <div class="calculator-container fade-in">
+            <h2 class="text-center">Cost Calculator</h2>
+            <p class="text-center mb-2">Calculate your savings vs traditional narration</p>
+            
+            <div class="calculator-input">
+                <label for="bookCount">Number of Books:</label>
+                <input type="number" id="bookCount" value="1" min="1" max="10" onchange="calculateCost()">
+            </div>
+            
+            <div class="calculator-input">
+                <label for="planType">ElevenLabs Plan:</label>
+                <select id="planType" onchange="calculateCost()">
+                    <option value="22">Creator ($22/month)</option>
+                    <option value="99">Professional ($99/month)</option>
+                </select>
+            </div>
+            
+            <div class="calculator-result">
+                <p>Your Total Cost:</p>
+                <h3 id="totalCost">$58</h3>
+                <p>vs Traditional: <span style="color: var(--gray-text); text-decoration: line-through;">$2,500</span></p>
+                <p style="color: var(--success-green); font-size: 1.5rem; font-weight: bold; margin-top: 1rem;">
+                    You Save: <span id="savings">$2,442</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="faq" id="faq">
+        <div class="faq-container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>Will this overload my MacBook's RAM?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>No! This system uses cloud-based ElevenLabs API instead of local TTS models, so RAM usage stays under 2GB. It processes one chapter at a time for maximum efficiency.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>How good is the voice cloning quality?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>ElevenLabs provides professional-grade voice cloning. With 5-10 minutes of quality samples, the cloned voices are nearly indistinguishable from the original. Perfect for audiobooks!</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>Is the output really ACX-compliant?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Yes! The system automatically normalizes audio to -18 LUFS at 48kHz, exactly as required by ACX/Audible. You can upload directly without any additional processing.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>How long does it really take?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Setup: 1-2 hours. Voice recording: 30 minutes. Manuscript prep: 3-15 hours (depending on method). Processing: 6-8 hours (automated overnight). Total active work time: ~5-17 hours spread over a few days.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>Can I use this for all 7 books in my series?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Absolutely! Once set up, each additional book only costs ~$36 in API fees. For 7 books, you'll save $17,000-$35,000 compared to traditional narration!</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>Can I use this with my own AI agent instead of ElevenLabs?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Absolutely! The system is designed to be modular. You can use ElevenLabs API (fastest start) or build your own custom TTS API using Coqui XTTS v2, StyleTTS2, or Piper TTS. Both integrate seamlessly with n8n - just swap the API endpoint. The architecture document includes detailed guidance for building a self-hosted AI agent with full control over voice synthesis.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>What if I need help or get stuck?</h3>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>The package includes comprehensive documentation: SETUP_GUIDE_FOR_PRASAD.md, ARCHITECTURE_OPTIONS.md, TROUBLESHOOTING.md, and step-by-step instructions for every part of the process. Plus ElevenLabs has excellent support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOWNLOAD SECTION -->
+    <section class="download" id="download">
+        <div class="download-container">
+            <h2 class="section-title">Download Complete System</h2>
+            <p class="text-center">Everything you need to create professional audiobooks</p>
+            
+            <div class="download-grid">
+                <div class="download-card fade-in">
+                    <div class="download-icon">📦</div>
+                    <h3>Complete Package</h3>
+                    <p>Full system with all documentation, scripts, and configurations</p>
+                    <a href="https://github.com/your-username/audiobook-tts-system" class="btn btn-primary">View on GitHub</a>
+                </div>
+                
+                <div class="download-card fade-in">
+                    <div class="download-icon">📚</div>
+                    <h3>Documentation</h3>
+                    <p>Setup guide, tagging guide, troubleshooting, and master checklist</p>
+                    <a href="#" class="btn btn-secondary" onclick="alert('Clone the repository to access all docs!')">View Docs</a>
+                </div>
+                
+                <div class="download-card fade-in">
+                    <div class="download-icon">🎙️</div>
+                    <h3>Recording Script</h3>
+                    <p>What to read when recording your voice samples for cloning</p>
+                    <a href="#" class="btn btn-secondary" onclick="alert('Included in the repository!')">Get Script</a>
+                </div>
+                
+                <div class="download-card fade-in">
+                    <div class="download-icon">⚙️</div>
+                    <h3>N8N Workflow</h3>
+                    <p>Visual automation workflow ready to import</p>
+                    <a href="#" class="btn btn-secondary" onclick="alert('Find it in n8n-workflows/ folder!')">Get Workflow</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#cost">Cost Calculator</a>
+                <a href="#faq">FAQ</a>
+                <a href="#download">Download</a>
+            </div>
+            <p style="color: var(--gray-text);">
+                Created for "Eclipse of Fire and Wings" by Hannah Kraulik Pagade<br>
+                Rohimaya Publishing • The Phoenix & Peacock Chronicles<br>
+                © 2025 All Rights Reserved
+            </p>
+            <p style="margin-top: 1rem; font-size: 2rem;">
+                🦚 🔥 🌙
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+        
+        // Tab Switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab and activate button
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Accordion Toggle
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const allItems = document.querySelectorAll('.accordion-item');
+            
+            // Close all other accordions
+            allItems.forEach(accItem => {
+                if (accItem !== item) {
+                    accItem.classList.remove('active');
+                }
+            });
+            
+            // Toggle current accordion
+            item.classList.toggle('active');
+        }
+        
+        // Cost Calculator
+        function calculateCost() {
+            const bookCount = parseInt(document.getElementById('bookCount').value);
+            const planCost = parseInt(document.getElementById('planType').value);
+            const apiCostPerBook = 36;
+            
+            // First book includes subscription, subsequent books just API cost
+            const totalCost = planCost + (apiCostPerBook * bookCount);
+            const traditionalCost = 2500 * bookCount;
+            const savings = traditionalCost - totalCost;
+            
+            document.getElementById('totalCost').textContent = '$' + totalCost.toLocaleString();
+            document.getElementById('savings').textContent = '$' + savings.toLocaleString();
+        }
+        
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all fade-in elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => observer.observe(el));
+            
+            // Initialize calculator
+            calculateCost();
+        });
+        
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

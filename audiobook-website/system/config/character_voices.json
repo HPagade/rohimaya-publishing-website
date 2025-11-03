@@ -1,0 +1,40 @@
+{
+  "narrator": {
+    "voice_id": "21m00Tcm4TlvDq8ikWAM",
+    "character_name": "Narrator",
+    "description": "Professional narrator voice - Rachel",
+    "style": "narrative",
+    "gender": "female"
+  },
+  "aaravi": {
+    "voice_id": "HANNAH_VOICE_ID",
+    "character_name": "Aaravi",
+    "description": "Female lead, Peacock manifestation, Hannah's cloned voice",
+    "style": "conversational",
+    "gender": "female",
+    "emotions": {
+      "default": "neutral",
+      "happy": "cheerful",
+      "sad": "somber",
+      "angry": "fierce",
+      "fearful": "worried",
+      "determined": "confident",
+      "loving": "warm"
+    }
+  },
+  "vihan": {
+    "voice_id": "PRASAD_VOICE_ID",
+    "character_name": "Vihan",
+    "description": "Male lead, Phoenix manifestation, Prasad's cloned voice",
+    "style": "conversational",
+    "gender": "male",
+    "emotions": {
+      "default": "confident",
+      "happy": "warm",
+      "sad": "brooding",
+      "angry": "furious",
+      "protective": "fierce",
+      "loving": "tender"
+    }
+  }
+}

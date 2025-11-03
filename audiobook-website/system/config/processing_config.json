@@ -1,0 +1,55 @@
+{
+  "audio_settings": {
+    "sample_rate": 48000,
+    "bit_depth": 16,
+    "channels": 1,
+    "format": "mp3",
+    "bitrate": "192k"
+  },
+  "acx_compliance": {
+    "target_lufs": -18,
+    "max_peak": -3,
+    "noise_floor": -60,
+    "sample_rate": 48000
+  },
+  "processing": {
+    "normalize": true,
+    "remove_silence": true,
+    "silence_threshold": -50,
+    "fade_in_ms": 100,
+    "fade_out_ms": 100,
+    "chapters_per_batch": 1
+  },
+  "elevenlabs_settings": {
+    "model": "eleven_multilingual_v2",
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true
+  },
+  "output_structure": {
+    "chapters_folder": "output/chapters",
+    "temp_folder": "output/temp",
+    "final_audiobook": "output/audiobook_complete.mp3",
+    "metadata_file": "output/metadata.json"
+  },
+  "character_detection": {
+    "auto_detect": true,
+    "patterns": {
+      "aaravi": ["Aaravi said", "she said", "she replied", "Aaravi whispered"],
+      "vihan": ["Vihan said", "he said", "he replied", "Vihan answered"],
+      "narrator": ["The", "As", "When", "Meanwhile"]
+    }
+  },
+  "emotion_detection": {
+    "enabled": true,
+    "keywords": {
+      "happy": ["smiled", "laughed", "cheerful", "delighted"],
+      "sad": ["cried", "tears", "sobbed", "mourned"],
+      "angry": ["shouted", "furious", "yelled", "snarled"],
+      "fearful": ["trembled", "afraid", "terrified", "panicked"],
+      "determined": ["resolved", "firm", "decided", "committed"],
+      "loving": ["gentle", "tender", "warmly", "affectionately"]
+    }
+  }
+}
