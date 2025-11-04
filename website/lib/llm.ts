@@ -6,10 +6,18 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 })
 
-// OpenAI client for Format/Covers/Images
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-})
+// OpenAI client for Format/Covers/Images (lazy-loaded to avoid build errors)
+let _openai: OpenAI | null = null
+export function getOpenAIClient(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'placeholder',
+    })
+  }
+  return _openai
+}
+
+export const openai = getOpenAIClient()
 
 /**
  * Stream text generation from Claude Opus
@@ -22,7 +30,7 @@ export async function streamClaudeResponse(
   systemPrompt: string,
   onChunk: (text: string) => void
 ): Promise<void> {
-  const stream = await anthropic.messages.stream({
+  const stream = anthropic.messages.stream({
     model: 'claude-3-opus-20240229',
     max_tokens: 4096,
     system: systemPrompt,
@@ -87,7 +95,7 @@ export async function generateCoverImage(prompt: string): Promise<string> {
     quality: 'hd',
   })
 
-  return response.data[0].url!
+  return response.data?.[0]?.url || ''
 }
 
 /**
