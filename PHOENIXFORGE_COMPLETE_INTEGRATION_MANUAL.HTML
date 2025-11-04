@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhoenixForge AI - Complete Feature Integration Manual</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #1a1a2e; color: #e0e0e0; padding: 40px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #FF6B35; font-size: 3em; border-bottom: 3px solid #f7931e; padding-bottom: 10px; text-align: center; }
+        h2 { color: #9B59B6; margin-top: 40px; border-bottom: 1px dashed #444; padding-bottom: 5px; font-size: 2em; }
+        h3 { color: #f7931e; margin-top: 20px; }
+        .feature-section { margin-bottom: 35px; padding: 20px; border: 1px solid #333; border-radius: 12px; background-color: #242436; }
+        .tech-detail { background-color: #1a1a2e; padding: 10px; border-left: 3px solid #FF6B35; margin-top: 10px; font-size: 0.95em; }
+        .tech-detail strong { color: #f7931e; }
+        .integration-step { background-color: #3e5c76; padding: 8px; border-radius: 4px; margin-top: 8px; font-size: 0.9em; }
+        .integration-step a { color: #e0e0e0; text-decoration: underline; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-item { padding: 15px; border: 1px solid #444; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔥 PHOENIXFORGE AI: Complete Feature Integration Manual</h1>
+    <p style="text-align: center;">**Rohimaya Publishing's Back-End Revenue Engine & Deployment Blueprint**</p>
+    <p style="text-align: center;">This document specifies every API, code location, and integration required for the 5-tool suite and privacy compliance.</p>
+
+    <h2>1. 🔑 Infrastructure, Privacy & Authentication (P0/P1)</h2>
+    <p>All application functionality is secured behind **NextAuth.js** and must adhere to data isolation principles (Zero Trust).</p>
+
+    <div class="feature-section">
+        <h3>Security & Compliance Mandate</h3>
+        <div class="tech-detail">
+            <p><strong>Authentication:</strong> **NextAuth.js** (Google/GitHub Sign-In). Required for access to all routes under `/app/` or `/dashboard/`.</p>
+            <p><strong>Privacy:</strong> All content must be tied to the **authenticated `user_id`** (Zero Trust). Dedicated API logic must be implemented for **GDPR/CCPA** deletion requests.</p>
+        </div>
+        <h4>Code Integration Steps (YOU/Copilot)</h4>
+        <div class="grid-container">
+            <div class="grid-item">
+                <p><strong>A. Auth Implementation:</strong> Implement NextAuth.js setup (P0) to protect all routes.</p>
+                <div class="integration-step">Target File: <code>src/pages/api/auth/[...nextauth].ts</code></div>
+            </div>
+            <div class="grid-item">
+                <p><strong>B. Database Schema:</strong> Add `User` and `Subscription` models to Prisma, linked to `NextAuth.js`.</p>
+                <div class="integration-step">Target File: <code>prisma/schema.prisma</code></div>
+            </div>
+        </div>
+    </div>
+
+    <h2>2. 💰 Revenue Engine Proxies (Stripe & Audiobook)</h2>
+    <p>These temporary API routes secure income and route complex tasks to external, specialized workers (n8n & Python).</p>
+
+    <div class="feature-section">
+        <h3>A. Stripe Webhook Proxy (P2 - Revenue Capture)</h3>
+        <div class="tech-detail">
+            <p><strong>Goal:</strong> Securely receive Stripe events (P2) and forward the validated data to the temporary n8n service for database updates.</p>
+            <p><strong>API Used:</strong> Stripe SDK</p>
+            <p><strong>External Target:</strong> <code>N8N_STRIPE_WEBHOOK_URL</code></p>
+        </div>
+        <h4>Code Integration Steps (YOU/Copilot)</h4>
+        <div class="integration-step">Implement API to validate Stripe signature and POST data to the n8n endpoint. Target File: <code>src/pages/api/proxy/stripe-webhook.ts</code></div>
+    </div>
+
+    <div class="feature-section">
+        <h3>B. PhoenixForge Voice Proxy (P3 - Audiobook Generation)</h3>
+        <p>This links the frontend UI to your husband's complex Python script, which handles chunking and ACX compliance.</p>
+        <div class="tech-detail">
+            <p><strong>Goal:</strong> Accept user's manuscript text and trigger the external audio job.</p>
+            <p><strong>External Target:</strong> <code>PYTHON_COMPUTE_URL</code> (Husband's secure endpoint)</p>
+            <p><strong>Data Flow:</strong> Next.js -> Sends text/Voice ID -> Python Worker -> Saves MP3 to S3.</p>
+        </div>
+        <h4>Code Integration Steps (YOU/Copilot)</h4>
+        <div class="integration-step">Implement API that accepts the request and securely POSTs the job payload to the Python endpoint. Target File: <code>src/pages/api/audio/generate.ts</code></div>
+    </div>
+
+    <h2>3. 🛠️ The 5-Tool Suite: Feature Integration & Scaling</h2>
+
+    <div class="feature-section">
+        <h3>A. PhoenixForge Writer (Core App)</h3>
+        <p>The primary user-facing application for book creation.</p>
+        <div class="tech-detail">
+            <p><strong>LLMs:</strong> **Claude** (Primary, for quality/context) and **Gemini** (Secondary, for brainstorming).</p>
+            <p><strong>Integration:</strong> Uses streaming API for smooth UX. **Lore/Codex DB** (PostgreSQL) is injected into the Claude prompt for context management.</p>
+        </div>
+        <h4>Code Integration Steps</h4>
+        <div class="integration-step">Implement the streaming API endpoint (P4). Target File: <code>src/pages/api/writer/generate.ts</code></div>
+        <div class="integration-step">Build the core UI component (P4) with the context panels. Target File: <code>src/components/LongFormEditor.tsx</code></div>
+    </div>
+
+    <div class="feature-section">
+        <h3>B. PhoenixForge Covers & Images</h3>
+        <p>Visual assets generation and series branding.</p>
+        <div class="tech-detail">
+            <p><strong>LLMs:</strong> **OpenAI (DALL-E 3)** for covers.</p>
+            <p><strong>Moat:</strong> **"Brand Kit" Logic**—API should output a JSON file containing the cover's color palette and fonts for other tools to reference, ensuring series consistency.</p>
+            <p><strong>Storage:</strong> All final assets are saved to **AWS S3**.</p>
+        </div>
+        <h4>Code Integration Steps</h4>
+        <div class="integration-step">Scaffold the API route to call DALL-E and implement the **"Brand Kit" JSON** logic. Target File: <code>src/pages/api/covers/generate.ts</code></div>
+    </div>
+
+    <div class="feature-section">
+        <h3>C. App Store & Website Integration</h3>
+        <p>Mobile access and external distribution.</p>
+        <div class="tool-grid">
+            <div class="grid-item">
+                <h4>Interactive Website/Marketing Hub</h4>
+                <p>The site serves as the portfolio for Rohimaya Publishing and the sign-in portal for PhoenixForge AI.</p>
+                <div class="integration-step">Implement professional marketing page (`index.tsx`) and the Consultative Services booking link.</div>
+            </div>
+            <div class="grid-item">
+                <h4>App Store Integration (Future Goal)</h4>
+                <p>The entire Next.js application is a PWA (Progressive Web App), but native apps are the goal.</p>
+                <div class="integration-step">**Requirement:** Once the core web app is stable, use **React Native** to wrap the application for iOS/Android distribution.</div>
+                <div class="integration-step">**Store Fees:** Requires **Apple (\$99/yr)** and **Google (\$25 one-time)** Developer accounts.</div>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. ✅ Final Deployment Checklist (You & Husband)</h2>
+    
+    <p style="font-size: 1.2em; color: #FF6B35; font-weight: bold;">Phase 1: Critical Setup (YOU: Revenue / HUSBAND: Compute)</p>
+    <ul style="text-align: left; max-width: 900px;">
+        <li class="checklist-item">**1. Rename Repository (YOU):** Rename your repository (e.g., to `Phoenix-Forge-SaaS-V-120525-Hybrid`).</li>
+        <li class="checklist-item">**2. Credentials (YOU):** Finalize **ALL** API Keys and inject them into the **Vercel Environment Variables**.</li>
+        <li class="checklist-item">**3. Python Deployment (HUSBAND):** Securely deploy the **Python Script** to external compute and provide the **`PYTHON_COMPUTE_URL`**.</li>
+        <li class="checklist-item">**4. Revenue Pipeline (YOU):** Build the **n8n Stripe Webhook workflow** and set the resulting URL as the **Stripe Live Webhook Endpoint**.</li>
+    </ul>
+
+    <p style="font-size: 1.2em; color: #FF6B35; font-weight: bold; margin-top: 30px;">Phase 2: Final Launch</p>
+    <ul style="text-align: left; max-width: 900px;">
+        <li class="checklist-item">**5. Code Implementations (Copilot):** You implement **NextAuth (P0)**, **CI/CD (P1)**, and the **Stripe/Audio Proxies (P2/P3)**.</li>
+        <li class="checklist-item">**6. Commit & Deploy:** Commit all changes and **Push to GitHub** (`git push origin main`). **Vercel starts deployment.**</li>
+        <li class="checklist-item">**7. Final Launch:** Log into **Cloudflare** and update the **DNS records** to point your custom domain to the live Vercel site.</li>
+    </ul>
+</section>
+
+</body>
+</html>
