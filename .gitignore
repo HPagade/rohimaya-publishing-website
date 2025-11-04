@@ -120,5 +120,27 @@ mobile-apps/android/app/build/
 .n8n/
 
 # Docker
-*.log
 docker-compose.override.yml
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+*/.streamlit/secrets.toml
+*/.streamlit/config.toml
+
+# API Keys & Secrets
+*.pem
+credentials.json
+*credentials*.json
+secrets.toml
+*.key
+*.secret
+
+# Backup files
+*.bak
+*.backup
+*~.nib
+
+# Generated files
+*.pyc
+*.pyo
