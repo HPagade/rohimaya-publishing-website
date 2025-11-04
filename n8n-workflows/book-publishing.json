@@ -1,0 +1,167 @@
+{
+  "name": "Book Publishing Automation - Rohimaya",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "publish-book",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-book-ready",
+      "name": "Webhook - Book Ready to Publish",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "publishing@rohimayapublishing.com",
+        "toEmail": "={{$json[\"author_email\"]}}",
+        "subject": "🎉 Congratulations! Your Book is Ready!",
+        "emailType": "html",
+        "message": "=<h1>🦚 Congratulations, {{$json[\"author_name\"]}}!</h1>\n<p>Your book <strong>{{$json[\"book_title\"]}}</strong> is ready to publish!</p>\n<h2>Next Steps:</h2>\n<ol>\n<li>Review your formatted manuscript</li>\n<li>Check your cover design</li>\n<li>Upload to Amazon KDP</li>\n<li>Set your pricing</li>\n<li>Launch your marketing campaign</li>\n</ol>\n<p><a href=\"https://rohimayapublishing.com/books/{{$json[\"book_id\"]}}\">View Your Book →</a></p>\n<p>We've also generated marketing copy for you! Check your dashboard.</p>"
+      },
+      "id": "send-congrats-email",
+      "name": "Send Congratulations Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://rohimayapublishing.com/api/marketing/generate",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"book_id\": \"{{$json[\"book_id\"]}}\", \"book_title\": \"{{$json[\"book_title\"]}}\", \"genre\": \"{{$json[\"genre\"]}}\", \"logline\": \"{{$json[\"logline\"]}}\"}"
+      },
+      "id": "generate-marketing-copy",
+      "name": "Generate Marketing Copy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "post",
+        "text": "=🎉 NEW BOOK ALERT! 🎉\n\n{{$json[\"book_title\"]}} by {{$json[\"author_name\"]}} is now available!\n\n{{$json[\"logline\"]}}\n\nGet your copy: {{$json[\"book_link\"]}}\n\n#newbook #{{$json[\"genre\"]}} #indieauthor #booklaunch",
+        "additionalFields": {
+          "includeImage": true,
+          "imageUrl": "={{$json[\"cover_url\"]}}"
+        }
+      },
+      "id": "post-to-social",
+      "name": "Create Social Media Posts",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "update",
+        "table": "books",
+        "filterType": "string",
+        "filterString": "id=eq.{{$json[\"book_id\"]}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "published",
+            "published_at": "={{$now}}",
+            "marketing_generated": true
+          }
+        }
+      },
+      "id": "update-book-status",
+      "name": "Update Book Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "fromEmail": "support@rohimayapublishing.com",
+        "toEmail": "={{$json[\"author_email\"]}}",
+        "template": "audiobook-upsell",
+        "templateVariables": {
+          "author_name": "={{$json[\"author_name\"]}}",
+          "book_title": "={{$json[\"book_title\"]}}",
+          "book_id": "={{$json[\"book_id\"]}}"
+        }
+      },
+      "id": "offer-audiobook",
+      "name": "Offer Audiobook Generation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"message\": \"Book publishing automation completed\", \"book_id\": \"{{$json[\"book_id\"]}}\"}"
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Book Ready to Publish": {
+      "main": [
+        [
+          {
+            "node": "Send Congratulations Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Marketing Copy",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Social Media Posts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Book Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Social Media Posts": {
+      "main": [
+        [
+          {
+            "node": "Offer Audiobook Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Book Status": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1",
+  "tags": ["publishing", "automation", "marketing"]
+}

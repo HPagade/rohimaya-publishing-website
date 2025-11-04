@@ -1,0 +1,182 @@
+{
+  "name": "Payment Processing - Stripe Webhooks",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "stripe-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "stripe-webhook",
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"type\"]}}",
+              "operation": "equals",
+              "value2": "checkout.session.completed"
+            }
+          ]
+        }
+      },
+      "id": "check-event-type",
+      "name": "Check Event Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "billing@rohimayapublishing.com",
+        "toEmail": "={{$json[\"data\"][\"object\"][\"customer_email\"]}}",
+        "subject": "🎉 Payment Confirmed - Welcome to Rohimaya Pro!",
+        "emailType": "html",
+        "message": "=<h1>Thank You for Your Purchase!</h1>\n<p>Your payment of ${{$json[\"data\"][\"object\"][\"amount_total\"] / 100}} has been processed successfully.</p>\n<h2>What's Next?</h2>\n<ul>\n<li>Your Pro features are now unlocked</li>\n<li>Access unlimited AI generations</li>\n<li>Generate audiobooks and covers</li>\n<li>Priority support included</li>\n</ul>\n<p><a href=\"https://rohimayapublishing.com/dashboard\">Go to Dashboard →</a></p>\n<p>Invoice attached.</p>"
+      },
+      "id": "send-invoice-email",
+      "name": "Send Invoice Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "update",
+        "table": "users",
+        "filterType": "string",
+        "filterString": "email=eq.{{$json[\"data\"][\"object\"][\"customer_email\"]}}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "subscription_tier": "={{$json[\"data\"][\"object\"][\"metadata\"][\"tier\"]}}",
+            "subscription_status": "active",
+            "stripe_customer_id": "={{$json[\"data\"][\"object\"][\"customer\"]}}",
+            "subscription_started_at": "={{$now}}"
+          }
+        }
+      },
+      "id": "unlock-features",
+      "name": "Unlock Pro Features",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "listId": "premium-users",
+        "email": "={{$json[\"data\"][\"object\"][\"customer_email\"]}}",
+        "mergeFields": {
+          "TIER": "={{$json[\"data\"][\"object\"][\"metadata\"][\"tier\"]}}",
+          "PURCHASED": "={{$now.toFormat('yyyy-MM-dd')}}"
+        }
+      },
+      "id": "segment-premium",
+      "name": "Add to Premium Segment",
+      "type": "n8n-nodes-base.mailchimp",
+      "typeVersion": 1,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "insert",
+        "table": "transactions",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "stripe_payment_id": "={{$json[\"data\"][\"object\"][\"payment_intent\"]}}",
+            "user_email": "={{$json[\"data\"][\"object\"][\"customer_email\"]}}",
+            "amount": "={{$json[\"data\"][\"object\"][\"amount_total\"]}}",
+            "currency": "={{$json[\"data\"][\"object\"][\"currency\"]}}",
+            "tier": "={{$json[\"data\"][\"object\"][\"metadata\"][\"tier\"]}}",
+            "status": "completed",
+            "created_at": "={{$now}}"
+          }
+        }
+      },
+      "id": "track-revenue",
+      "name": "Track Revenue in Analytics",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"received\": true}"
+      },
+      "id": "acknowledge-webhook",
+      "name": "Acknowledge Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Event Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Event Type": {
+      "main": [
+        [
+          {
+            "node": "Send Invoice Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Unlock Pro Features",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Add to Premium Segment",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Track Revenue in Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unlock Pro Features": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "versionId": "1",
+  "tags": ["payment", "stripe", "subscription"]
+}

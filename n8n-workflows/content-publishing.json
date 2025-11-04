@@ -1,0 +1,186 @@
+{
+  "name": "Content Publishing - Blog to Social",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "specificFolder",
+        "folderToWatch": "blog-posts",
+        "event": "fileAdded"
+      },
+      "id": "file-watcher",
+      "name": "Watch for New Blog Posts",
+      "type": "n8n-nodes-base.filesWatcher",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "filePath": "={{$json[\"path\"]}}"
+      },
+      "id": "read-blog-post",
+      "name": "Read Blog Post",
+      "type": "n8n-nodes-base.readFile",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"model\": \"gpt-4\", \"messages\": [{\"role\": \"system\", \"content\": \"Generate SEO meta description (155 chars) for this blog post.\"}, {\"role\": \"user\", \"content\": \"{{$json[\"data\"]}}\"}]}"
+      },
+      "id": "generate-meta-description",
+      "name": "Generate SEO Meta Description",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"model\": \"gpt-4\", \"messages\": [{\"role\": \"system\", \"content\": \"Create 3 social media snippets (Twitter, Instagram, LinkedIn) from this blog post. Keep each under character limits.\"}, {\"role\": \"user\", \"content\": \"{{$json[\"data\"]}}\"}]}"
+      },
+      "id": "generate-social-snippets",
+      "name": "Generate Social Media Snippets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "tweet",
+        "text": "={{$json[\"twitter_snippet\"]}}",
+        "additionalFields": {
+          "url": "={{$json[\"blog_url\"]}}"
+        }
+      },
+      "id": "post-to-twitter",
+      "name": "Post to Twitter",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "post",
+        "pageId": "rohimaya-page-id",
+        "message": "={{$json[\"facebook_snippet\"]}}",
+        "additionalFields": {
+          "link": "={{$json[\"blog_url\"]}}"
+        }
+      },
+      "id": "post-to-facebook",
+      "name": "Post to Facebook",
+      "type": "n8n-nodes-base.facebook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "sendTemplate",
+        "fromEmail": "blog@rohimayapublishing.com",
+        "toEmail": "={{$json[\"subscriber_email\"]}}",
+        "template": "new-blog-post",
+        "templateVariables": {
+          "post_title": "={{$json[\"title\"]}}",
+          "post_excerpt": "={{$json[\"excerpt\"]}}",
+          "post_url": "={{$json[\"blog_url\"]}}"
+        }
+      },
+      "id": "email-subscribers",
+      "name": "Email Subscribers",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "collection": "rss-feed",
+        "document": {
+          "title": "={{$json[\"title\"]}}",
+          "description": "={{$json[\"meta_description\"]}}",
+          "link": "={{$json[\"blog_url\"]}}",
+          "pubDate": "={{$now}}",
+          "author": "={{$json[\"author\"]}}"
+        }
+      },
+      "id": "update-rss-feed",
+      "name": "Update RSS Feed",
+      "type": "n8n-nodes-base.mongodb",
+      "typeVersion": 1,
+      "position": [850, 500]
+    }
+  ],
+  "connections": {
+    "Watch for New Blog Posts": {
+      "main": [
+        [
+          {
+            "node": "Read Blog Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Blog Post": {
+      "main": [
+        [
+          {
+            "node": "Generate SEO Meta Description",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Social Media Snippets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Social Media Snippets": {
+      "main": [
+        [
+          {
+            "node": "Post to Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Facebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Subscribers",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update RSS Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1",
+  "tags": ["content", "blog", "social-media"]
+}

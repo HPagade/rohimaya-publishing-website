@@ -1,0 +1,198 @@
+{
+  "name": "Customer Support Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "support-ticket",
+        "responseMode": "responseNode"
+      },
+      "id": "support-webhook",
+      "name": "Webhook - Support Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "support@rohimayapublishing.com",
+        "toEmail": "={{$json[\"user_email\"]}}",
+        "subject": "We received your support request",
+        "emailType": "html",
+        "message": "=<h1>Hi {{$json[\"user_name\"]}},</h1>\n<p>We've received your support request and are here to help!</p>\n<p><strong>Your Question:</strong></p>\n<blockquote>{{$json[\"message\"]}}</blockquote>\n<p>We're checking our knowledge base for a quick answer. If we find one, you'll receive it shortly. Otherwise, our team will respond within 24 hours.</p>\n<p>Ticket ID: #{{$json[\"ticket_id\"]}}</p>\n<p>Best regards,<br>Rohimaya Support Team</p>"
+      },
+      "id": "auto-reply",
+      "name": "Send Auto-Reply",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"model\": \"gpt-4\", \"messages\": [{\"role\": \"system\", \"content\": \"You are a customer support AI for Rohimaya Publishing. Search the knowledge base and provide helpful answers. If you don't know, say so.\"}, {\"role\": \"user\", \"content\": \"{{$json[\"message\"]}}\"}]}"
+      },
+      "id": "check-knowledge-base",
+      "name": "Check Knowledge Base (AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"choices\"][0][\"message\"][\"content\"]}}",
+              "operation": "notContains",
+              "value2": "I don't know"
+            }
+          ]
+        }
+      },
+      "id": "has-answer",
+      "name": "Has Answer?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "support@rohimayapublishing.com",
+        "toEmail": "={{$json[\"user_email\"]}}",
+        "subject": "✅ Answer to your question",
+        "emailType": "html",
+        "message": "=<h1>Hi {{$json[\"user_name\"]}},</h1>\n<p>Great news! We found an answer to your question:</p>\n<p><strong>Your Question:</strong></p>\n<blockquote>{{$json[\"message\"]}}</blockquote>\n<p><strong>Answer:</strong></p>\n<div style=\"background: #f0f9ff; padding: 1rem; border-radius: 8px;\">{{$json[\"answer\"]}}</div>\n<p>Did this solve your issue? <a href=\"https://rohimayapublishing.com/support/feedback/{{$json[\"ticket_id\"]}}\">Let us know</a></p>\n<p>If you need more help, just reply to this email!</p>"
+      },
+      "id": "send-automated-answer",
+      "name": "Send Automated Answer",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "insert",
+        "table": "support_tickets",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket_id": "={{$json[\"ticket_id\"]}}",
+            "user_email": "={{$json[\"user_email\"]}}",
+            "user_name": "={{$json[\"user_name\"]}}",
+            "message": "={{$json[\"message\"]}}",
+            "status": "needs_human",
+            "priority": "normal",
+            "created_at": "={{$now}}"
+          }
+        }
+      },
+      "id": "create-ticket",
+      "name": "Create Support Ticket",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "support@rohimayapublishing.com",
+        "toEmail": "hannah@rohimayapublishing.com",
+        "subject": "🎫 New Support Ticket #{{$json[\"ticket_id\"]}}",
+        "emailType": "html",
+        "message": "=<h2>New Support Ticket</h2>\n<p><strong>From:</strong> {{$json[\"user_name\"]}} ({{$json[\"user_email\"]}})</p>\n<p><strong>Ticket ID:</strong> #{{$json[\"ticket_id\"]}}</p>\n<p><strong>Message:</strong></p>\n<blockquote>{{$json[\"message\"]}}</blockquote>\n<p><a href=\"https://rohimayapublishing.com/admin/tickets/{{$json[\"ticket_id\"]}}\">View Ticket →</a></p>"
+      },
+      "id": "notify-team",
+      "name": "Notify Support Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [850, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"ticket_id\": \"{{$json[\"ticket_id\"]}}\", \"message\": \"Support ticket created\"}"
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Support Request": {
+      "main": [
+        [
+          {
+            "node": "Send Auto-Reply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Knowledge Base (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Knowledge Base (AI)": {
+      "main": [
+        [
+          {
+            "node": "Has Answer?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Answer?": {
+      "main": [
+        [
+          {
+            "node": "Send Automated Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Support Ticket",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Support Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Support Ticket": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1",
+  "tags": ["support", "customer-service", "automation"]
+}

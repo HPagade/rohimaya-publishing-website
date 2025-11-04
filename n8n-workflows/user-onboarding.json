@@ -1,0 +1,143 @@
+{
+  "name": "User Onboarding - Rohimaya Publishing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "onboard-user",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - New User Signup",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rohimaya-user-onboard"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "welcome@rohimayapublishing.com",
+        "toEmail": "={{$json[\"email\"]}}",
+        "subject": "🦚 Welcome to Rohimaya Publishing!",
+        "emailType": "html",
+        "message": "=<h1>Welcome, {{$json[\"name\"]}}!</h1>\n<p>We're thrilled to have you join the Rohimaya Publishing community.</p>\n<h2>Get Started:</h2>\n<ul>\n<li>Explore our AI Writing Assistant</li>\n<li>Format your first manuscript</li>\n<li>Design a book cover with AI</li>\n</ul>\n<p><a href=\"https://rohimayapublishing.com/dashboard\">Go to Dashboard →</a></p>\n<p>Questions? Reply to this email anytime!</p>\n<p>✨ <em>Ascend • Flourish • Enlighten</em></p>"
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "insert",
+        "table": "users",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{$json[\"email\"]}}",
+            "name": "={{$json[\"name\"]}}",
+            "signup_date": "={{$now}}",
+            "subscription_tier": "free",
+            "trial_ends_at": "={{$now.plus({ days: 14 })}}"
+          }
+        }
+      },
+      "id": "create-user-record",
+      "name": "Create User in Database",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "listId": "rohimaya-main-list",
+        "email": "={{$json[\"email\"]}}",
+        "mergeFields": {
+          "FNAME": "={{$json[\"name\"]}}",
+          "SIGNUP": "={{$now.toFormat('yyyy-MM-dd')}}"
+        }
+      },
+      "id": "add-to-mailchimp",
+      "name": "Add to Email List",
+      "type": "n8n-nodes-base.mailchimp",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "task",
+        "triggerAt": "={{$now.plus({ days: 3 }).toISO()}}",
+        "workflow": "day-3-checkin",
+        "data": {
+          "email": "={{$json[\"email\"]}}",
+          "name": "={{$json[\"name\"]}}"
+        }
+      },
+      "id": "schedule-day3-followup",
+      "name": "Schedule Day 3 Follow-up",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"message\": \"User onboarded successfully\", \"user_id\": \"{{$json[\"id\"]}}\"}"
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - New User Signup": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create User in Database",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Add to Email List",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Schedule Day 3 Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User in Database": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1",
+  "tags": ["onboarding", "user-management"]
+}

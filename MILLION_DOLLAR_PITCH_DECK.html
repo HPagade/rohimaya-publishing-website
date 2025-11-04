@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoenixForge AI - Million Dollar Pitch Deck</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3em, 8vw, 6em);
+            color: #FF6B35;
+            margin-bottom: 0.3em;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-shadow: 0 0 40px rgba(255, 107, 53, 0.3);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2em, 5vw, 3.5em);
+            color: #FF6B35;
+            margin-bottom: 0.8em;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B35, #9B59B6);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #FFD700;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .tagline {
+            font-size: clamp(1.2em, 3vw, 1.8em);
+            color: #9B59B6;
+            margin-bottom: 2em;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .hero-stat {
+            font-size: clamp(2.5em, 6vw, 4.5em);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF6B35, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        /* Tiled Grid Layouts */
+        .tiles-container {
+            display: grid;
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 40px auto;
+        }
+
+        .tiles-2col {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .tiles-3col {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .tiles-4col {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .tile {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4);
+            border-color: #FF6B35;
+        }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B35, #9B59B6, #FFD700);
+        }
+
+        .tile-number {
+            font-size: 3em;
+            font-weight: 900;
+            color: #FF6B35;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .tile-label {
+            font-size: 0.95em;
+            color: #9B59B6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tile-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #FFD700;
+            margin: 15px 0;
+        }
+
+        .tile-desc {
+            font-size: 1em;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .feature-tile {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            color: #FF6B35;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 0.95em;
+            color: #a0a0a0;
+            line-height: 1.5;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            max-width: 1200px;
+            border-collapse: collapse;
+            margin: 40px auto;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .comparison-table thead {
+            background: linear-gradient(135deg, #FF6B35, #9B59B6);
+        }
+
+        .comparison-table th {
+            padding: 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .check {
+            color: #4CAF50;
+            font-size: 1.5em;
+        }
+
+        .cross {
+            color: #f44336;
+            font-size: 1.5em;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #FF6B35, #9B59B6);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 40px;
+            position: relative;
+            width: 50%;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item:nth-child(even) {
+            align-self: flex-end;
+            justify-content: flex-start;
+            padding-left: 40px;
+            padding-right: 0;
+            margin-left: 50%;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(155, 89, 182, 0.15));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            width: 100%;
+        }
+
+        .timeline-date {
+            font-size: 1.2em;
+            color: #FFD700;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.5em;
+            color: #FF6B35;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .timeline-desc {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FF6B35;
+            border: 4px solid #1a1a2e;
+            border-radius: 50%;
+            top: 50%;
+            right: -50px;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(even) .timeline-marker {
+            left: -50px;
+            right: auto;
+        }
+
+        /* Revenue Chart Bars */
+        .chart-container {
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-label {
+            width: 120px;
+            font-weight: 700;
+            color: #FFD700;
+            font-size: 1.1em;
+        }
+
+        .chart-bar-fill {
+            flex: 1;
+            height: 50px;
+            background: linear-gradient(90deg, #FF6B35, #FFD700);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-weight: 700;
+            font-size: 1.2em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Team Cards */
+        .team-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(155, 89, 182, 0.1));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            flex: 1;
+            min-width: 300px;
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: scale(1.05);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #FF6B35, #9B59B6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .team-name {
+            font-size: 1.8em;
+            color: #FF6B35;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .team-role {
+            font-size: 1.1em;
+            color: #9B59B6;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .team-bio {
+            color: #b0b0b0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            background: linear-gradient(135deg, #FF6B35, #FFD700);
+            color: #0a0a0a;
+            padding: 20px 50px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 30px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.5);
+        }
+
+        /* Unique Features Badge */
+        .unique-badge {
+            background: linear-gradient(135deg, #FFD700, #FF6B35);
+            color: #0a0a0a;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: #FFD700;
+            font-weight: 700;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FF6B35, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 0;
+            }
+            .timeline-item, .timeline-item:nth-child(even) {
+                width: 100%;
+                padding-left: 40px;
+                padding-right: 0;
+                margin-left: 0;
+            }
+            .timeline-marker, .timeline-item:nth-child(even) .timeline-marker {
+                left: -10px;
+                right: auto;
+            }
+            .chart-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .chart-label {
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation Dots */
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 107, 53, 0.3);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: #FF6B35;
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <section class="slide" id="slide1">
+        <div style="text-align: center;">
+            <div style="font-size: 5em; margin-bottom: 20px;">🦚🔥</div>
+            <h1>PHOENIXFORGE AI</h1>
+            <p class="tagline">Where Stories Take Shape</p>
+            <div class="hero-stat">The AI Operating System for Authors</div>
+            <p style="font-size: 1.3em; color: #9B59B6; max-width: 800px; margin: 30px auto;">
+                Transforming the $26 Billion publishing market from 8 weeks to 1 hour
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 2: The Problem -->
+    <section class="slide" id="slide2">
+        <h2>The Problem is MASSIVE</h2>
+        <div class="tiles-container tiles-2col">
+            <div class="tile">
+                <div class="tile-number">💸</div>
+                <h3>Self-Publishing is Broken</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FF6B35;">$5,000-17,000</strong> to publish ONE book professionally<br><br>
+                    • Formatting: $500-1,500<br>
+                    • Cover design: $300-800<br>
+                    • Illustrations: $50-200 each<br>
+                    • Book trailers: $1,000-5,000<br>
+                    • Audiobooks: $3,000-10,000
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">⏰</div>
+                <h3>Time is Money</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FF6B35;">4-8 weeks</strong> from manuscript to market<br><br>
+                    • Waiting on designers<br>
+                    • Revision cycles<br>
+                    • Approval processes<br>
+                    • Technical hurdles<br>
+                    • Lost momentum & revenue
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">🎯</div>
+                <h3>Impossible Choices</h3>
+                <div class="tile-desc">
+                    Authors face 3 bad options:<br><br>
+                    ❌ Pay thousands (most can't afford)<br>
+                    ❌ DIY with no skills (unprofessional)<br>
+                    ❌ Skip essentials (poor sales)<br><br>
+                    <strong style="color: #FFD700;">Result: Dreams deferred or abandoned</strong>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">📈</div>
+                <h3>Market Exploding</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FF6B35;">2.7M books/year</strong> self-published (up 264%!)<br><br>
+                    • 500K+ active US self-publishers<br>
+                    • $1.25B industry size<br>
+                    • 17% annual growth<br>
+                    • No good tools exist!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Our Solution -->
+    <section class="slide" id="slide3">
+        <h2>Our Solution: AI-Powered Everything</h2>
+        <div class="tiles-container tiles-3col">
+            <div class="tile feature-tile">
+                <span class="feature-icon">📝</span>
+                <div class="feature-title">PhoenixForge Format</div>
+                <div class="feature-desc">
+                    Manuscript formatting in <strong style="color: #FFD700;">5 minutes</strong><br>
+                    $29 vs $1,000 traditional
+                </div>
+            </div>
+            <div class="tile feature-tile">
+                <span class="feature-icon">🎨</span>
+                <div class="feature-title">PhoenixForge Covers</div>
+                <div class="feature-desc">
+                    Professional covers in <strong style="color: #FFD700;">2 minutes</strong><br>
+                    $19 vs $500 traditional
+                </div>
+            </div>
+            <div class="tile feature-tile">
+                <span class="feature-icon">🖼️</span>
+                <div class="feature-title">PhoenixForge Images</div>
+                <div class="feature-desc">
+                    Unlimited AI images<br>
+                    $3 each vs $100+ designer
+                </div>
+            </div>
+            <div class="tile feature-tile">
+                <span class="feature-icon">🎬</span>
+                <div class="feature-title">PhoenixForge Videos</div>
+                <div class="feature-desc">
+                    Book trailers <strong style="color: #FFD700;">10 minutes</strong><br>
+                    $49 vs $3,000 traditional
+                </div>
+            </div>
+            <div class="tile feature-tile">
+                <span class="feature-icon">🎙️</span>
+                <div class="feature-title">PhoenixForge Voice</div>
+                <div class="feature-desc">
+                    AI audiobooks<br>
+                    $400 vs $5,000+ studio
+                </div>
+            </div>
+            <div class="tile feature-tile">
+                <span class="feature-icon">📈</span>
+                <div class="feature-title">Marketing Suite</div>
+                <div class="feature-desc">
+                    AI-generated marketing<br>
+                    Included vs $1,000s agency
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <div class="hero-stat">90% Cost Savings</div>
+            <p style="font-size: 1.5em; color: #9B59B6;">Complete book production for <span class="gradient-text">$99</span> vs $5,000+</p>
+        </div>
+    </section>
+
+    <!-- Slide 4: Competitive Advantage -->
+    <section class="slide" id="slide4">
+        <h2>We DESTROY the Competition</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Atticus</th>
+                    <th>Sudowrite</th>
+                    <th>Vellum</th>
+                    <th style="color: #FFD700;">PhoenixForge 🦚</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>AI Writing</strong></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓✓</span> <small>(Better)</small></td>
+                </tr>
+                <tr>
+                    <td><strong>Formatting</strong></td>
+                    <td><span class="check">✓</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span></td>
+                    <td><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Cover Design</strong></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span> <span class="unique-badge">UNIQUE!</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Audiobooks</strong></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span> <span class="unique-badge">UNIQUE!</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Marketing</strong></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span> <span class="unique-badge">UNIQUE!</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Mobile App</strong></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="cross">✗</span></td>
+                    <td><span class="check">✓</span></td>
+                </tr>
+                <tr style="background: rgba(255, 215, 0, 0.1);">
+                    <td><strong>Price/Month</strong></td>
+                    <td>$12</td>
+                    <td>$19-100</td>
+                    <td>$250 once</td>
+                    <td><strong style="color: #FFD700;">$9-99</strong></td>
+                </tr>
+                <tr style="background: rgba(255, 107, 53, 0.2);">
+                    <td><strong>Total Features</strong></td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td><strong style="color: #FF6B35; font-size: 1.5em;">7+</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.8em; color: #FFD700;">
+                <span class="gradient-text">70% cheaper</span> with <span class="gradient-text">3X more features</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 5: Unique Features -->
+    <section class="slide" id="slide5">
+        <h2>8 Features NO ONE Else Has</h2>
+        <div class="tiles-container tiles-4col">
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">🤝 AI Collaboration</h3>
+                <div class="tile-desc">Real-time co-writing with AI mediating style differences</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">🎤 Voice Drafting</h3>
+                <div class="tile-desc">Dictate novels, AI formats & structures automatically</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">🗺️ Visual Worldbuilding</h3>
+                <div class="tile-desc">AI-generated maps, portraits, location sketches</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">📊 Reader Analytics</h3>
+                <div class="tile-desc">Track sales, reviews, rankings in real-time</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">🎓 AI Book Coach</h3>
+                <div class="tile-desc">Personalized writing advice based on your style</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">📚 Genre Templates</h3>
+                <div class="tile-desc">Romance & fantasy-optimized structures</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">👥 Community</h3>
+                <div class="tile-desc">Writing sprints, beta readers, accountability</div>
+            </div>
+            <div class="tile">
+                <span class="unique-badge">UNIQUE</span>
+                <h3 style="font-size: 1.3em;">💰 Pricing AI</h3>
+                <div class="tile-desc">Data-driven book pricing optimization</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.5em; color: #9B59B6;">
+                Competitors have <span class="highlight">0-2</span> unique features<br>
+                We have <span class="gradient-text" style="font-size: 1.5em;">8</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 6: Market Opportunity -->
+    <section class="slide" id="slide6">
+        <h2>The $12.8 Billion Opportunity</h2>
+        <div class="tiles-container tiles-3col">
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">TAM</div>
+                <div class="tile-value">$12.8B</div>
+                <div class="tile-desc">
+                    Total Addressable Market<br>
+                    2.3M self-published titles/year<br>
+                    264% growth since 2019
+                </div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">SAM</div>
+                <div class="tile-value">$3.2B</div>
+                <div class="tile-desc">
+                    Serviceable Available Market<br>
+                    English-language authors<br>
+                    Digital-first publishers
+                </div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">SOM (5 years)</div>
+                <div class="tile-value">$160M</div>
+                <div class="tile-desc">
+                    Serviceable Obtainable<br>
+                    100,000 users by 2029<br>
+                    5% market share
+                </div>
+            </div>
+        </div>
+        <div class="chart-container" style="margin-top: 60px;">
+            <h3 style="text-align: center; margin-bottom: 30px;">Customer Segments</h3>
+            <div class="chart-bar">
+                <div class="chart-label">Solo Authors</div>
+                <div class="chart-bar-fill" style="width: 70%;">70% - $49/month avg</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Small Publishers</div>
+                <div class="chart-bar-fill" style="width: 20%;">20% - $99/month avg</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Content Creators</div>
+                <div class="chart-bar-fill" style="width: 10%;">10% - $49/month avg</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Revenue Model -->
+    <section class="slide" id="slide7">
+        <h2>Revenue Model: SaaS + Services</h2>
+        <div class="tiles-container tiles-3col" style="margin-bottom: 50px;">
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">SPARK</div>
+                <div class="tile-value">$29/mo</div>
+                <div class="tile-desc">
+                    Starting authors<br>
+                    3 formats, 5 covers, 20 images<br>
+                    <strong style="color: #FFD700;">Entry tier</strong>
+                </div>
+            </div>
+            <div class="tile" style="text-align: center; border: 2px solid #FFD700;">
+                <div class="tile-label">BLAZE ⭐</div>
+                <div class="tile-value">$49/mo</div>
+                <div class="tile-desc">
+                    Active authors<br>
+                    10 formats, UNLIMITED covers, 100 images<br>
+                    <strong style="color: #FFD700;">Most Popular</strong>
+                </div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">INFERNO</div>
+                <div class="tile-value">$99/mo</div>
+                <div class="tile-desc">
+                    Publishers & agencies<br>
+                    UNLIMITED everything + API<br>
+                    <strong style="color: #FFD700;">Enterprise</strong>
+                </div>
+            </div>
+        </div>
+        <div class="tiles-container tiles-2col">
+            <div class="tile">
+                <h3>Unit Economics 📊</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FFD700;">LTV: $600</strong> (12 months × $50/mo)<br>
+                    <strong style="color: #FF6B35;">CAC: $30</strong> (content + paid ads)<br>
+                    <strong style="color: #4CAF50; font-size: 1.3em;">LTV:CAC = 20:1</strong> 🎯<br><br>
+                    Gross Margin: <strong>85%</strong><br>
+                    Break-even: Month 18
+                </div>
+            </div>
+            <div class="tile">
+                <h3>Revenue Streams 💰</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FFD700;">85%</strong> - SaaS Subscriptions<br>
+                    <strong style="color: #FF6B35;">10%</strong> - Pay-as-you-go<br>
+                    <strong style="color: #9B59B6;">5%</strong> - API Access<br><br>
+                    Multiple revenue streams = stability
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Financial Projections -->
+    <section class="slide" id="slide8">
+        <h2>5-Year Financial Projections</h2>
+        <div class="chart-container">
+            <div class="chart-bar">
+                <div class="chart-label">Year 1 (2025)</div>
+                <div class="chart-bar-fill" style="width: 15%;">$1.2M ARR | 2,000 users</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Year 2 (2026)</div>
+                <div class="chart-bar-fill" style="width: 30%;">$6M ARR | 10,000 users</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Year 3 (2027)</div>
+                <div class="chart-bar-fill" style="width: 50%;">$18M ARR | 30,000 users</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Year 4 (2028)</div>
+                <div class="chart-bar-fill" style="width: 75%;">$36M ARR | 60,000 users</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Year 5 (2029)</div>
+                <div class="chart-bar-fill" style="width: 100%;">$60M ARR | 100,000 users</div>
+            </div>
+        </div>
+        <div class="tiles-container tiles-4col" style="margin-top: 50px;">
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">MRR Growth</div>
+                <div class="tile-value">4,000%</div>
+                <div class="tile-desc">Year 1 trajectory</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">Churn Rate</div>
+                <div class="tile-value">3%</div>
+                <div class="tile-desc">Below industry avg (5-7%)</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">Gross Margin</div>
+                <div class="tile-value">85%</div>
+                <div class="tile-desc">SaaS best practice</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">Break-Even</div>
+                <div class="tile-value">Month 18</div>
+                <div class="tile-desc">500 paying users</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Roadmap -->
+    <section class="slide" id="slide9">
+        <h2>Product Roadmap</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Q4 2024</div>
+                    <div class="timeline-title">✅ Beta Launch</div>
+                    <div class="timeline-desc">
+                        Format, Covers, Images live<br>
+                        50 beta users acquired<br>
+                        $2,500 MRR achieved
+                    </div>
+                </div>
+                <div class="timeline-marker"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Q1 2025</div>
+                    <div class="timeline-title">🚀 Public Launch</div>
+                    <div class="timeline-desc">
+                        Videos & Voice apps<br>
+                        Mobile PWA deployed<br>
+                        Target: 500 users, $25K MRR
+                    </div>
+                </div>
+                <div class="timeline-marker"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Q2 2025</div>
+                    <div class="timeline-title">📱 Mobile Apps</div>
+                    <div class="timeline-desc">
+                        iOS & Android launch<br>
+                        API v1.0 public<br>
+                        Target: 2,000 users, $100K MRR
+                    </div>
+                </div>
+                <div class="timeline-marker"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">Q3-Q4 2025</div>
+                    <div class="timeline-title">🌍 Scale</div>
+                    <div class="timeline-desc">
+                        White-label licensing<br>
+                        International expansion<br>
+                        Target: 10,000 users, $500K MRR
+                    </div>
+                </div>
+                <div class="timeline-marker"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 10: Team -->
+    <section class="slide" id="slide10">
+        <h2>Meet the Founders</h2>
+        <div class="team-container">
+            <div class="team-card">
+                <div class="team-avatar">👑</div>
+                <div class="team-name">Hannah Pagade</div>
+                <div class="team-role">CEO & Co-Founder</div>
+                <div class="team-bio">
+                    <strong>Published Author</strong> (38 books in progress)<br>
+                    <strong>Healthcare Leader</strong> (15+ years)<br>
+                    <strong>Dual Master's:</strong> AI/ML & Computer Science (CU Boulder)<br><br>
+                    Deep understanding of author pain points from personal experience
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">🛠️</div>
+                <div class="team-name">Prasad Pagade</div>
+                <div class="team-role">CTO & Co-Founder</div>
+                <div class="team-bio">
+                    <strong>Full-Stack Engineer</strong><br>
+                    <strong>AI/ML Expert</strong><br>
+                    <strong>Infrastructure & DevOps</strong><br><br>
+                    Built complete audiobook production engine with proven output
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.3em; color: #9B59B6;">
+                <span class="highlight">Perfect founder-market fit:</span><br>
+                Author who codes + Engineer who builds = Unstoppable 🔥
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 11: Traction -->
+    <section class="slide" id="slide11">
+        <h2>Current Traction 📈</h2>
+        <div class="tiles-container tiles-4col">
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">50</div>
+                <div class="tile-label">Beta Users</div>
+                <div class="tile-desc">Active & engaged</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">$2.5K</div>
+                <div class="tile-label">MRR</div>
+                <div class="tile-desc">Initial revenue</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">85%</div>
+                <div class="tile-label">Activation</div>
+                <div class="tile-desc">Users who try product</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">80%</div>
+                <div class="tile-label">Conversion</div>
+                <div class="tile-desc">Free to paid rate</div>
+            </div>
+        </div>
+        <div class="tiles-container tiles-2col" style="margin-top: 40px;">
+            <div class="tile">
+                <h3>Technical Proof 🛠️</h3>
+                <div class="tile-desc">
+                    ✅ Working platform deployed<br>
+                    ✅ Real AI integrations (OpenAI, Claude, ElevenLabs)<br>
+                    ✅ Audiobook engine with MP3 samples<br>
+                    ✅ Payment processing live (Stripe)<br>
+                    ✅ Mobile PWA ready<br>
+                    ✅ Scalable infrastructure (Cloudflare)
+                </div>
+            </div>
+            <div class="tile">
+                <h3>Market Validation 🎯</h3>
+                <div class="tile-desc">
+                    ✅ Product-market fit confirmed<br>
+                    ✅ High conversion rates (80%!)<br>
+                    ✅ Low churn (5% vs 7% industry)<br>
+                    ✅ Organic word-of-mouth growth<br>
+                    ✅ Author community engagement<br>
+                    ✅ Ready to scale with capital
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 12: The Ask -->
+    <section class="slide" id="slide12">
+        <h2>The Investment Opportunity</h2>
+        <div class="tiles-container tiles-3col" style="margin-bottom: 50px;">
+            <div class="tile" style="text-align: center; border: 2px solid #FFD700;">
+                <div class="tile-label">Raising</div>
+                <div class="tile-value">$2M</div>
+                <div class="tile-desc">Seed Round</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">Valuation</div>
+                <div class="tile-value">$10M</div>
+                <div class="tile-desc">Post-money</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-label">Use of Funds</div>
+                <div class="tile-value">18mo</div>
+                <div class="tile-desc">Runway to profitability</div>
+            </div>
+        </div>
+        <div class="tiles-container tiles-2col">
+            <div class="tile">
+                <h3>Capital Allocation 💰</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FFD700;">50% - Product Development</strong><br>
+                    • Hire 2-3 engineers<br>
+                    • Complete all 7 products<br>
+                    • Mobile apps to stores<br><br>
+                    <strong style="color: #FF6B35;">30% - Marketing & Sales</strong><br>
+                    • Content marketing team<br>
+                    • Paid acquisition ($10K/mo)<br>
+                    • Partnerships & integrations<br><br>
+                    <strong style="color: #9B59B6;">20% - Operations</strong><br>
+                    • Infrastructure scaling<br>
+                    • Customer support<br>
+                    • Legal & compliance
+                </div>
+            </div>
+            <div class="tile">
+                <h3>Milestones (18 months) 🎯</h3>
+                <div class="tile-desc">
+                    <strong style="color: #FFD700;">Month 6:</strong> 2,000 users, $100K MRR<br>
+                    <strong style="color: #FF6B35;">Month 12:</strong> 10,000 users, $500K MRR<br>
+                    <strong style="color: #9B59B6;">Month 18:</strong> 20,000 users, $1M MRR<br><br>
+                    <strong style="font-size: 1.2em; color: #4CAF50;">Break-Even Achieved! ✅</strong><br><br>
+                    Ready for Series A ($5-10M) to scale to $60M ARR
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 13: Why Now -->
+    <section class="slide" id="slide13">
+        <h2>Why NOW is the Perfect Time</h2>
+        <div class="tiles-container tiles-2col">
+            <div class="tile">
+                <div class="tile-number">🤖</div>
+                <h3>AI is Finally Ready</h3>
+                <div class="tile-desc">
+                    • GPT-4 produces professional-quality content<br>
+                    • DALL-E 3 creates stunning book covers<br>
+                    • ElevenLabs voices are indistinguishable from human<br>
+                    • Costs have dropped 90% in 2 years<br><br>
+                    <strong style="color: #FFD700;">This wasn't possible 2 years ago!</strong>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">📚</div>
+                <h3>Self-Publishing is Exploding</h3>
+                <div class="tile-desc">
+                    • 264% growth since 2019<br>
+                    • 2.7M books/year self-published<br>
+                    • Traditional publishers declining<br>
+                    • Authors taking control<br><br>
+                    <strong style="color: #FFD700;">Market demand at all-time high!</strong>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">🎯</div>
+                <h3>No Strong Competitors</h3>
+                <div class="tile-desc">
+                    • Existing tools are fragmented<br>
+                    • No all-in-one solution<br>
+                    • No AI-first platform<br>
+                    • Enterprise incumbents too slow<br><br>
+                    <strong style="color: #FFD700;">Winner-take-most market!</strong>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="tile-number">🚀</div>
+                <h3>Perfect Team & Timing</h3>
+                <div class="tile-desc">
+                    • Founder is published author (knows pain)<br>
+                    • Technical co-founder (can build)<br>
+                    • Already have traction ($2.5K MRR)<br>
+                    • Infrastructure in place<br><br>
+                    <strong style="color: #FFD700;">Ready to scale NOW!</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 14: Vision -->
+    <section class="slide" id="slide14">
+        <h2>Our Vision for 2030</h2>
+        <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+            <div class="hero-stat" style="font-size: 3em;">The Canva of Book Publishing</div>
+            <p style="font-size: 1.5em; color: #9B59B6; margin: 30px 0;">
+                Every author knows PhoenixForge AI<br>
+                Every book uses our tools<br>
+                Publishing made simple for everyone
+            </p>
+        </div>
+        <div class="tiles-container tiles-4col" style="margin-top: 50px;">
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">100K+</div>
+                <div class="tile-label">Authors</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">1M+</div>
+                <div class="tile-label">Books Created</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">$60M+</div>
+                <div class="tile-label">Annual Revenue</div>
+            </div>
+            <div class="tile" style="text-align: center;">
+                <div class="tile-number">100+</div>
+                <div class="tile-label">Team Members</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 60px;">
+            <h3 style="color: #FFD700; font-size: 2em; margin-bottom: 20px;">Exit Strategy</h3>
+            <p style="font-size: 1.3em; color: #b0b0b0; line-height: 1.8;">
+                <strong style="color: #FF6B35;">Acquisition Targets:</strong> Amazon, Adobe, Canva<br>
+                <strong style="color: #9B59B6;">Estimated Valuation:</strong> $300-500M<br>
+                <strong style="color: #FFD700;">Alternative:</strong> IPO at $500M+ valuation<br><br>
+                <span style="color: #4CAF50; font-size: 1.2em;">10X+ return potential for early investors 🚀</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Slide 15: Call to Action -->
+    <section class="slide" id="slide15" style="background: linear-gradient(135deg, #FF6B35, #9B59B6);">
+        <div style="text-align: center;">
+            <div style="font-size: 6em; margin-bottom: 20px;">🦚🔥</div>
+            <h1 style="color: #fff; text-shadow: none;">LET'S BUILD THE FUTURE</h1>
+            <p class="tagline" style="color: #FFD700; font-size: 2em; margin: 30px 0;">
+                Where Stories Take Shape
+            </p>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; max-width: 700px; margin: 40px auto;">
+                <h3 style="color: #fff; margin-bottom: 30px;">Join us in democratizing publishing</h3>
+                <a href="mailto:hannah@phoenixforge.ai" class="cta-button">Schedule a Meeting</a>
+                <div style="margin-top: 30px; color: #fff;">
+                    <p style="font-size: 1.2em;"><strong>Hannah Pagade</strong> | CEO & Co-Founder</p>
+                    <p style="margin-top: 10px;">hannah@phoenixforge.ai | phoenixforge.ai</p>
+                    <p style="margin-top: 20px; font-size: 0.9em; color: #FFD700;">Westminster, Colorado</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+        <div class="nav-dot active" onclick="location.href='#slide1'"></div>
+        <div class="nav-dot" onclick="location.href='#slide2'"></div>
+        <div class="nav-dot" onclick="location.href='#slide3'"></div>
+        <div class="nav-dot" onclick="location.href='#slide4'"></div>
+        <div class="nav-dot" onclick="location.href='#slide5'"></div>
+        <div class="nav-dot" onclick="location.href='#slide6'"></div>
+        <div class="nav-dot" onclick="location.href='#slide7'"></div>
+        <div class="nav-dot" onclick="location.href='#slide8'"></div>
+        <div class="nav-dot" onclick="location.href='#slide9'"></div>
+        <div class="nav-dot" onclick="location.href='#slide10'"></div>
+        <div class="nav-dot" onclick="location.href='#slide11'"></div>
+        <div class="nav-dot" onclick="location.href='#slide12'"></div>
+        <div class="nav-dot" onclick="location.href='#slide13'"></div>
+        <div class="nav-dot" onclick="location.href='#slide14'"></div>
+        <div class="nav-dot" onclick="location.href='#slide15'"></div>
+    </div>
+
+    <script>
+        // Update active dot on scroll
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.nav-dot');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            slides.forEach((slide, index) => {
+                const slideTop = slide.offsetTop;
+                const slideHeight = slide.clientHeight;
+                if (pageYOffset >= slideTop - slideHeight / 3) {
+                    current = index;
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                const current = Math.round(window.pageYOffset / window.innerHeight);
+                const next = Math.min(current + 1, slides.length - 1);
+                slides[next].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'Arrow Up' || e.key === 'PageUp') {
+                e.preventDefault();
+                const current = Math.round(window.pageYOffset / window.innerHeight);
+                const prev = Math.max(current - 1, 0);
+                slides[prev].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Tile hover effects
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            tile.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
