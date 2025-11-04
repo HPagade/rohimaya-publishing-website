@@ -1,10 +1,19 @@
 # 🔥 PhoenixForge AI - Complete Author's Toolkit
 
+**Repository:** `Phoenix-Forge-SaaS-V-120525-Hybrid` (Renamed for competitive protection)  
 **Where Stories Take Shape**
 
 ---
 
 ## 🚀 START HERE: Ready to Launch?
+
+**⚠️ IMPORTANT:** If you cloned the old repository name (`rohimaya-publishing-website`), update your remote:
+```bash
+git remote set-url origin https://github.com/HPagade/Phoenix-Forge-SaaS-V-120525-Hybrid.git
+```
+See [REPOSITORY_RENAME_GUIDE.md](REPOSITORY_RENAME_GUIDE.md) for complete instructions.
+
+---
 
 **✨ NEW:** Your complete production roadmap is ready!
 

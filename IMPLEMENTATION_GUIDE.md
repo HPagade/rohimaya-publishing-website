@@ -1,8 +1,23 @@
 # 🔐 PhoenixForge AI - Privacy & Authentication Implementation Guide
 
+**Repository:** `Phoenix-Forge-SaaS-V-120525-Hybrid`  
 **Date:** November 4, 2025  
 **Status:** P0-P4 Implementation Complete  
 **Security Level:** Production-Ready with Zero Trust Architecture  
+
+---
+
+## ⚠️ Repository Renamed
+
+**Old Name:** `rohimaya-publishing-website`  
+**New Name:** `Phoenix-Forge-SaaS-V-120525-Hybrid`  
+
+If you have a local clone, update your remote:
+```bash
+git remote set-url origin https://github.com/HPagade/Phoenix-Forge-SaaS-V-120525-Hybrid.git
+```
+
+See [REPOSITORY_RENAME_GUIDE.md](REPOSITORY_RENAME_GUIDE.md) for complete instructions.
 
 ---
 
